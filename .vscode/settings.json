@@ -1,0 +1,14 @@
+{
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/elm-stuff": true,
+        "**/index.html": true,
+        "public/index.js": true
+    },
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#00517d",
+        "activityBar.inactiveForeground": "#2281b5",
+        "activityBar.activeBorder": "#b4c9d3",
+        "activityBar.foreground": "#b4c9d3"
+      }
+}
