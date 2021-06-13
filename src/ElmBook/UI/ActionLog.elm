@@ -1,0 +1,160 @@
+module ElmBook.UI.ActionLog exposing
+    ( list
+    , preview
+    , previewEmpty
+    , styles
+    )
+
+import ElmBook.UI.Helpers exposing (..)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+
+
+preview :
+    { lastActionIndex : Int
+    , lastAction : ( String, String )
+    , onClick : msg
+    }
+    -> Html msg
+preview props =
+    div
+        [ class "elm-book-action-log-preview-wrapper" ]
+        [ button
+            [ class "elm-book-action-log-preview"
+            , onClick props.onClick
+            ]
+            [ item props.lastActionIndex props.lastAction
+            ]
+        ]
+
+
+previewEmpty : Html msg
+previewEmpty =
+    div
+        [ class "elm-book-monospace elm-book-action-log-preview-empty-wrapper" ]
+        [ div [ class "elm-book-action-log-preview-empty" ]
+            [ text "Your logged actions will appear here." ]
+        ]
+
+
+list : List ( String, String ) -> Html msg
+list props =
+    div [ class "elm-book elm-book-action-log-list-wrapper" ]
+        [ p
+            [ class "elm-book elm-book-action-log-list-header elm-book-sans"
+            , style "background" themeBackground
+            ]
+            [ text "Action log" ]
+        , ul
+            [ class "elm-book elm-book-action-log-list" ]
+            (List.indexedMap item props
+                |> List.reverse
+                |> List.map
+                    (\item_ ->
+                        li [ class "elm-book elm-book-action-log-list-item" ]
+                            [ item_ ]
+                    )
+            )
+        ]
+
+
+item : Int -> ( String, String ) -> Html msg
+item index ( preffix, label ) =
+    div
+        [ class "elm-book-action-log-item-wrapper elm-book-monospace" ]
+        [ span
+            [ class "elm-book-action-log-item-index" ]
+            [ text ("(" ++ String.fromInt (index + 1) ++ ")")
+            ]
+        , span
+            [ class "elm-book-action-log-item-preffix" ]
+            [ text preffix ]
+        , span [ class "elm-book-action-log-item-label" ] [ text label ]
+        ]
+
+
+styles : Html msg
+styles =
+    css_ """
+.elm-book-action-log-preview-wrapper {
+    padding: 8px;
+}
+.elm-book-action-log-preview {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+.elm-book-action-log-preview:hover {
+    opacity: 0.9;
+}
+.elm-book-action-log-preview:hover {
+    opacity: 0.8;
+}
+
+.elm-book-action-log-preview-empty-wrapper {
+    padding: 8px;
+    font-size: 14px;
+    color: #aaa;
+}
+.elm-book-action-log-preview-empty {
+    padding: 12px 20px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+}
+
+.elm-book-action-log-list-wrapper {
+    position: relative;
+    padding-top: 34px;
+    width: 640px;
+    max-width: 100%;
+}
+.elm-book-action-log-list-header {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 34px;
+    padding: 0 20px;
+    font-weight: bold;
+    color: #fff;
+}
+.elm-book-action-log-list {
+    list-style-type: none;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+.elm-book-action-log-list-item {
+    border-top: 1px solid #f5f5f5;
+}
+
+.elm-book-action-log-item-wrapper {
+    display: flex;
+    align-items: baseline;
+    padding: 12px 20px;
+    font-size: 14px;
+    background-color: #f3f3f3;
+}
+.elm-book-action-log-item-index {
+    display: inline-block;
+    padding-right: 16px;
+    color: #a0a0a0;
+}
+.elm-book-action-log-item-preffix {
+    padding-right: 16px;
+    color: #a0a0a0;
+    letter-spacing: 0.5px;
+}
+.elm-book-action-log-item-label {
+
+}
+"""

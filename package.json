@@ -16,9 +16,9 @@
   },
   "scripts": {
     "postinstall": "elm-tooling install",
-    "start": "elm-live ./src/UIBook/UI/UIBook.elm --port=3000 --pushstate --open",
+    "start": "elm-live ./src/ElmBook/UI/ElmBook.elm --port=3000 --pushstate --open -- --debug",
     "start:docs": "npx elm-doc-preview",
-    "build": "npx elm make ./src/UIBook/UI/UIBook.elm --output=public/index.js"
+    "build": "npx elm make ./src/ElmBook/UI/ElmBook.elm --output=public/index.js"
   },
   "dependencies": {
     "elm-live": "^4.0.2"

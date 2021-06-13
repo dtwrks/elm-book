@@ -4,7 +4,7 @@ A book that tells the story of the UI elements of your Elm application.
 
 - Plain Elm (no custom setup)
 - Customizable theme colors and header
-- Organize your UI elements into chapters and sections
+- Organize your UI elements into chapters and elements
 - Showcase stateful widgets, not only static elements
 - Log your actions
 - Built-in integration with elm-ui, elm-css and others
@@ -14,23 +14,23 @@ A live example can be found here: https://elm-ui-book.netlify.app/
 
 ## Start with a chapter.
 
-You can create one chapter for each one of your UI elements and split it in sections to showcase all of their possible variants.
+You can create one chapter for each one of your UI elements and split it in elements to showcase all of their possible variants.
 
     buttonsChapter : UIChapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withSections
+            |> withElements
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
 
-Don't be limited by this pattern though. A chapter and its sections may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
+Don't be limited by this pattern though. A chapter and its elements may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
 
 ## Then, create your book.
 
-Your UIBook is a collection of chapters.
+Your ElmBook is a collection of chapters.
 
-    book : UIBook ()
+    book : ElmBook ()
     book =
         book "MyApp" ()
             |> withChapters
@@ -57,10 +57,10 @@ You can configure your book with a few extra settings to make it more personaliz
 
 If you're using one of these two common ways of styling your Elm app, just import the proper definitions and you're good to go.
 
-    import UIBook.ElmCSS exposing (UIBook, book)
-    import UIBook exposing (withChapters)
+    import ElmBook.ElmCSS exposing (ElmBook, book)
+    import ElmBook exposing (withChapters)
 
-    main : UIBook ()
+    main : ElmBook ()
     main =
         book "MyElmCSSApp" ()
             |> withChapters []
@@ -90,7 +90,7 @@ Sometimes it's useful to display a complex component so people can understand ho
         { input = "", counter = 0 }
 
 
-    main : UIBook MyState
+    main : ElmBook MyState
     main =
         book "MyStatefulApp" initialState
             |> withChapters
@@ -106,7 +106,7 @@ Sometimes it's useful to display a complex component so people can understand ho
                 { state | counter = state.counter + 1 }
         in
         chapter "Counter"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     button
                         [ onClick (updateState updateCounter) ]
@@ -121,7 +121,7 @@ Sometimes it's useful to display a complex component so people can understand ho
                 { state | input = value }
         in
         chapter "Input"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     input
                         [ value state.input

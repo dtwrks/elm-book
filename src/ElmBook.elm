@@ -1,10 +1,11 @@
 module ElmBook exposing
-    ( chapter, withSection, withSections, withBackgroundColor, withDescription, withTwoColumns, UIChapter
-    , book, withChapters, withChapterGroups, UIBook
+    ( chapter, withElement, withElements, withBackgroundColor, withTwoColumns, UIChapter
+    , book, withChapters, withChapterGroups, ElmBook
     , withLogo, withSubtitle, withHeader, withGlobals, withThemeBackground, withThemeBackgroundAlt, withThemeAccent, withThemeAccentAlt, themeBackground, themeBackgroundAlt, themeAccent, themeAccentAlt, withColor
-    , UIChapterCustom, UIBookCustom, UIBookBuilder, UIBookMsg, customBook
+    , UIChapterCustom, ElmBookCustom, ElmBookBuilder, ElmBookMsg, customBook
     , logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionMap
-    , withStatefulSection, withStatefulSections, toStateful, updateState, updateState1
+    , withStatefulElement, withStatefulElements, updateState, updateState1
+    , render, renderElements, renderElementsWithBackground
     )
 
 {-| A book that tells the story of the UI elements of your Elm application.
@@ -12,26 +13,26 @@ module ElmBook exposing
 
 # Start with a chapter.
 
-You can create one chapter for each one of your UI elements and split it in sections to showcase all of their possible variants.
+You can create one chapter for each one of your UI elements and split it in elements to showcase all of their possible variants.
 
     buttonsChapter : UIChapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withSections
+            |> withElements
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
 
-Don't be limited by this pattern though. A chapter and its sections may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
+Don't be limited by this pattern though. A chapter and its elements may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
 
-@docs chapter, withSection, withSections, withBackgroundColor, withDescription, withTwoColumns, UIChapter
+@docs chapter, withElement, withElements, withBackgroundColor, withTwoColumns, UIChapter
 
 
 # Then, create your book.
 
-Your UIBook is a collection of chapters.
+Your ElmBook is a collection of chapters.
 
-    book : UIBook ()
+    book : ElmBook ()
     book =
         book "MyApp" ()
             |> withChapters
@@ -47,7 +48,7 @@ This returns a standard `Browser.application`. You can choose to use it just as 
 
 If you want to use our zero-config dev server, just install `elm-ui-book` as a devDependency then run `npx elm-ui-book {MyBookModule}.elm` and you should see your brand new Book running on your browser.
 
-@docs book, withChapters, withChapterGroups, UIBook
+@docs book, withChapters, withChapterGroups, ElmBook
 
 
 # Customize the book's style.
@@ -66,41 +67,41 @@ You can configure your book with a few extra settings to make it more personaliz
 
 If you're using one of these two common ways of styling your Elm app, just import the proper definitions and you're good to go.
 
-    import UIBook exposing (withChapters)
-    import UIBook.ElmCSS exposing (UIBook, book)
+    import ElmBook exposing (withChapters)
+    import ElmBook.ElmCSS exposing (ElmBook, book)
 
-    main : UIBook ()
+    main : ElmBook ()
     main =
         book "MyElmCSSApp" ()
             |> withChapters []
 
 If you're using other packages that also work with a custom html, don't worry , defining a custom setup is pretty simple as well:
 
-    module UIBookCustom exposing (UIBook, UIChapter, book)
+    module ElmBookCustom exposing (ElmBook, UIChapter, book)
 
+    import ElmBook
     import MyCustomHtmlLibrary exposing (CustomHtml, toHtml)
-    import UIBook
 
-    type alias UIBookHtml state =
-        CustomHtml (UIBook.UIBookMsg state)
+    type alias ElmBookHtml state =
+        CustomHtml (ElmBook.ElmBookMsg state)
 
     type alias UIChapter state =
-        UIBook.UIChapterCustom state (UIBookHtml state)
+        ElmBook.UIChapterCustom state (ElmBookHtml state)
 
-    type alias UIBook state =
-        UIBook.UIBookCustom state (UIBookHtml state)
+    type alias ElmBook state =
+        ElmBook.ElmBookCustom state (ElmBookHtml state)
 
-    book : String -> state -> UIBook.UIBookBuilder state (UIBookHtml state)
+    book : String -> state -> ElmBook.ElmBookBuilder state (ElmBookHtml state)
     book title state =
-        UIBook.customBook
+        ElmBook.customBook
             { title = title
             , state = state
             , toHtml = toHtml
             }
 
-Then you can `import UIBookCustom exposing (UIBook, UIChapter, book)` just as you would with `UIBook.ElmCSS`.
+Then you can `import ElmBookCustom exposing (ElmBook, UIChapter, book)` just as you would with `ElmBook.ElmCSS`.
 
-@docs UIChapterCustom, UIBookCustom, UIBookBuilder, UIBookMsg, customBook
+@docs UIChapterCustom, ElmBookCustom, ElmBookBuilder, ElmBookMsg, customBook
 
 
 # Interact with it.
@@ -121,7 +122,7 @@ Sometimes it's useful to display a complex component so people can understand ho
     initialState =
         { input = "", counter = 0 }
 
-    main : UIBook MyState
+    main : ElmBook MyState
     main =
         book "MyStatefulApp" initialState
             |> withChapters
@@ -136,7 +137,7 @@ Sometimes it's useful to display a complex component so people can understand ho
                 { state | counter = state.counter + 1 }
         in
         chapter "Counter"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     button
                         [ onClick (updateState updateCounter) ]
@@ -150,7 +151,7 @@ Sometimes it's useful to display a complex component so people can understand ho
                 { state | input = value }
         in
         chapter "Input"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     input
                         [ value state.input
@@ -159,7 +160,7 @@ Sometimes it's useful to display a complex component so people can understand ho
                         []
                 )
 
-@docs withStatefulSection, withStatefulSections, toStateful, updateState, updateState1
+@docs withStatefulElement, withStatefulElements, updateState, updateState1
 
 -}
 
@@ -168,42 +169,42 @@ import Browser exposing (UrlRequest(..))
 import Browser.Dom
 import Browser.Events exposing (onKeyDown, onKeyUp)
 import Browser.Navigation as Nav
-import Html exposing (Html)
-import Html.Styled exposing (fromUnstyled, text, toUnstyled)
+import ElmBook.Msg exposing (..)
+import ElmBook.UI.ActionLog
+import ElmBook.UI.Chapter exposing (ChapterLayout(..))
+import ElmBook.UI.ChapterHeader
+import ElmBook.UI.Footer
+import ElmBook.UI.Header
+import ElmBook.UI.Helpers
+import ElmBook.UI.Nav
+import ElmBook.UI.Search
+import ElmBook.UI.Styles
+import ElmBook.UI.Wrapper
+import Html exposing (Html, text)
 import Json.Decode as Decode
 import List
 import Task
-import UIBook.Msg exposing (..)
-import UIBook.UI.ActionLog
-import UIBook.UI.Chapter exposing (ChapterLayout(..))
-import UIBook.UI.ChapterHeader
-import UIBook.UI.Footer
-import UIBook.UI.Header
-import UIBook.UI.Helpers
-import UIBook.UI.Nav
-import UIBook.UI.Search
-import UIBook.UI.Wrapper
 import Url exposing (Url)
 import Url.Builder
 import Url.Parser exposing ((</>), map, oneOf, parse, s, string)
 
 
 {-| -}
-type alias UIBook state =
-    UIBookCustom state (Html (UIBookMsg state))
+type alias ElmBook state =
+    ElmBookCustom state (Html (ElmBookMsg state))
 
 
 {-| -}
-type alias UIBookCustom state html =
+type alias ElmBookCustom state html =
     Program () (Model state html) (Msg state)
 
 
 {-| -}
-type UIBookBuilder state html
-    = UIBookBuilder (UIBookConfig state html)
+type ElmBookBuilder state html
+    = ElmBookBuilder (ElmBookConfig state html)
 
 
-type alias UIBookConfig state html =
+type alias ElmBookConfig state html =
     { urlPreffix : String
     , logo : Maybe html
     , title : String
@@ -219,9 +220,9 @@ type alias UIBookConfig state html =
     }
 
 
-{-| Kickoff the creation of an UIBook application.
+{-| Kickoff the creation of an ElmBook application.
 -}
-book : String -> state -> UIBookBuilder state (Html (Msg state))
+book : String -> state -> ElmBookBuilder state (Html (Msg state))
 book title state =
     customBook
         { title = title
@@ -236,9 +237,9 @@ customBook :
     , state : state
     , toHtml : html -> Html (Msg state)
     }
-    -> UIBookBuilder state html
+    -> ElmBookBuilder state html
 customBook config =
-    UIBookBuilder
+    ElmBookBuilder
         { urlPreffix = "chapter"
         , logo = Nothing
         , title = config.title
@@ -256,39 +257,39 @@ customBook config =
 
 {-| Customize your book's background color. Any valid CSS `background` value can be used.
 -}
-withThemeBackground : String -> UIBookBuilder state html -> UIBookBuilder state html
-withThemeBackground themeBackground_ (UIBookBuilder config) =
-    UIBookBuilder
+withThemeBackground : String -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeBackground themeBackground_ (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | themeBackground = themeBackground_ }
 
 
 {-| Customize your book's background alt color. Any valid CSS `background` value can be used.
 -}
-withThemeBackgroundAlt : String -> UIBookBuilder state html -> UIBookBuilder state html
-withThemeBackgroundAlt themeBackgroundAlt_ (UIBookBuilder config) =
-    UIBookBuilder
+withThemeBackgroundAlt : String -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeBackgroundAlt themeBackgroundAlt_ (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | themeBackgroundAlt = themeBackgroundAlt_ }
 
 
 {-| Customize your book's accent color. Any valid CSS `color` value can be used.
 -}
-withThemeAccent : String -> UIBookBuilder state html -> UIBookBuilder state html
-withThemeAccent themeAccent_ (UIBookBuilder config) =
-    UIBookBuilder
+withThemeAccent : String -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeAccent themeAccent_ (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | themeAccent = themeAccent_ }
 
 
 {-| Customize your book's accent alt color. Any valid CSS `color` value can be used.
 -}
-withThemeAccentAlt : String -> UIBookBuilder state html -> UIBookBuilder state html
-withThemeAccentAlt themeAccentAlt_ (UIBookBuilder config) =
-    UIBookBuilder
+withThemeAccentAlt : String -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeAccentAlt themeAccentAlt_ (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | themeAccentAlt = themeAccentAlt_ }
 
 
 {-| [DEPRECATED] This has the same effect as `withThemeBackground`.
 -}
-withColor : String -> UIBookBuilder state html -> UIBookBuilder state html
+withColor : String -> ElmBookBuilder state html -> ElmBookBuilder state html
 withColor =
     withThemeBackground
 
@@ -297,7 +298,7 @@ withColor =
 
     chapter : UIChapter x
     chapter
-        |> withSection
+        |> withElement
             (p
                 [ style "background" themeBackground ]
                 [ text "Hello." ]
@@ -306,21 +307,21 @@ withColor =
 -}
 themeBackground : String
 themeBackground =
-    UIBook.UI.Helpers.themeBackground
+    ElmBook.UI.Helpers.themeBackground
 
 
 {-| Use your theme background alt color on other parts of your book.
 -}
 themeBackgroundAlt : String
 themeBackgroundAlt =
-    UIBook.UI.Helpers.themeBackgroundAlt
+    ElmBook.UI.Helpers.themeBackgroundAlt
 
 
 {-| Use your theme accent color on other parts of your book.
 
     chapter : UIChapter x
     chapter
-        |> withSection
+        |> withElement
             (p
                 [ style "color" themeAccent ]
                 [ text "Hello." ]
@@ -329,29 +330,29 @@ themeBackgroundAlt =
 -}
 themeAccent : String
 themeAccent =
-    UIBook.UI.Helpers.themeAccent
+    ElmBook.UI.Helpers.themeAccent
 
 
 {-| Use your theme accent alt color on other parts of your book.
 -}
 themeAccentAlt : String
 themeAccentAlt =
-    UIBook.UI.Helpers.themeAccentAlt
+    ElmBook.UI.Helpers.themeAccentAlt
 
 
 {-| Customize the header logo to match your brand.
 -}
-withLogo : html -> UIBookBuilder state html -> UIBookBuilder state html
-withLogo logo (UIBookBuilder config) =
-    UIBookBuilder
+withLogo : html -> ElmBookBuilder state html -> ElmBookBuilder state html
+withLogo logo (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | logo = Just logo }
 
 
 {-| Replace the default "UI Docs" subtitle with a custom one.
 -}
-withSubtitle : String -> UIBookBuilder state html -> UIBookBuilder state html
-withSubtitle subtitle (UIBookBuilder config) =
-    UIBookBuilder
+withSubtitle : String -> ElmBookBuilder state html -> ElmBookBuilder state html
+withSubtitle subtitle (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | subtitle = subtitle }
 
 
@@ -364,9 +365,9 @@ withSubtitle subtitle (UIBookBuilder config) =
 Note that your header must use the same type of html as your chapters. So if you're using `elm-ui`, then your header would need to be typed as `Element msg`.
 
 -}
-withHeader : html -> UIBookBuilder state html -> UIBookBuilder state html
-withHeader customHeader (UIBookBuilder config) =
-    UIBookBuilder
+withHeader : html -> ElmBookBuilder state html -> ElmBookBuilder state html
+withHeader customHeader (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | customHeader = Just customHeader }
 
 
@@ -376,7 +377,7 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
 
     import Css.Global exposing (global)
     import Tailwind.Utilities exposing (globalStyles)
-    import UIBook.ElmCSS exposing (book)
+    import ElmBook.ElmCSS exposing (book)
 
     book "MyApp"
         |> withGlobals [
@@ -384,9 +385,9 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
         ]
 
 -}
-withGlobals : List html -> UIBookBuilder state html -> UIBookBuilder state html
-withGlobals globals (UIBookBuilder config) =
-    UIBookBuilder
+withGlobals : List html -> ElmBookBuilder state html -> ElmBookBuilder state html
+withGlobals globals (ElmBookBuilder config) =
+    ElmBookBuilder
         { config | globals = Just globals }
 
 
@@ -395,7 +396,7 @@ withGlobals globals (UIBookBuilder config) =
 **Should be used as the final step on your setup.**
 
 -}
-withChapters : List (UIChapterCustom state html) -> UIBookBuilder state html -> UIBookCustom state html
+withChapters : List (UIChapterCustom state html) -> ElmBookBuilder state html -> ElmBookCustom state html
 withChapters chapters =
     withChapterGroups [ ( "", chapters ) ]
 
@@ -420,15 +421,15 @@ withChapters chapters =
 **Should be used as the final step on your setup.**
 
 -}
-withChapterGroups : List ( String, List (UIChapterCustom state html) ) -> UIBookBuilder state html -> UIBookCustom state html
-withChapterGroups chapterGroups_ (UIBookBuilder config) =
+withChapterGroups : List ( String, List (UIChapterCustom state html) ) -> ElmBookBuilder state html -> ElmBookCustom state html
+withChapterGroups chapterGroups_ (ElmBookBuilder config) =
     let
         chapterGroups =
             chapterGroups_
                 |> List.map
                     (\( group, chapters ) ->
                         ( group
-                        , List.map (addGroupToSlug group) chapters
+                        , List.map (chapterGroupSlug group) chapters
                         )
                     )
     in
@@ -456,7 +457,7 @@ withChapterGroups chapterGroups_ (UIBookBuilder config) =
 
 {-| -}
 type alias UIChapter state =
-    UIChapterCustom state (Html (UIBookMsg state))
+    UIChapterCustom state (Html (ElmBookMsg state))
 
 
 {-| -}
@@ -471,37 +472,35 @@ type UIChapterBuilder state html
 type alias UIChapterConfig state html =
     { title : String
     , slug : String
-    , sections : List (UIChapterSection state html)
+    , elements : List (UIChapterelement state html)
     , layout : ChapterLayout
-    , description : Maybe String
     , backgroundColor : Maybe String
+    , body : String
     }
 
 
-type alias UIChapterSection state html =
+type alias UIChapterelement state html =
     { label : String
     , view : state -> html
     }
 
 
-{-| Use this to make your life easier when mixing stateful and static sections.
+{-| Use this to make your life easier when mixing stateful and static elements.
 
     chapter "ComplexWidget"
-        |> withStatefulSections
+        |> withStatefulElements
             [ ( "Interactive", (\state -> ... ) )
-            , toStateful ( "State1", widgetInState1 )
-            , toStateful ( "State2", widgetInState1 )
             ]
 
 -}
-toStateful : ( String, html ) -> UIChapterSection state html
+toStateful : ( String, html ) -> UIChapterelement state html
 toStateful ( label, html ) =
     { label = label
     , view = \_ -> html
     }
 
 
-fromTuple : ( String, state -> html ) -> UIChapterSection state html
+fromTuple : ( String, state -> html ) -> UIChapterelement state html
 fromTuple ( label, view_ ) =
     { label = label, view = view_ }
 
@@ -513,10 +512,10 @@ chapter title =
     UIChapterBuilder
         { title = title
         , slug = toSlug title
-        , sections = []
+        , elements = []
         , layout = SingleColumn
-        , description = Nothing
         , backgroundColor = Nothing
+        , body = ""
         }
 
 
@@ -535,8 +534,8 @@ chapterSlug (UIChapter { slug }) =
     slug
 
 
-addGroupToSlug : String -> UIChapterCustom state html -> UIChapterCustom state html
-addGroupToSlug group (UIChapter chapter_) =
+chapterGroupSlug : String -> UIChapterCustom state html -> UIChapterCustom state html
+chapterGroupSlug group (UIChapter chapter_) =
     if group == "" then
         UIChapter chapter_
 
@@ -552,13 +551,13 @@ withTwoColumns (UIChapterBuilder config) =
         { config | layout = TwoColumns }
 
 
-{-| Used for customizing the background color of a chapter's sections.
+{-| Used for customizing the background color of a chapter's elements.
 
     buttonsChapter : UIChapter x
     buttonsChapter =
         chapter "Buttons"
             |> withBackgroundColor "#F0F"
-            |> withSections
+            |> withElements
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
@@ -570,62 +569,112 @@ withBackgroundColor backgroundColor_ (UIChapterBuilder config) =
         { config | backgroundColor = Just backgroundColor_ }
 
 
-{-| Used for adding a markdown description to your chapter.
--}
-withDescription : String -> UIChapterBuilder state html -> UIChapterBuilder state html
-withDescription description (UIChapterBuilder config) =
-    UIChapterBuilder
-        { config | description = Just description }
-
-
-{-| Used for chapters with a single section.
+{-| Used for chapters with a single element.
 
     inputChapter : UIChapter x
     inputChapter =
         chapter "Input"
-            |> withSection (input [] [])
+            |> withElement (input [] [])
 
 -}
-withSection : html -> UIChapterBuilder state html -> UIChapterCustom state html
-withSection html (UIChapterBuilder builder) =
-    UIChapter
-        { builder | sections = [ toStateful ( "", html ) ] }
+withElement : html -> UIChapterBuilder state html -> UIChapterBuilder state html
+withElement html (UIChapterBuilder builder) =
+    UIChapterBuilder
+        { builder | elements = [ toStateful ( "", html ) ] }
 
 
-{-| Used for chapters with multiple sections.
+{-| Used for chapters with multiple elements.
 
     buttonsChapter : UIChapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withSections
+            |> withElements
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
 
 -}
-withSections : List ( String, html ) -> UIChapterBuilder state html -> UIChapterCustom state html
-withSections sections (UIChapterBuilder builder) =
-    UIChapter
-        { builder | sections = List.map toStateful sections }
+withElements : List ( String, html ) -> UIChapterBuilder state html -> UIChapterBuilder state html
+withElements elements (UIChapterBuilder builder) =
+    UIChapterBuilder
+        { builder | elements = List.map toStateful elements }
 
 
-{-| Used for chapters with a single stateful section.
+{-| Used for chapters with a single stateful element.
 -}
-withStatefulSection : (state -> html) -> UIChapterBuilder state html -> UIChapterCustom state html
-withStatefulSection view_ (UIChapterBuilder builder) =
-    UIChapter
-        { builder | sections = [ { label = "", view = view_ } ] }
+withStatefulElement : (state -> html) -> UIChapterBuilder state html -> UIChapterBuilder state html
+withStatefulElement view_ (UIChapterBuilder builder) =
+    UIChapterBuilder
+        { builder | elements = [ { label = "", view = view_ } ] }
 
 
-{-| Used for chapters with multiple stateful sections.
+{-| Used for chapters with multiple stateful elements.
+-}
+withStatefulElements : List ( String, state -> html ) -> UIChapterBuilder state html -> UIChapterBuilder state html
+withStatefulElements elements (UIChapterBuilder builder) =
+    UIChapterBuilder
+        { builder | elements = List.map fromTuple elements }
 
-This is often used for displaying one interactive section and then multiple sections showcasing static states. Check `toStateful` if you are instered in this setup.
+
+{-| Used when you just want to render the list of elements with no additional information.
+
+    buttonsChapter : UIChapter x
+    buttonsChapter =
+        chapter "Buttons"
+            |> withElements
+                [ ( "Default", button [] [] )
+                , ( "Disabled", button [ disabled True ] [] )
+                ]
+            |> renderElements
 
 -}
-withStatefulSections : List ( String, state -> html ) -> UIChapterBuilder state html -> UIChapterCustom state html
-withStatefulSections sections (UIChapterBuilder builder) =
+renderElements : UIChapterBuilder state html -> UIChapterCustom state html
+renderElements (UIChapterBuilder builder) =
     UIChapter
-        { builder | sections = List.map fromTuple sections }
+        { builder | body = "<all-elements />" }
+
+
+{-| Same as `renderElements` but you must also provide a background color for all of the elements cards.
+
+    |> renderElementsCustom [
+        elementsBackground "...",
+        elementsFullWidth
+    ]
+
+-}
+renderElementsWithBackground : String -> UIChapterBuilder state html -> UIChapterCustom state html
+renderElementsWithBackground background (UIChapterBuilder builder) =
+    UIChapter
+        { builder | body = "<all-elements with-background=\"" ++ background ++ "\" />" }
+
+
+{-| Used when you want to create a rich chapter with markdown and embedded elements.
+
+    buttonsChapter : UIChapter x
+    buttonsChapter =
+        chapter "Buttons"
+            |> withElements
+                [ ( "Default", button [] [] )
+                , ( "Disabled", button [ disabled True ] [] )
+                ]
+            |> render """
+        # Buttons
+
+        A button can be both active
+
+        <element key="Default" />
+
+        or inactive:
+
+        <element key="Disabled" />
+
+    """
+
+-}
+render : String -> UIChapterBuilder state html -> UIChapterCustom state html
+render body (UIChapterBuilder builder) =
+    UIChapter
+        { builder | body = body }
 
 
 
@@ -658,7 +707,7 @@ searchChapters search chapters =
 
 type alias Model state html =
     { navKey : Nav.Key
-    , config : UIBookConfig state html
+    , config : ElmBookConfig state html
     , chapterGroups : List ( String, List Int )
     , chapters : Array (UIChapterCustom state html)
     , chaptersSearched : Array (UIChapterCustom state html)
@@ -676,7 +725,7 @@ type alias Model state html =
 
 init :
     { chapterGroups : List ( String, List (UIChapterCustom state html) )
-    , config : UIBookConfig state html
+    , config : ElmBookConfig state html
     }
     -> ()
     -> Url
@@ -764,12 +813,12 @@ parseActiveChapterFromUrl preffix docsList url =
 
 
 {-| -}
-type alias UIBookMsg state =
+type alias ElmBookMsg state =
     Msg state
 
 
 type alias Msg state =
-    UIBook.Msg.Msg state
+    ElmBook.Msg.Msg state
 
 
 update : Msg state -> Model state html -> ( Model state html, Cmd (Msg state) )
@@ -898,7 +947,7 @@ update msg model =
 
         KeyK ->
             if model.isMetaPressed then
-                ( model, Task.attempt (\_ -> DoNothing) (Browser.Dom.focus "ui-book-search") )
+                ( model, Task.attempt (\_ -> DoNothing) (Browser.Dom.focus "elm-book-search") )
 
             else
                 ( model, Cmd.none )
@@ -1016,7 +1065,7 @@ logActionMap action toString value =
                 { state | counter = state.counter + 1 }
         in
         chapter "Counter"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     button
                         [ onClick (updateState update) ]
@@ -1038,7 +1087,7 @@ updateState =
                 { state | input = value }
         in
         chapter "Input"
-            |> withStatefulSection
+            |> withStatefulElement
                 (\state ->
                     input
                         [ value state.input
@@ -1071,7 +1120,8 @@ view model =
             Nothing ->
                 mainTitle
     , body =
-        [ UIBook.UI.Wrapper.view
+        [ ElmBook.UI.Styles.view
+        , ElmBook.UI.Wrapper.view
             { themeBackground = model.config.themeBackground
             , themeBackgroundAlt = model.config.themeBackgroundAlt
             , themeAccent = model.config.themeAccent
@@ -1080,19 +1130,15 @@ view model =
             , globals =
                 model.config.globals
                     |> Maybe.withDefault []
-                    |> List.map
-                        (model.config.toHtml
-                            >> fromUnstyled
-                        )
+                    |> List.map model.config.toHtml
             , header =
-                UIBook.UI.Header.view
+                ElmBook.UI.Header.view
                     { href = "/"
                     , logo =
                         model.config.logo
                             |> Maybe.map
                                 (model.config.toHtml
                                     >> Html.map (\_ -> DoNothing)
-                                    >> fromUnstyled
                                 )
                     , title = model.config.title
                     , subtitle = model.config.subtitle
@@ -1101,13 +1147,12 @@ view model =
                             |> Maybe.map
                                 (model.config.toHtml
                                     >> Html.map (\_ -> DoNothing)
-                                    >> fromUnstyled
                                 )
                     , isMenuOpen = model.isMenuOpen
                     , onClickMenuButton = ToggleMenu
                     }
             , menuHeader =
-                UIBook.UI.Search.view
+                ElmBook.UI.Search.view
                     { value = model.search
                     , onInput = Search
                     , onFocus = SearchFocus
@@ -1119,7 +1164,7 @@ view model =
                         Array.toList model.chaptersSearched
                             |> List.map chapterSlug
                 in
-                UIBook.UI.Nav.view
+                ElmBook.UI.Nav.view
                     { preffix = model.config.urlPreffix
                     , active = Maybe.map chapterSlug model.chapterActive
                     , preSelected =
@@ -1140,25 +1185,24 @@ view model =
                                     )
                                 )
                     }
-            , menuFooter = UIBook.UI.Footer.view
+            , menuFooter = ElmBook.UI.Footer.view
             , mainHeader =
                 model.chapterActive
-                    |> Maybe.map (UIBook.UI.ChapterHeader.view << chapterTitle)
+                    |> Maybe.map (ElmBook.UI.ChapterHeader.view << chapterTitle)
             , main =
                 model.chapterActive
                     |> Maybe.map
                         (\(UIChapter activeChapter_) ->
-                            UIBook.UI.Chapter.view
+                            ElmBook.UI.Chapter.view
                                 { title = activeChapter_.title
                                 , layout = activeChapter_.layout
-                                , description = activeChapter_.description
-                                , backgroundColor = activeChapter_.backgroundColor
-                                , sections =
-                                    activeChapter_.sections
+                                , body = activeChapter_.body
+                                , elements =
+                                    activeChapter_.elements
                                         |> List.map
-                                            (\section ->
-                                                ( section.label
-                                                , section.view model.config.state
+                                            (\element ->
+                                                ( element.label
+                                                , element.view model.config.state
                                                     |> model.config.toHtml
                                                 )
                                             )
@@ -1169,23 +1213,22 @@ view model =
                 List.head model.actionLog
                     |> Maybe.map
                         (\lastAction ->
-                            UIBook.UI.ActionLog.preview
+                            ElmBook.UI.ActionLog.preview
                                 { lastActionIndex = List.length model.actionLog
                                 , lastAction = lastAction
                                 , onClick = ActionLogShow
                                 }
                         )
-                    |> Maybe.withDefault UIBook.UI.ActionLog.previewEmpty
+                    |> Maybe.withDefault ElmBook.UI.ActionLog.previewEmpty
             , modal =
                 if model.actionLogModal then
                     Just <|
-                        UIBook.UI.ActionLog.list model.actionLog
+                        ElmBook.UI.ActionLog.list model.actionLog
 
                 else
                     Nothing
             , onCloseModal = ActionLogHide
             }
-            |> toUnstyled
         ]
     }
 
