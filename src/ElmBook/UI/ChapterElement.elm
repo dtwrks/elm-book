@@ -12,9 +12,7 @@ import Html.Attributes exposing (..)
 styles : Html msg
 styles =
     css_ """
-.elm-book__chapter-element {
-    padding-bottom: 24px;
-}
+.elm-book__chapter-element {}
 
 .elm-book__chapter-element__title {
     padding-bottom: 12px;

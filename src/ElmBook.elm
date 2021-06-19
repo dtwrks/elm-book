@@ -580,7 +580,7 @@ withBackgroundColor backgroundColor_ (UIChapterBuilder config) =
 withElement : html -> UIChapterBuilder state html -> UIChapterBuilder state html
 withElement html (UIChapterBuilder builder) =
     UIChapterBuilder
-        { builder | elements = [ toStateful ( "", html ) ] }
+        { builder | elements = toStateful ( "", html ) :: builder.elements }
 
 
 {-| Used for chapters with multiple elements.
@@ -597,7 +597,7 @@ withElement html (UIChapterBuilder builder) =
 withElements : List ( String, html ) -> UIChapterBuilder state html -> UIChapterBuilder state html
 withElements elements (UIChapterBuilder builder) =
     UIChapterBuilder
-        { builder | elements = List.map toStateful elements }
+        { builder | elements = List.map toStateful elements ++ builder.elements }
 
 
 {-| Used for chapters with a single stateful element.
@@ -605,7 +605,7 @@ withElements elements (UIChapterBuilder builder) =
 withStatefulElement : (state -> html) -> UIChapterBuilder state html -> UIChapterBuilder state html
 withStatefulElement view_ (UIChapterBuilder builder) =
     UIChapterBuilder
-        { builder | elements = [ { label = "", view = view_ } ] }
+        { builder | elements = { label = "", view = view_ } :: builder.elements }
 
 
 {-| Used for chapters with multiple stateful elements.
@@ -613,7 +613,7 @@ withStatefulElement view_ (UIChapterBuilder builder) =
 withStatefulElements : List ( String, state -> html ) -> UIChapterBuilder state html -> UIChapterBuilder state html
 withStatefulElements elements (UIChapterBuilder builder) =
     UIChapterBuilder
-        { builder | elements = List.map fromTuple elements }
+        { builder | elements = List.map fromTuple elements ++ builder.elements }
 
 
 {-| Used when you just want to render the list of elements with no additional information.

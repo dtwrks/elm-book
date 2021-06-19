@@ -302,12 +302,15 @@ styles =
     margin: 0;
     padding: 0;
 }
-.elm-book-md__element-list__item {}
+.elm-book-md__element-list__item + .elm-book-md__element-list__item {
+    padding-top: 36px;
+}
 
 .elm-book-md {
     max-width: 720px;
     margin: 0 auto;
     padding-bottom: 36px;
+    color: rgb(41,41,41);
 }
 .elm-book-md * {
     margin: 0;
@@ -370,8 +373,8 @@ styles =
 
 .elm-book-md p {
     line-height: 1.8em;
-    color: rgb(41, 41, 41);
-    font-size: 21px;
+    color: rgb(80, 80, 90);
+    font-size: 20px;
 }
 
 .elm-book-md a {
@@ -438,7 +441,7 @@ styles =
 
 .elm-book-md__code,
 .elm-book-md__code code {
-    font-size: 21px;
+    font-size: 18px;
     line-height: 22px;
     padding: 36px 24px;
     background-color: #31353b;

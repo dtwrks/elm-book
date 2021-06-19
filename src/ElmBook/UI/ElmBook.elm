@@ -15,9 +15,19 @@ import ElmBook.UI.Docs.Search
 import ElmBook.UI.Docs.Wrapper
 
 
-main : ElmBook ()
+type alias Model =
+    { themingModel : ElmBook.UI.Docs.Guides.Theming.Model }
+
+
+initialModel : Model
+initialModel =
+    { themingModel = ElmBook.UI.Docs.Guides.Theming.init
+    }
+
+
+main : ElmBook Model
 main =
-    book "ElmBook's" ()
+    book "ElmBook's" initialModel
         |> withSubtitle "Guides & Components"
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )
