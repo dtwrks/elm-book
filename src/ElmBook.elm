@@ -5,7 +5,7 @@ module ElmBook exposing
     , UIChapterCustom, ElmBookCustom, ElmBookBuilder, ElmBookMsg, customBook
     , logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionMap
     , withStatefulElement, withStatefulElements, updateState, updateState1
-    , render, renderElements, renderElementsWithBackground
+    , render, renderElements, renderElementsWithBackground, renderWithElements
     )
 
 {-| A book that tells the story of the UI elements of your Elm application.
@@ -662,11 +662,11 @@ renderElementsWithBackground background (UIChapterBuilder builder) =
 
         A button can be both active
 
-        <element key="Default" />
+        <element with-label="Default" />
 
         or inactive:
 
-        <element key="Disabled" />
+        <element with-label="Disabled" />
 
     """
 
@@ -675,6 +675,14 @@ render : String -> UIChapterBuilder state html -> UIChapterCustom state html
 render body (UIChapterBuilder builder) =
     UIChapter
         { builder | body = body }
+
+
+{-| Used on chapters where all of the text content sits on top and all elements at the bottom.
+-}
+renderWithElements : String -> UIChapterBuilder state html -> UIChapterCustom state html
+renderWithElements body (UIChapterBuilder builder) =
+    UIChapter
+        { builder | body = body ++ "\n<all-elements />" }
 
 
 

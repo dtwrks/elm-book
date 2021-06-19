@@ -45,7 +45,7 @@ view chapterTitle backgroundColor_ ( label, html ) =
             text ""
 
           else
-            p [ class "elm-book elm-book__chapter-element__title" ] [ text label ]
+            p [ class "elm-book elm-book__chapter-element__title elm-book-sans" ] [ text label ]
         , div
             [ class "elm-book__chapter-element__background elm-book-shadows-light"
             , style "background"

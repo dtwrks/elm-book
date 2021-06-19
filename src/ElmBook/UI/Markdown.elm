@@ -6,7 +6,7 @@ module ElmBook.UI.Markdown exposing
 import Dict
 import ElmBook.Msg exposing (Msg)
 import ElmBook.UI.ChapterElement
-import ElmBook.UI.Helpers exposing (css_)
+import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Markdown.Block as Block
@@ -29,46 +29,9 @@ view chapterTitle chapterElements =
         >> (\children ->
                 article
                     []
-                    [ styles
-                    , SyntaxHighlight.useTheme SyntaxHighlight.gitHub
-                    , div [ class "elm-book-md__wrapper" ] children
+                    [ div [] children
                     ]
            )
-
-
-
--- defaultPaddings : Style
--- defaultPaddings =
---     Css.batch
---         [ margin zero
---         , padding zero
---         , paddingBottom (px 24)
---         ]
--- defaultWidth : Style
--- defaultWidth =
---     Css.batch
---         [ Css.width (pct 100)
---         , maxWidth (px 720)
---         , margin2 zero auto
---         ]
--- fullWidth : Style
--- fullWidth =
---     Css.width (pct 100)
--- defaultFontStyles : Style
--- defaultFontStyles =
---     Css.batch
---         [ fontDefault
---         , fontSerif
---         , fontSize (px 16)
---         , lineHeight (Css.em 1.4)
---         ]
--- defaultStyles : Style
--- defaultStyles =
---     Css.batch
---         [ defaultFontStyles
---         , defaultWidth
---         , defaultPaddings
---         ]
 
 
 sectionRenderer : String -> List ( String, Html (Msg state) ) -> Markdown.Renderer.Renderer (Html (Msg state))
@@ -77,7 +40,7 @@ sectionRenderer chapterTitle chapterElements =
         | html =
             Markdown.Html.oneOf
                 [ Markdown.Html.tag "element"
-                    (\maybeLabel maybeBackground _ ->
+                    (\maybeLabel maybeBackground maybeFullWidth _ ->
                         let
                             section_ =
                                 case maybeLabel of
@@ -95,27 +58,64 @@ sectionRenderer chapterTitle chapterElements =
                                     chapterTitle
                                     maybeBackground
                                 )
-                            |> Maybe.withDefault (div [] [ text "Example not found." ])
+                            |> Maybe.map
+                                (\c ->
+                                    div
+                                        [ classList
+                                            [ ( "elm-book__element-wrapper", True )
+                                            , ( "full"
+                                              , case maybeFullWidth of
+                                                    Just _ ->
+                                                        True
+
+                                                    Nothing ->
+                                                        False
+                                              )
+                                            ]
+                                        ]
+                                        [ c ]
+                                )
+                            |> Maybe.withDefault
+                                (div
+                                    [ class "elm-book__element-wrapper elm-book-sans elm-book__element-empty" ]
+                                    [ text <| "\"" ++ Maybe.withDefault "" maybeLabel ++ "\" example not found." ]
+                                )
                     )
                     |> Markdown.Html.withOptionalAttribute "with-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
+                    |> Markdown.Html.withOptionalAttribute "with-full-width"
                 , Markdown.Html.tag "all-elements"
-                    (\maybeBackground _ ->
-                        ul [ class "elm-book" ]
-                            (List.map
-                                (\section ->
-                                    li
-                                        []
-                                        [ ElmBook.UI.ChapterElement.view
-                                            chapterTitle
-                                            maybeBackground
-                                            section
-                                        ]
+                    (\maybeBackground maybeFullWidth _ ->
+                        div
+                            [ classList
+                                [ ( "elm-book__element-wrapper", True )
+                                , ( "full"
+                                  , case maybeFullWidth of
+                                        Just _ ->
+                                            True
+
+                                        Nothing ->
+                                            False
+                                  )
+                                ]
+                            ]
+                            [ ul [ class "elm-book-md__element-list" ]
+                                (List.map
+                                    (\section ->
+                                        li
+                                            [ class "elm-book elm-book-md__element-list__item" ]
+                                            [ ElmBook.UI.ChapterElement.view
+                                                chapterTitle
+                                                maybeBackground
+                                                section
+                                            ]
+                                    )
+                                    chapterElements
                                 )
-                                chapterElements
-                            )
+                            ]
                     )
                     |> Markdown.Html.withOptionalAttribute "with-background"
+                    |> Markdown.Html.withOptionalAttribute "with-full-width"
                 ]
     }
 
@@ -129,7 +129,7 @@ defaultRenderer =
                 tag =
                     case level of
                         Block.H1 ->
-                            h1 [ class "elm-book-sans" ]
+                            h1 [ class "elm-book-serif" ]
 
                         Block.H2 ->
                             h2 [ class "elm-book-serif" ]
@@ -138,7 +138,7 @@ defaultRenderer =
                             h3 [ class "elm-book-serif" ]
 
                         Block.H4 ->
-                            h4 [ class "elm-book-serif" ]
+                            h4 [ class "elm-book-sans" ]
 
                         Block.H5 ->
                             h5 [ class "elm-book-sans" ]
@@ -149,11 +149,11 @@ defaultRenderer =
             div [ class "elm-book-md" ] [ tag children ]
     , paragraph =
         \children ->
-            div [ class "elm-book-md" ] [ p [] children ]
+            div [ class "elm-book-md" ] [ p [ class "elm-book-serif" ] children ]
     , hardLineBreak = div [ class "elm-book-md" ] [ br [] [] ]
     , blockQuote =
         \children ->
-            div [ class "elm-book-md" ]
+            div [ class "elm-book-md elm-book-serif" ]
                 [ blockquote [] children
                 ]
     , strong = strong []
@@ -161,7 +161,7 @@ defaultRenderer =
     , strikethrough = span []
     , codeSpan =
         \children ->
-            div [ class "elm-book-md" ] [ code [] [ text children ] ]
+            span [ class "elm-book-md" ] [ code [ class "elm-book-monospace" ] [ text children ] ]
     , link =
         \link children ->
             a
@@ -238,10 +238,10 @@ defaultRenderer =
             in
             hCode
                 |> Result.map (SyntaxHighlight.toBlockHtml Nothing)
-                |> Result.map (\content -> div [ class "elm-book-md" ] [ div [ class "elm-book-md__code elm-book-mono elm-book-shadows-light" ] [ content ] ])
+                |> Result.map (\content -> div [ class "elm-book-md" ] [ div [ class "elm-book-md__code elm-book-monospace elm-book-shadows-light" ] [ content ] ])
                 |> Result.withDefault
                     (div [ class "elm-book-md" ]
-                        [ Html.pre [ class "elm-book-md__code-default elm-book-mono elm-book-shadows-light" ] [ text body ]
+                        [ Html.pre [ class "elm-book-md__code-default elm-book-monospace elm-book-shadows-light" ] [ text body ]
                         ]
                     )
     , thematicBreak =
@@ -280,44 +280,119 @@ defaultRenderer =
 
 styles : Html msg
 styles =
-    css_ """
+    css_ <| """
+.elm-book__element-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-bottom: 36px;
+}
+.elm-book__element-wrapper.full {
+    max-width: 100%;
+}
+.elm-book__element-empty {
+    padding: 20px;
+    background-color: #eaeaea;
+    border-radius: 4px;
+    border: 2px solid #dadada;
+    color: #666;
+}
+
+.elm-book-md__element-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.elm-book-md__element-list__item {}
+
+.elm-book-md {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-bottom: 36px;
+}
+.elm-book-md * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+""" ++ mediaLargeScreen ++ """ {
+    .elm-book__element-wrapper {
+        max-width: 960px;
+    }
+    .elm-book__element-wrapper.full {
+        max-width: 100%;
+    }
+    .elm-book-md {
+        max-width: 960px;
+    }
+}
+
 .elm-book-md h1 {
-    font-size: 24px;
+    font-size: 46px;
 }
 .elm-book-md h2 {
-    font-size: 22px;
+    font-size: 32px;
 }
 .elm-book-md h3 {
-    font-size: 18px;
+    font-size: 24px;
 }
 .elm-book-md h4 {
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: normal;
+    text-transform: uppercase;
 }
 .elm-book-md h5 {
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: normal;
     text-transform: uppercase;
 }
 .elm-book-md h6 {
-    font-size: 13px;
+    font-size: 16px;
+    font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+.elm-book-md h1,
+.elm-book-md h2,
+.elm-book-md h3 {
+    font-weight: bold;
+}
+
+.elm-book-md h1,
+.elm-book-md h2,
+.elm-book-md h3,
+.elm-book-md h4,
+.elm-book-md h5,
+.elm-book-md h6 {
+    padding-top: 24px;
+}
+
 .elm-book-md p {
     line-height: 1.8em;
-    color: #666;
+    color: rgb(41, 41, 41);
+    font-size: 21px;
 }
+
+.elm-book-md a {
+    color: #000;
+    text-decoration: underline;
+}
+.elm-book-md a:hover {
+    opacity: 0.8;   
+}
+
 .elm-book-md blockquote {
-    font-style: italic;
-    font-size: 24px;
-    padding-left: 24px;
+    font-size: 18px;
+    margin-left: 0;
+    padding: 8px 0 8px 24px;
     border-left: 4px solid #f0f0f0;
 }
 .elm-book-md code {
     display: inline-block;
-    border-radius: 2px;
-    padding: 0 8px;
-    color: #dadada;
-    backgroundColor: #282c34;
+    border-radius: 4px;
+    padding: 0 12px;
+    background-color: #eaeaea;
 }
 .elm-book-md img {
     max-width: 100%;
@@ -328,16 +403,7 @@ styles =
 .elm-book-md ol {
     padding-left: 32px;
 }
-.elm-book-md__code {
-    margin-bottom: 24px;
-    font-size: 16px;
-    padding: 16px 24px;
-    background-color: #fff;
-    border-radius: 6px;
-}
-.elm-book-md__code-default {
 
-}
 .elm-book-md hr {
     border: none;
     height: 2px;
@@ -345,24 +411,100 @@ styles =
 }
 
 .elm-book-md table {
+    border-collapse: collapse;
     overflow-x: auto;
     border: 2px solid #f0f0f0;
 }
 .elm-book-md thead {
-    border: 2px solid #f0f0f0;
+    border: none;
 }
 .elm-book-md tbody {
-    border: 2px solid #f0f0f0;
+    border: none;
 }
 .elm-book-md tr {
-    border: 2px solid #f0f0f0;
+    border: none;
+    border-top: 2px solid #f0f0f0;
 }
-.elm-book-md th {
-    border: 2px solid #f0f0f0;
-    padding: 8px;
-}
+.elm-book-md th,
 .elm-book-md td {
-    border: 2px solid #f0f0f0;
-    padding: 8px;
+    border: none;
+    border-right: 2px solid #f0f0f0;
+    padding: 12px;
+}
+.elm-book-md th:last-child,
+.elm-book-md td:last-child {
+    border-right: none;
+}
+
+.elm-book-md__code,
+.elm-book-md__code code {
+    font-size: 21px;
+    line-height: 22px;
+    padding: 36px 24px;
+    background-color: #31353b;
+    border-radius: 6px;
+}
+.elm-book-md__code-default {
+
+}
+
+.elm-book-md pre.elmsh {
+    padding: 10px;
+    margin: 0;
+    text-align: left;
+    overflow: auto;
+}
+
+.elm-book-md code.elmsh {
+    padding: 0;
+}
+
+.elm-book-md .elmsh {
+    color: #f8f8f2;
+}
+.elm-book-md .elmsh-hl {
+    background: #343434;
+}
+.elm-book-md .elmsh-add {
+    background: #003800;
+}
+.elm-book-md .elmsh-del {
+    background: #380000;
+}
+.elm-book-md .elmsh-comm {
+    color: #75715e;
+}
+.elm-book-md .elmsh1 {
+    color: #46f0ff;
+}
+.elm-book-md .elmsh2 {
+    color: #46ff9a;
+}
+.elm-book-md .elmsh3 {
+    color: #f92672;
+}
+.elm-book-md .elmsh4 {
+    color: #46f0ff;
+}
+.elm-book-md .elmsh5 {
+    color: #46f0ff;
+}
+.elm-book-md .elmsh6 {
+    color: #46f0ff;
+}
+.elm-book-md .elmsh7 {
+    color: #46f0ff;
+}
+.elm-book-md .elmsh-elm-ts, .elm-book-md .elmsh-js-dk, .elm-book-md .elmsh-css-p {
+    font-style: italic;
+    color: #46f0ff;
+}
+.elm-book-md .elmsh-js-ce {
+    font-style: italic;
+    color: #46f0ff;
+}
+.elm-book-md .elmsh-css-ar-i {
+    font-weight: bold;
+    color: #46f0ff;
 }
 """

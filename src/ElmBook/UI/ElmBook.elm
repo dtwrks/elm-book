@@ -17,8 +17,8 @@ import ElmBook.UI.Docs.Wrapper
 
 main : ElmBook ()
 main =
-    book "ElmBook" ()
-        |> withSubtitle "Documentation"
+    book "ElmBook's" ()
+        |> withSubtitle "Guides & Components"
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )
             , ( "Guides"

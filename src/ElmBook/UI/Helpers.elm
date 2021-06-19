@@ -2,6 +2,7 @@ module ElmBook.UI.Helpers exposing
     ( baseStyles
     , chapterSectionBackground
     , css_
+    , mediaLargeScreen
     , mediaMobile
     , setTheme
     , themeAccent
@@ -89,6 +90,11 @@ chapterSectionBackground =
 mediaMobile : String
 mediaMobile =
     "@media screen and (max-width: 768px)"
+
+
+mediaLargeScreen : String
+mediaLargeScreen =
+    "@media screen and (min-width: 1720px)"
 
 
 

@@ -47,9 +47,81 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http:/
 
 Lorem ipsum dolor sit amet, `consectetur adipiscing elit`, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-    view : String -> Html msg
-    view content =
-        ElmBook.UI.Markdown.view content
+```elm
+-- Elm
+
+view : String -> Html msg
+view content =
+    ElmBook.UI.Markdown.view content
+        |> withOther "stuff"
+        |> withAnd [ "x" [] ]
+```
+
+```html
+<!-- HTML -->
+
+<body>
+    <h1>Title</h1>
+</body>
+```
+
+```css
+/* CSS */
+
+body {
+    margin: 0;
+    padding: 0;
+}
+```
+
+
+```js
+// Javascript
+
+import { Elm } from "..";
+
+const app = Elm.Main.init({
+    node: document.getElementById('myapp')
+});
+```
+
+```js
+// Typescript
+
+interface User {
+  name: string;
+  id: number;
+}
+
+class UserAccount {
+  name: string;
+  id: number;
+
+  constructor(name: string, id: number) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
+const user: User = new UserAccount("Murphy", 1);
+```
+
+```rust
+// Rust (Unknown)
+
+fn used_function() {}
+
+// `#[allow(dead_code)]` is an attribute that disables the `dead_code` lint
+#[allow(dead_code)]
+fn unused_function() {}
+
+fn noisy_unused_function() {}
+// FIXME ^ Add an attribute to suppress the warning
+
+fn main() {
+    used_function();
+}
+```
 
 ---
 

@@ -72,7 +72,7 @@ view props =
                       case props.mainHeader of
                         Just mainHeader ->
                             div
-                                [ class "elm-book--wrapper--main--header" ]
+                                [ class "elm-book--wrapper--main--header elm-book-sans" ]
                                 [ mainHeader ]
 
                         Nothing ->
@@ -115,7 +115,7 @@ view props =
 
 sidebarSize : String
 sidebarSize =
-    "280px"
+    "300px"
 
 
 modalZ : String

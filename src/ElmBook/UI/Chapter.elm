@@ -28,7 +28,7 @@ styles : Html msg
 styles =
     css_ """
 .elm-book-chapter {
-    padding: 22px 20px 0;
+    padding: 40px;
     width: 100%;
 }
 """

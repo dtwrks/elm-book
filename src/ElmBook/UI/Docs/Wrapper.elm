@@ -1,6 +1,6 @@
 module ElmBook.UI.Docs.Wrapper exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, renderElements, withElements)
+import ElmBook exposing (UIChapter, chapter, renderWithElements, withElements)
 import ElmBook.UI.Wrapper exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -35,14 +35,20 @@ docs =
             [ ( "Default"
               , wrapper (view props)
               )
-            , ( "Opened Menu (Mobile)"
+            , ( "Opened Menu (Visible on Mobile)"
               , wrapper (view { props | isMenuOpen = True })
               )
             , ( "With Modal"
               , wrapper (view { props | modal = Just mockModalContent })
               )
             ]
-        |> renderElements
+        |> renderWithElements """
+# Wrapper
+
+Since ElmBook is basically a "one layout" app –\u{00A0}it's easier to maintain all it's skeleton in a single place. This is all inside the `Wrapper` module. Take a look at the possible states below.
+        
+<all-elements />
+"""
 
 
 placeholder : Bool -> Html msg
