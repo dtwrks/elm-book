@@ -19,7 +19,7 @@ ElmBook tries to help them by making it easy to create rich documents that showc
 
 ## It all starts with a chapter
 
-They can be as simple as a markdown block or as rich as a set of UI elements that interact with each other. Take a look at the ["Creating Chapters"](/chapter/guides--creating-chapters) guide for more details.
+They can be as simple as a markdown block or as rich as a set of interactive UI elements that talk to each other. Take a look at the ["Creating Chapters"](/chapter/guides--creating-chapters) guide for more details.
 
 ```elm
 module FirstChapter exposing (chapter)
@@ -28,22 +28,30 @@ module FirstChapter exposing (chapter)
 import ElmBook
 
 
+chapter : ElmBook.Chapter x
+chapter =
+    ElmBook.chapter "The First Chapter"
+        |> withComponent component
+        |> render content
+
+
+component : Html msg
+component =
+    button [] [ text "Click me!" ]
+
+
 content : String
 content = \"\"\"
 
 # It all starts with a chapter
 
-They can be as simple as …
+Oh, look – A wide real component!
+
+<component />
+
+Woof! Moving on...
 
 \"\"\"
-
-
-chapter : ElmBook.Chapter x
-chapter =
-    ElmBook.chapter "The First Chapter"
-        |> render content
-
-
 ```
 
 ---
@@ -72,9 +80,32 @@ main =
 
 ---
 
-### Inspiration
+## Inspiration
 
-This library takes a lot of inspiration from both [Storybook](http://storybook.js.org) and [HexDocs](http://hexdocs.pm) but it does not try to replicate their features. I really hope we can create something unique to the Elm ecosystem here, so please let me know what you think, ideas to improve it or if you encountered any problems. Find me as **georgesboris** on Elm Slack.
+This library takes a lot of inspiration from two libraries:
+
+- [Storybook](http://storybook.js.org) – a JS ecosystem tool that focus on showcasing components and their states, mostly aiming at internal design systems but also enabling the pattern of creating visual components in isolation.
+
+- [HexDocs](http://hexdocs.pm) – an Erlang/Elixir ecosystem tool that enables structured library documentation with guides, function docs, links to code and external sources.
+
+Both of these tools affected their whole ecosystems greatly. Creating good docs is a common place when you're in Elixir world. Using Storybook to facilitate design-engineering iteration is a common place in the JS world.
+
+What if the Elm ecosystem can create it's own thing with the best of both worlds? ElmBook aims to be just that – making it easy to create attractive documentation websites that can also work as a playground for live components.
+
+---
+
+## Roadmap
+
+This tool can already be used as-is for great effect.
+Can we add plugins? Sure. Darkmode? Definitely.
+
+The most interesting thing that is currently sitting on the back of my head though is automatically creating ElmBooks based on doc comments, the same that are used to generate docs on elm-packages.
+
+This would enable any/all published elm packages to automatically have their own ElmBook with example codes turning into live components. This is both more simple that it sounds and more complex than it could be. I don't expect it to happen in the next few weeks but it's definitely possible.
+
+---
+
+I really hope we can create something unique to the Elm ecosystem here, so please let me know what you think, ideas to improve it or if you encountered any problems. Find me as **georgesboris** on Elm Slack.
 
 
 """

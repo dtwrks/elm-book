@@ -3,6 +3,8 @@ module ElmBook.UI.ElmBook exposing (..)
 import ElmBook exposing (ElmBook, book, withChapterGroups, withSubtitle)
 import ElmBook.UI.Docs.ActionLog
 import ElmBook.UI.Docs.Footer
+import ElmBook.UI.Docs.Guides.CreatingBooks
+import ElmBook.UI.Docs.Guides.CreatingChapters
 import ElmBook.UI.Docs.Guides.LoggingActions
 import ElmBook.UI.Docs.Guides.StatefulChapters
 import ElmBook.UI.Docs.Guides.Theming
@@ -32,7 +34,9 @@ main =
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )
             , ( "Guides"
-              , [ ElmBook.UI.Docs.Guides.Theming.docs
+              , [ ElmBook.UI.Docs.Guides.CreatingChapters.docs
+                , ElmBook.UI.Docs.Guides.CreatingBooks.docs
+                , ElmBook.UI.Docs.Guides.Theming.docs
                 , ElmBook.UI.Docs.Guides.LoggingActions.docs
                 , ElmBook.UI.Docs.Guides.StatefulChapters.docs
                 ]

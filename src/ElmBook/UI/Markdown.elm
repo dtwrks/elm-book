@@ -149,7 +149,7 @@ defaultRenderer =
             div [ class "elm-book-md" ] [ tag children ]
     , paragraph =
         \children ->
-            div [ class "elm-book-md" ] [ p [ class "elm-book-serif" ] children ]
+            div [ class "elm-book-md elm-book-serif elm-book-md__default" ] [ p [] children ]
     , hardLineBreak = div [ class "elm-book-md" ] [ br [] [] ]
     , blockQuote =
         \children ->
@@ -177,7 +177,7 @@ defaultRenderer =
     , text = text
     , unorderedList =
         \items ->
-            div [ class "elm-book-md" ]
+            div [ class "elm-book-md elm-book-serif elm-book-md__default" ]
                 [ ul []
                     (items
                         |> List.map
@@ -212,7 +212,7 @@ defaultRenderer =
                 ]
     , orderedList =
         \startingIndex items ->
-            div [ class "elm-book-md" ]
+            div [ class "elm-book-md elm-book-serif elm-book-md__default" ]
                 [ ol [ Attr.start startingIndex ]
                     (List.map (li []) items)
                 ]
@@ -248,7 +248,7 @@ defaultRenderer =
         div [ class "elm-book-md" ] [ hr [] [] ]
     , table =
         \children ->
-            div [ class "elm-book-md" ] [ Html.table [] children ]
+            div [ class "elm-book-md elm-book-md__default elm-book-sans" ] [ Html.table [] children ]
     , tableHeader = thead []
     , tableBody = tbody []
     , tableRow = tr []
@@ -371,7 +371,7 @@ styles =
     padding-top: 24px;
 }
 
-.elm-book-md p {
+.elm-book-md__default {
     line-height: 1.8em;
     color: rgb(80, 80, 90);
     font-size: 20px;
