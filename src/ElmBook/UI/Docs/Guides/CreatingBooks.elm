@@ -1,13 +1,11 @@
 module ElmBook.UI.Docs.Guides.CreatingBooks exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, render)
+import ElmBook.Chapter exposing (Chapter, chapter, render)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Creating Books"
         |> render """
-# Creating Books
-
 WIP
 """

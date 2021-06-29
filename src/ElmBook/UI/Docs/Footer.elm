@@ -1,12 +1,15 @@
 module ElmBook.UI.Docs.Footer exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, renderElementsWithBackground, themeBackground, withBackgroundColor, withElement)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponent, renderComponentList, withComponent, withComponentOptions)
+import ElmBook.Component
 import ElmBook.UI.Footer exposing (view)
+import ElmBook.UI.Helpers exposing (themeBackground)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Footer"
-        |> withBackgroundColor themeBackground
-        |> withElement view
-        |> renderElementsWithBackground themeBackground
+        |> withComponentOptions
+            [ ElmBook.Component.background themeBackground
+            ]
+        |> renderComponent view

@@ -1,16 +1,14 @@
 module ElmBook.UI.Docs.Guides.StatefulChapters exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, render)
+import ElmBook.Chapter exposing (Chapter, chapter, render)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Stateful Chapters"
         |> render """
-# Stateful Chapters
-
 Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states.
 
 But how to accomplish this with Elm's static typing? Simply provide your own custom model that can be used and updated by your own elements.
@@ -119,7 +117,7 @@ module InputChapter exposing (Model, init, chapter)
 
 import ElmBook exposing (updateState1)
 
-type alias Model = { value = String }
+type alias Model = { value : String }
 
 type alias SharedModel
     = { x | inputModel : Model }
@@ -168,7 +166,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    input [ value = model.value, onInput = UpdateValue ] []
+    input [ value model.value, onInput UpdateValue ] []
 
 
 type alias SharedModel
@@ -186,7 +184,7 @@ chapter =
         |> withStatefulElement (
             \\{ inputModel } ->
                 view inputModel
-                    |> Html.map (\\msg -> updateState (updateSharedModel msg))
+                    |> Html.map (updateState1 updateSharedModel)
         )
 ```
 

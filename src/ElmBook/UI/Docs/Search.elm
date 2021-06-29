@@ -1,14 +1,19 @@
 module ElmBook.UI.Docs.Search exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, logAction, logActionWithString, renderElementsWithBackground, themeBackground, withBackgroundColor, withElement)
+import ElmBook.Actions exposing (logAction, logActionWithString)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponent, withComponentOptions)
+import ElmBook.Component
+import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Search exposing (view)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Search"
-        |> withBackgroundColor themeBackground
-        |> withElement
+        |> withComponentOptions
+            [ ElmBook.Component.background themeBackground
+            ]
+        |> renderComponent
             (view
                 { value = ""
                 , onInput = logActionWithString "onInput"
@@ -16,4 +21,3 @@ docs =
                 , onBlur = logAction "onBlur"
                 }
             )
-        |> renderElementsWithBackground themeBackground

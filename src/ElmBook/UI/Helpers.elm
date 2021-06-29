@@ -6,9 +6,7 @@ module ElmBook.UI.Helpers exposing
     , mediaMobile
     , setTheme
     , themeAccent
-    , themeAccentAlt
     , themeBackground
-    , themeBackgroundAlt
     , wrapperMainBackground
     )
 
@@ -25,28 +23,16 @@ themeBackgroundVar =
     "--elm-book-background"
 
 
-themeBackgroundAltVar : String
-themeBackgroundAltVar =
-    "--elm-book-background-alt"
-
-
 themeAccentVar : String
 themeAccentVar =
     "--elm-book-accent"
 
 
-themeAccentAltVar : String
-themeAccentAltVar =
-    "--elm-book-accent-alt"
-
-
-setTheme : String -> String -> String -> String -> Attribute msg
-setTheme background backgroundAlt_ accentColor_ accentAuxColor_ =
+setTheme : String -> String -> Attribute msg
+setTheme background accentColor_ =
     attribute "style"
         ([ ( themeBackgroundVar, background )
-         , ( themeBackgroundAltVar, backgroundAlt_ )
          , ( themeAccentVar, accentColor_ )
-         , ( themeAccentAltVar, accentAuxColor_ )
          ]
             |> List.map (\( k, v ) -> k ++ ":" ++ v ++ ";")
             |> String.concat
@@ -58,19 +44,9 @@ themeBackground =
     "var(" ++ themeBackgroundVar ++ ")"
 
 
-themeBackgroundAlt : String
-themeBackgroundAlt =
-    "var(" ++ themeBackgroundAltVar ++ ")"
-
-
 themeAccent : String
 themeAccent =
     "var(" ++ themeAccentVar ++ ")"
-
-
-themeAccentAlt : String
-themeAccentAlt =
-    "var(" ++ themeAccentAltVar ++ ")"
 
 
 wrapperMainBackground : String

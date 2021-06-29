@@ -43,7 +43,7 @@ view =
             [ href "https://package.elm-lang.org/packages/dtwrks/elm-ui-book/latest/"
             , target "_blank"
             , class "elm-book-footer"
-            , style "color" themeAccentAlt
+            , style "color" themeAccent
             ]
             [ iconElm { size = 16, color = "currentColor" }
             , div [ class "elm-book-footer--text" ]

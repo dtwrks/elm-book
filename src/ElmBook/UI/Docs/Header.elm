@@ -1,6 +1,10 @@
 module ElmBook.UI.Docs.Header exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, logAction, renderElementsWithBackground, withBackgroundColor, withElements, withTwoColumns)
+import ElmBook.Actions exposing (logAction)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, withComponentOptions)
+import ElmBook.Component
+import ElmBook.Internal.Theme exposing (defaultTheme)
+import ElmBook.Theme
 import ElmBook.UI.Header exposing (view)
 import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Icons exposing (iconElm)
@@ -9,16 +13,15 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     let
         props =
             { href = "/x"
-            , logo = Nothing
             , title = "Title"
-            , subtitle = "Subtitle"
-            , custom = Nothing
+            , theme = defaultTheme
             , isMenuOpen = False
+            , onClickHeader = logAction "onClickHeader"
             , onClickMenuButton = logAction "onClickMenuButton"
             }
 
@@ -30,17 +33,29 @@ docs =
                 [ text "Custom" ]
     in
     chapter "Header"
-        |> withBackgroundColor themeBackground
-        |> withTwoColumns
-        |> withElements
+        |> withComponentOptions
+            [ ElmBook.Component.background themeBackground
+            ]
+        |> renderComponentList
             [ ( "Default"
               , view props
               )
             , ( "Custom Logo"
-              , view { props | logo = Just (iconElm { size = 28, color = "#75c5f0" }) }
+              , view
+                    { props
+                        | theme =
+                            ElmBook.Theme.logo
+                                (iconElm { size = 28, color = "#75c5f0" })
+                                props.theme
+                    }
               )
             , ( "Custom"
-              , view { props | custom = Just customTitle }
+              , view
+                    { props
+                        | theme =
+                            ElmBook.Theme.header
+                                customTitle
+                                props.theme
+                    }
               )
             ]
-        |> renderElementsWithBackground themeBackground

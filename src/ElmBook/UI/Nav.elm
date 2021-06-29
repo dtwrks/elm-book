@@ -113,7 +113,7 @@ view props =
                     ]
                     [ div
                         [ class "elm-book-inset elm-book-nav-item-bg"
-                        , style "background-color" themeBackgroundAlt
+                        , style "background-color" themeAccent
                         ]
                         []
                     , div [ class "elm-book-nav-item-content" ]

@@ -66,12 +66,12 @@ styles =
 .elm-book-search-bg {
     opacity: 0.2;
     border-radius: 4px;
-    background-color: """ ++ themeBackgroundAlt ++ """;
+    background-color: """ ++ themeAccent ++ """;
 }
 .elm-book-search-border {
     opacity: 0.5;
     border-radius: 4px;
-    border: 0px solid """ ++ themeBackgroundAlt ++ """;
+    border: 0px solid """ ++ themeAccent ++ """;
     transition: 0.2s;
 }
 

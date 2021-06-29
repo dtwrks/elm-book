@@ -1,10 +1,12 @@
 module ElmBook.UI.Docs.Nav exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, renderElementsWithBackground, themeBackground, withBackgroundColor, withElements)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, withComponentOptions)
+import ElmBook.Component
+import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Nav exposing (view)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     let
         itemGroup index =
@@ -25,8 +27,10 @@ docs =
             { props | active = Just "0-first-slug" }
     in
     chapter "Nav"
-        |> withBackgroundColor themeBackground
-        |> withElements
+        |> withComponentOptions
+            [ ElmBook.Component.background themeBackground
+            ]
+        |> renderComponentList
             [ ( "Default", view props )
             , ( "Selected", view activeProps )
             , ( "Selected + Pre-selected", view { activeProps | preSelected = Just "0-second-slug" } )
@@ -58,4 +62,3 @@ docs =
                     }
               )
             ]
-        |> renderElementsWithBackground themeBackground

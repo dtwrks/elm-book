@@ -1,4 +1,4 @@
-module ElmBook.Msg exposing (Msg(..))
+module ElmBook.Internal.Msg exposing (Msg(..))
 
 import Browser exposing (UrlRequest)
 import Url exposing (Url)

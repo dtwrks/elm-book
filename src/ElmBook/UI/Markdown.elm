@@ -4,7 +4,8 @@ module ElmBook.UI.Markdown exposing
     )
 
 import Dict
-import ElmBook.Msg exposing (Msg)
+import ElmBook.Internal.Component
+import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.UI.ChapterElement
 import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen)
 import Html exposing (..)
@@ -16,14 +17,15 @@ import Markdown.Renderer
 import SyntaxHighlight
 
 
-view : String -> List ( String, Html (Msg state) ) -> String -> Html (Msg state)
-view chapterTitle chapterElements =
+view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> String -> Html (Msg state)
+view chapterTitle chapterElements componentOptions =
     Markdown.Parser.parse
         >> Result.withDefault []
         >> Markdown.Renderer.render
             (sectionRenderer
                 chapterTitle
                 chapterElements
+                componentOptions
             )
         >> Result.withDefault []
         >> (\children ->
@@ -34,16 +36,25 @@ view chapterTitle chapterElements =
            )
 
 
-sectionRenderer : String -> List ( String, Html (Msg state) ) -> Markdown.Renderer.Renderer (Html (Msg state))
-sectionRenderer chapterTitle chapterElements =
+sectionRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
+sectionRenderer chapterTitle chapterElements componentOptions =
     { defaultRenderer
         | html =
             Markdown.Html.oneOf
                 [ Markdown.Html.tag "element"
-                    (\maybeLabel maybeBackground maybeFullWidth _ ->
+                    (\labelFilter hiddenLabel_ background_ layout_ fullWidth_ _ ->
                         let
+                            options_ =
+                                ElmBook.Internal.Component.markdownOptions
+                                    componentOptions
+                                    { hiddenLabel = hiddenLabel_
+                                    , layout = layout_
+                                    , background = background_
+                                    , fullWidth = fullWidth_
+                                    }
+
                             section_ =
-                                case maybeLabel of
+                                case labelFilter of
                                     Just label_ ->
                                         Dict.fromList chapterElements
                                             |> Dict.get label_
@@ -56,21 +67,14 @@ sectionRenderer chapterTitle chapterElements =
                             |> Maybe.map
                                 (ElmBook.UI.ChapterElement.view
                                     chapterTitle
-                                    maybeBackground
+                                    options_.background
                                 )
                             |> Maybe.map
                                 (\c ->
                                     div
                                         [ classList
                                             [ ( "elm-book__element-wrapper", True )
-                                            , ( "full"
-                                              , case maybeFullWidth of
-                                                    Just _ ->
-                                                        True
-
-                                                    Nothing ->
-                                                        False
-                                              )
+                                            , ( "full", options_.fullWidth )
                                             ]
                                         ]
                                         [ c ]
@@ -78,25 +82,30 @@ sectionRenderer chapterTitle chapterElements =
                             |> Maybe.withDefault
                                 (div
                                     [ class "elm-book__element-wrapper elm-book-sans elm-book__element-empty" ]
-                                    [ text <| "\"" ++ Maybe.withDefault "" maybeLabel ++ "\" example not found." ]
+                                    [ text <| "\"" ++ Maybe.withDefault "" labelFilter ++ "\" example not found." ]
                                 )
                     )
                     |> Markdown.Html.withOptionalAttribute "with-label"
+                    |> Markdown.Html.withOptionalAttribute "with-hidden-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
+                    |> Markdown.Html.withOptionalAttribute "with-layout"
                     |> Markdown.Html.withOptionalAttribute "with-full-width"
-                , Markdown.Html.tag "all-elements"
-                    (\maybeBackground maybeFullWidth _ ->
+                , Markdown.Html.tag "component-list"
+                    (\hiddenLabel_ background_ layout_ fullWidth_ _ ->
+                        let
+                            options_ =
+                                ElmBook.Internal.Component.markdownOptions
+                                    componentOptions
+                                    { hiddenLabel = hiddenLabel_
+                                    , layout = layout_
+                                    , background = background_
+                                    , fullWidth = fullWidth_
+                                    }
+                        in
                         div
                             [ classList
                                 [ ( "elm-book__element-wrapper", True )
-                                , ( "full"
-                                  , case maybeFullWidth of
-                                        Just _ ->
-                                            True
-
-                                        Nothing ->
-                                            False
-                                  )
+                                , ( "full", options_.fullWidth )
                                 ]
                             ]
                             [ ul [ class "elm-book-md__element-list" ]
@@ -106,7 +115,7 @@ sectionRenderer chapterTitle chapterElements =
                                             [ class "elm-book elm-book-md__element-list__item" ]
                                             [ ElmBook.UI.ChapterElement.view
                                                 chapterTitle
-                                                maybeBackground
+                                                options_.background
                                                 section
                                             ]
                                     )
@@ -114,7 +123,9 @@ sectionRenderer chapterTitle chapterElements =
                                 )
                             ]
                     )
+                    |> Markdown.Html.withOptionalAttribute "with-hidden-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
+                    |> Markdown.Html.withOptionalAttribute "with-layout"
                     |> Markdown.Html.withOptionalAttribute "with-full-width"
                 ]
     }

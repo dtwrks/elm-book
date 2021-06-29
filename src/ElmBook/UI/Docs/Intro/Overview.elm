@@ -1,16 +1,14 @@
 module ElmBook.UI.Docs.Intro.Overview exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, render)
+import ElmBook.Chapter exposing (Chapter, chapter, render)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Overview"
         |> render """
-# Overview
-
 Every application, tool or team has their own history worth telling.
 
 ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI elements**, **design tokens**, or anything else really.

@@ -1,9 +1,9 @@
 module ElmBook.UI.Docs.Markdown exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, render)
+import ElmBook.Chapter exposing (Chapter, chapter, render)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Markdown"
         |> render """

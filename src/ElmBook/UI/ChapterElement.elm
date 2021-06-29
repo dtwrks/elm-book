@@ -3,8 +3,8 @@ module ElmBook.UI.ChapterElement exposing
     , view
     )
 
-import ElmBook.Msg exposing (Msg(..))
-import ElmBook.UI.Helpers exposing (chapterSectionBackground, css_)
+import ElmBook.Internal.Msg exposing (Msg(..))
+import ElmBook.UI.Helpers exposing (css_)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
@@ -35,7 +35,7 @@ styles =
 """
 
 
-view : String -> Maybe String -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+view : String -> String -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
 view chapterTitle backgroundColor_ ( label, html ) =
     article
         [ class "elm-book__chapter-element" ]
@@ -46,10 +46,7 @@ view chapterTitle backgroundColor_ ( label, html ) =
             p [ class "elm-book elm-book__chapter-element__title elm-book-sans" ] [ text label ]
         , div
             [ class "elm-book__chapter-element__background elm-book-shadows-light"
-            , style "background"
-                (backgroundColor_
-                    |> Maybe.withDefault chapterSectionBackground
-                )
+            , style "background" backgroundColor_
             ]
             [ div
                 [ class "elm-book__chapter-element__content" ]

@@ -1,16 +1,17 @@
 module ElmBook.UI.Docs.Guides.LoggingActions exposing (..)
 
-import ElmBook exposing (UIChapter, chapter, logAction, logActionWithString, render, withElements)
+import ElmBook.Actions exposing (logAction, logActionWithString)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList)
 import ElmBook.UI.Helpers exposing (css_)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 
-docs : UIChapter x
+docs : Chapter x
 docs =
     chapter "Logging Actions"
-        |> withElements
+        |> withComponentList
             [ ( "button"
               , div []
                     [ css_ """
@@ -59,8 +60,6 @@ docs =
               )
             ]
         |> render """
-# Logging Actions
-
 When creating something like a UI catalogue it's often useful to display how each element reacts to user interaction.
 
 For instance, a custom button might receive an `onClick` message. But is that message actually sent when the user clicks on it? And what message should I use on my docs since the button can be used anywhere?

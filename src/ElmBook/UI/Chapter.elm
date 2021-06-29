@@ -1,24 +1,19 @@
 module ElmBook.UI.Chapter exposing
-    ( ChapterLayout(..)
-    , styles
+    ( styles
     , view
     )
 
-import ElmBook.Msg exposing (Msg(..))
+import ElmBook.Internal.Component
+import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.UI.Helpers exposing (..)
 import ElmBook.UI.Markdown
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-type ChapterLayout
-    = SingleColumn
-    | TwoColumns
-
-
 type alias Props state =
     { title : String
-    , layout : ChapterLayout
+    , componentOptions : ElmBook.Internal.Component.ValidComponentOptions
     , body : String
     , elements : List ( String, Html.Html (Msg state) )
     }
@@ -41,5 +36,6 @@ view props =
         [ ElmBook.UI.Markdown.view
             props.title
             props.elements
+            props.componentOptions
             props.body
         ]

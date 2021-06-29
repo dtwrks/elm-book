@@ -3,6 +3,7 @@ module ElmBook.UI.Wrapper exposing
     , view
     )
 
+import ElmBook.Internal.Theme
 import ElmBook.UI.Helpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -10,10 +11,7 @@ import Html.Events exposing (..)
 
 
 view :
-    { themeBackground : String
-    , themeBackgroundAlt : String
-    , themeAccent : String
-    , themeAccentAlt : String
+    { theme : ElmBook.Internal.Theme.Theme
     , globals : List (Html msg)
     , header : Html msg
     , menu : Html msg
@@ -29,7 +27,9 @@ view :
     -> Html msg
 view props =
     div
-        [ setTheme props.themeBackground props.themeBackgroundAlt props.themeAccent props.themeAccentAlt
+        [ setTheme
+            (ElmBook.Internal.Theme.background props.theme)
+            (ElmBook.Internal.Theme.accent props.theme)
         ]
         [ div [ class "elm-book--wrapper--globals" ] props.globals
         , div
@@ -186,7 +186,7 @@ styles =
     margin: 0;
     padding: 0;
     opacity: 0.25;
-    border-bottom: 1px solid """ ++ themeBackgroundAlt ++ """;
+    border-bottom: 1px solid """ ++ themeAccent ++ """;
 }
 
 .elm-book--wrapper--menu--main-wrapper {

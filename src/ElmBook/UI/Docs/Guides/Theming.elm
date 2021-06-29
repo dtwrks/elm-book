@@ -5,9 +5,13 @@ module ElmBook.UI.Docs.Guides.Theming exposing
     , styles
     )
 
-import ElmBook exposing (UIChapter, chapter, logAction, logActionWithString, render, themeAccent, themeBackground, updateState1, withBackgroundColor, withElement, withElements, withStatefulElement, withStatefulElements, withTwoColumns)
+import ElmBook.Actions exposing (logAction, updateState1)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
+import ElmBook.Component
+import ElmBook.Internal.Theme exposing (defaultTheme)
+import ElmBook.Theme
 import ElmBook.UI.Header
-import ElmBook.UI.Helpers exposing (css_, setTheme, themeAccentAlt, themeBackgroundAlt, wrapperMainBackground)
+import ElmBook.UI.Helpers exposing (css_, setTheme, themeAccent, themeBackground, wrapperMainBackground)
 import ElmBook.UI.Icons exposing (iconElm)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -28,9 +32,7 @@ styles =
 type alias Model =
     { themeBackgroundStart : String
     , themeBackgroundEnd : String
-    , themeBackgroundAlt : String
     , themeAccent : String
-    , themeAccentAlt : String
     }
 
 
@@ -42,22 +44,19 @@ init : Model
 init =
     { themeBackgroundStart = "rgba(0,135,207,1)"
     , themeBackgroundEnd = "rgba(86,207,255,1)"
-    , themeBackgroundAlt = "#fff"
     , themeAccent = "#fff"
-    , themeAccentAlt = "#fff"
     }
 
 
-docs : UIChapter (SharedModel x)
+docs : Chapter (SharedModel x)
 docs =
     let
         headerProps =
             { href = "/x"
-            , logo = Nothing
+            , theme = defaultTheme
             , title = "Title"
-            , subtitle = "Subtitle"
-            , custom = Nothing
             , isMenuOpen = False
+            , onClickHeader = logAction "onClickHeader"
             , onClickMenuButton = logAction "onClickMenuButton"
             }
 
@@ -69,25 +68,36 @@ docs =
                 [ text "Custom" ]
     in
     chapter "Theming"
-        |> withTwoColumns
-        |> withBackgroundColor themeBackground
-        |> withElements
+        |> withComponentOptions
+            [ ElmBook.Component.background themeBackground
+            ]
+        |> withComponentList
             [ ( "Header with custom logo"
-              , ElmBook.UI.Header.view { headerProps | logo = Just (iconElm { size = 28, color = "#75c5f0" }) }
+              , ElmBook.UI.Header.view
+                    { headerProps
+                        | theme =
+                            ElmBook.Theme.logo
+                                (iconElm { size = 28, color = "#75c5f0" })
+                                headerProps.theme
+                    }
               )
             , ( "Custom header"
-              , ElmBook.UI.Header.view { headerProps | custom = Just customHeader }
+              , ElmBook.UI.Header.view
+                    { headerProps
+                        | theme =
+                            ElmBook.Theme.header
+                                customHeader
+                                headerProps.theme
+                    }
               )
             ]
-        |> withStatefulElements
+        |> withStatefulComponentList
             [ ( "Theme Builder"
               , \{ themingModel } ->
                     div
                         [ setTheme
                             ("linear-gradient(150deg, " ++ themingModel.themeBackgroundStart ++ " 0%, " ++ themingModel.themeBackgroundEnd ++ " 100%)")
-                            themingModel.themeBackgroundAlt
                             themingModel.themeAccent
-                            themingModel.themeAccentAlt
                         ]
                         [ div [ class "elm-book-wrapper elm-book-sans elm-book-docs__theming__theme", style "background" themeBackground ]
                             [ styles
@@ -114,14 +124,14 @@ docs =
                                     [ div
                                         [ class "elm-book-inset"
                                         , style "opacity" "0.2"
-                                        , style "background-color" themeBackgroundAlt
+                                        , style "background-color" themeAccent
                                         ]
                                         []
                                     , p
                                         [ style "padding" "20px 48px 20px 20px"
                                         , style "position" "relative"
                                         , style "z-index" "1"
-                                        , style "color" themeAccentAlt
+                                        , style "color" themeAccent
                                         ]
                                         [ text "Theme Accent"
                                         , br [] []
@@ -189,27 +199,6 @@ docs =
                                     []
                                 ]
                             , p []
-                                [ label [] [ text "theme background alt" ]
-                                , input
-                                    [ type_ "color"
-                                    , onInput <|
-                                        updateState1
-                                            (\c shared ->
-                                                let
-                                                    themingModel_ =
-                                                        shared.themingModel
-                                                in
-                                                { shared
-                                                    | themingModel =
-                                                        { themingModel_
-                                                            | themeBackgroundAlt = c
-                                                        }
-                                                }
-                                            )
-                                    ]
-                                    []
-                                ]
-                            , p []
                                 [ label [] [ text "theme accent" ]
                                 , input
                                     [ type_ "color"
@@ -230,34 +219,11 @@ docs =
                                     ]
                                     []
                                 ]
-                            , p []
-                                [ label [] [ text "theme accent alt" ]
-                                , input
-                                    [ type_ "color"
-                                    , onInput <|
-                                        updateState1
-                                            (\c shared ->
-                                                let
-                                                    themingModel_ =
-                                                        shared.themingModel
-                                                in
-                                                { shared
-                                                    | themingModel =
-                                                        { themingModel_
-                                                            | themeAccentAlt = c
-                                                        }
-                                                }
-                                            )
-                                    ]
-                                    []
-                                ]
                             ]
                         ]
               )
             ]
         |> render ("""
-# Theming
-
 Your book should look and feel your own, so ElmBook provides a few ways you can customize it's theme.
 
 ## Custom Header
