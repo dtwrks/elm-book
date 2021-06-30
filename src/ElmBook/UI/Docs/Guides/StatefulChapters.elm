@@ -115,7 +115,7 @@ The same can be done for the InputChapter. But note that it's `updateState` now 
 ```elm
 module InputChapter exposing (Model, init, chapter)
 
-import ElmBook exposing (updateState1)
+import ElmBook exposing (updateStateWith)
 
 type alias Model = { value : String }
 
@@ -133,7 +133,7 @@ chapter =
             \\{ inputModel } ->
                 myInput
                     { value = inputModel.value
-                    , onInput = updateState1 updateSharedModel
+                    , onInput = updateStateWith updateSharedModel
                     }
         )
 ```
@@ -147,7 +147,7 @@ Let's change our `InputChapter` so it now have it's own elm architecture.
 ```elm
 module InputChapter exposing (Model, init, chapter)
 
-import ElmBook exposing (updateState1)
+import ElmBook exposing (updateStateWith)
 
 
 type alias Model = { value = String }
@@ -184,7 +184,7 @@ chapter =
         |> withStatefulComponent (
             \\{ inputModel } ->
                 view inputModel
-                    |> Html.map (updateState1 updateSharedModel)
+                    |> Html.map (updateStateWith updateSharedModel)
         )
 ```
 

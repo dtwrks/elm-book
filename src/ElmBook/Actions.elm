@@ -1,11 +1,11 @@
 module ElmBook.Actions exposing
     ( logAction
-    , logActionMap
+    , logActionWith
     , logActionWithFloat
     , logActionWithInt
     , logActionWithString
     , updateState
-    , updateState1
+    , updateStateWith
     )
 
 import ElmBook.Internal.Msg exposing (..)
@@ -60,12 +60,12 @@ logActionWithFloat action value =
 
     myCustomComponent {
         onEvent =
-            logActionMap "My Custom Component: " eventToString
+            logActionWith "My Custom Component: " eventToString
     }
 
 -}
-logActionMap : String -> (value -> String) -> value -> Msg state
-logActionMap action toString value =
+logActionWith : (value -> String) -> String -> value -> Msg state
+logActionWith toString action value =
     LogAction "" (action ++ ": " ++ toString value)
 
 
@@ -108,12 +108,12 @@ updateState =
                 (\state ->
                     input
                         [ value state.input
-                        , onInput (updateState1 updateInput)
+                        , onInput (updateStateWith updateInput)
                         ]
                         []
                 )
 
 -}
-updateState1 : (a -> state -> state) -> a -> Msg state
-updateState1 fn =
+updateStateWith : (a -> state -> state) -> a -> Msg state
+updateStateWith fn =
     UpdateState << fn

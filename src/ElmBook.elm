@@ -103,7 +103,7 @@ Then you can `import ElmBookCustom exposing (ElmBook, UIChapter, book)` just as 
 
 Log your action intents to showcase how your components would react to interactions.
 
-@docs logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionMap
+@docs logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionWith
 
 
 # Showcase stateful widgets
@@ -150,12 +150,12 @@ Sometimes it's useful to display a complex component so people can understand ho
                 (\state ->
                     input
                         [ value state.input
-                        , onInput (updateState1 updateInput)
+                        , onInput (updateStateWith updateInput)
                         ]
                         []
                 )
 
-@docs withStatefulComponent, withStatefulComponents, updateState, updateState1
+@docs withStatefulComponent, withStatefulComponents, updateState, updateStateWith
 
 -}
 

@@ -1,6 +1,5 @@
 module ElmBook.Theme exposing
-    ( Attribute
-    , Theme
+    ( Theme
     , accent
     , background
     , backgroundGradient

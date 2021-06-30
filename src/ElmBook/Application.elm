@@ -1,11 +1,11 @@
-module ElmBook.Application exposing (..)
+module ElmBook.Application exposing
+    ( globals
+    , initialState
+    , subscriptions
+    )
 
 import ElmBook.Internal.ApplicationOptions exposing (ApplicationOptions)
 import ElmBook.Internal.Msg exposing (Msg)
-
-
-type alias Attribute state html =
-    ApplicationOptions state html -> ApplicationOptions state html
 
 
 {-| Add global elements to your book. This can be helpful for things like CSS resets.

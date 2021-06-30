@@ -5,7 +5,7 @@ module ElmBook.UI.Docs.Guides.Theming exposing
     , styles
     )
 
-import ElmBook.Actions exposing (logAction, updateState1)
+import ElmBook.Actions exposing (logAction, updateStateWith)
 import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
 import ElmBook.Component
 import ElmBook.Internal.Theme exposing (defaultTheme)
@@ -161,7 +161,7 @@ docs =
                                 , input
                                     [ type_ "color"
                                     , onInput <|
-                                        updateState1
+                                        updateStateWith
                                             (\c shared ->
                                                 let
                                                     themingModel_ =
@@ -182,7 +182,7 @@ docs =
                                 , input
                                     [ type_ "color"
                                     , onInput <|
-                                        updateState1
+                                        updateStateWith
                                             (\c shared ->
                                                 let
                                                     themingModel_ =
@@ -203,7 +203,7 @@ docs =
                                 , input
                                     [ type_ "color"
                                     , onInput <|
-                                        updateState1
+                                        updateStateWith
                                             (\c shared ->
                                                 let
                                                     themingModel_ =

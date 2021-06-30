@@ -1,7 +1,5 @@
 module ElmBook.Component exposing
-    ( Attribute
-    , ComponentOptions
-    , background
+    ( background
     , block
     , card
     , hiddenLabel
@@ -13,10 +11,6 @@ import ElmBook.Internal.Component exposing (ComponentOptions(..), Layout(..))
 
 type alias ComponentOptions =
     ElmBook.Internal.Component.ComponentOptions
-
-
-type alias Attribute =
-    ComponentOptions -> ComponentOptions
 
 
 background : String -> ComponentOptions -> ComponentOptions

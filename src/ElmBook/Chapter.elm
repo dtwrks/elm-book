@@ -12,7 +12,7 @@ module ElmBook.Chapter exposing
     , withStatefulComponentList
     )
 
-import ElmBook.Component exposing (Attribute)
+import ElmBook.Component
 import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..))
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
@@ -39,7 +39,10 @@ chapter title =
         }
 
 
-withComponentOptions : List Attribute -> ChapterBuilder state html -> ChapterBuilder state html
+withComponentOptions :
+    List ElmBook.Internal.Component.Attribute
+    -> ChapterBuilder state html
+    -> ChapterBuilder state html
 withComponentOptions attributes (ChapterBuilder config) =
     ChapterBuilder
         { config
