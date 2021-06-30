@@ -11,13 +11,13 @@ docs =
         |> render """
 Every application, tool or team has their own history worth telling.
 
-ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI elements**, **design tokens**, or anything else really.
+ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI components**, **design tokens**, or anything else really.
 
 ---
 
 ## It all starts with a chapter
 
-They can be as simple as a markdown block or as rich as a set of interactive UI elements that talk to each other. Take a look at the ["Creating Chapters"](/chapter/guides--creating-chapters) guide for more details.
+They can be as simple as a markdown block or as rich as a set of interactive UI components that talk to each other. Take a look at the ["Creating Chapters"](/guides/creating-chapters) guide for more details.
 
 ```elm
 module FirstChapter exposing (chapter)
@@ -56,7 +56,7 @@ Woof! Moving on...
 
 ## Together, they become a book
 
-A book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/chapter/guides--creating-books) and ["Theming"](/chapter/guides--theming) guides for more details.
+A book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/guides/creating-books) and ["Theming"](/guides/theming) guides for more details.
 
 
 ```elm
@@ -88,7 +88,7 @@ This library takes a lot of inspiration from two libraries:
 
 Both of these tools affected their whole ecosystems greatly. Creating good docs is a common place when you're in Elixir world. Using Storybook to facilitate design-engineering iteration is a common place in the JS world.
 
-What if the Elm ecosystem can create it's own thing with the best of both worlds? ElmBook aims to be just that – making it easy to create attractive documentation websites that can also work as a playground for live components.
+What if the Elm ecosystem can create it's own thing with the best of both worlds? ElmBook aims to be just that – making it easy to create attractive documentation websites that can also work as a playground for live components built with Elm.
 
 ---
 

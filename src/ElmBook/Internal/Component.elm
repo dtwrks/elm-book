@@ -31,7 +31,7 @@ type alias Attribute =
 defaultOptions : ValidComponentOptions
 defaultOptions =
     { hiddenLabel = False
-    , background = "blue"
+    , background = "#fff"
     , layout = Card
     , fullWidth = False
     }

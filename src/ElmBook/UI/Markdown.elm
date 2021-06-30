@@ -6,7 +6,7 @@ module ElmBook.UI.Markdown exposing
 import Dict
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg)
-import ElmBook.UI.ChapterElement
+import ElmBook.UI.ChapterComponent
 import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
@@ -18,13 +18,13 @@ import SyntaxHighlight
 
 
 view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> String -> Html (Msg state)
-view chapterTitle chapterElements componentOptions =
+view chapterTitle chapterComponents componentOptions =
     Markdown.Parser.parse
         >> Result.withDefault []
         >> Markdown.Renderer.render
             (sectionRenderer
                 chapterTitle
-                chapterElements
+                chapterComponents
                 componentOptions
             )
         >> Result.withDefault []
@@ -37,11 +37,11 @@ view chapterTitle chapterElements componentOptions =
 
 
 sectionRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
-sectionRenderer chapterTitle chapterElements componentOptions =
+sectionRenderer chapterTitle chapterComponents componentOptions =
     { defaultRenderer
         | html =
             Markdown.Html.oneOf
-                [ Markdown.Html.tag "element"
+                [ Markdown.Html.tag "component"
                     (\labelFilter hiddenLabel_ background_ layout_ fullWidth_ _ ->
                         let
                             options_ =
@@ -56,24 +56,20 @@ sectionRenderer chapterTitle chapterElements componentOptions =
                             section_ =
                                 case labelFilter of
                                     Just label_ ->
-                                        Dict.fromList chapterElements
+                                        Dict.fromList chapterComponents
                                             |> Dict.get label_
                                             |> Maybe.map (\v -> ( label_, v ))
 
                                     Nothing ->
-                                        List.head chapterElements
+                                        List.head chapterComponents
                         in
                         section_
-                            |> Maybe.map
-                                (ElmBook.UI.ChapterElement.view
-                                    chapterTitle
-                                    options_.background
-                                )
+                            |> Maybe.map (ElmBook.UI.ChapterComponent.view chapterTitle options_)
                             |> Maybe.map
                                 (\c ->
                                     div
                                         [ classList
-                                            [ ( "elm-book__element-wrapper", True )
+                                            [ ( "elm-book__component-wrapper", True )
                                             , ( "full", options_.fullWidth )
                                             ]
                                         ]
@@ -81,7 +77,7 @@ sectionRenderer chapterTitle chapterElements componentOptions =
                                 )
                             |> Maybe.withDefault
                                 (div
-                                    [ class "elm-book__element-wrapper elm-book-sans elm-book__element-empty" ]
+                                    [ class "elm-book__component-wrapper elm-book-sans elm-book__component-empty" ]
                                     [ text <| "\"" ++ Maybe.withDefault "" labelFilter ++ "\" example not found." ]
                                 )
                     )
@@ -104,22 +100,22 @@ sectionRenderer chapterTitle chapterElements componentOptions =
                         in
                         div
                             [ classList
-                                [ ( "elm-book__element-wrapper", True )
+                                [ ( "elm-book__component-wrapper", True )
                                 , ( "full", options_.fullWidth )
                                 ]
                             ]
-                            [ ul [ class "elm-book-md__element-list" ]
+                            [ ul [ class "elm-book-md__component-list" ]
                                 (List.map
                                     (\section ->
                                         li
-                                            [ class "elm-book elm-book-md__element-list__item" ]
-                                            [ ElmBook.UI.ChapterElement.view
+                                            [ class "elm-book elm-book-md__component-list__item" ]
+                                            [ ElmBook.UI.ChapterComponent.view
                                                 chapterTitle
-                                                options_.background
+                                                options_
                                                 section
                                             ]
                                     )
-                                    chapterElements
+                                    chapterComponents
                                 )
                             ]
                     )
@@ -292,15 +288,15 @@ defaultRenderer =
 styles : Html msg
 styles =
     css_ <| """
-.elm-book__element-wrapper {
+.elm-book__component-wrapper {
     max-width: 720px;
     margin: 0 auto;
     padding-bottom: 36px;
 }
-.elm-book__element-wrapper.full {
+.elm-book__component-wrapper.full {
     max-width: 100%;
 }
-.elm-book__element-empty {
+.elm-book__component-empty {
     padding: 20px;
     background-color: #eaeaea;
     border-radius: 4px;
@@ -308,12 +304,12 @@ styles =
     color: #666;
 }
 
-.elm-book-md__element-list {
+.elm-book-md__component-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-.elm-book-md__element-list__item + .elm-book-md__element-list__item {
+.elm-book-md__component-list__item + .elm-book-md__component-list__item {
     padding-top: 36px;
 }
 
@@ -330,10 +326,10 @@ styles =
 }
 
 """ ++ mediaLargeScreen ++ """ {
-    .elm-book__element-wrapper {
+    .elm-book__component-wrapper {
         max-width: 960px;
     }
-    .elm-book__element-wrapper.full {
+    .elm-book__component-wrapper.full {
         max-width: 100%;
     }
     .elm-book-md {
@@ -455,7 +451,7 @@ styles =
     font-size: 18px;
     line-height: 22px;
     padding: 36px 24px;
-    background-color: #31353b;
+    background-color: #2a354d;
     border-radius: 6px;
 }
 .elm-book-md__code-default {
@@ -492,10 +488,10 @@ styles =
     color: #46f0ff;
 }
 .elm-book-md .elmsh2 {
-    color: #46ff9a;
+    color: #a5fb98;
 }
 .elm-book-md .elmsh3 {
-    color: #f92672;
+    color: #ff8f00;
 }
 .elm-book-md .elmsh4 {
     color: #46f0ff;

@@ -15,7 +15,7 @@ type alias Props state =
     { title : String
     , componentOptions : ElmBook.Internal.Component.ValidComponentOptions
     , body : String
-    , elements : List ( String, Html.Html (Msg state) )
+    , components : List ( String, Html.Html (Msg state) )
     }
 
 
@@ -35,7 +35,7 @@ view props =
         [ class "elm-book elm-book-chapter" ]
         [ ElmBook.UI.Markdown.view
             props.title
-            props.elements
+            props.components
             props.componentOptions
             props.body
         ]

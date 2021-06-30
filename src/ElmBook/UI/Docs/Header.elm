@@ -17,7 +17,7 @@ docs : Chapter x
 docs =
     let
         props =
-            { href = "/x"
+            { href = "/logAction/href"
             , title = "Title"
             , theme = defaultTheme
             , isMenuOpen = False

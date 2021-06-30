@@ -3,11 +3,15 @@ module ElmBook.Internal.Chapter exposing
     , ChapterComponent
     , ChapterConfig
     , ChapterCustom(..)
-    , chapterSlug
+    , chapterBreadcrumb
     , chapterTitle
+    , chapterUrl
+    , chapterWithGroup
+    , groupTitle
     )
 
 import ElmBook.Internal.Component exposing (ComponentOptions)
+import ElmBook.Internal.Helpers exposing (toSlug)
 
 
 type ChapterCustom state html
@@ -19,8 +23,9 @@ type ChapterBuilder state html
 
 
 type alias ChapterConfig state html =
-    { title : String
-    , slug : String
+    { url : String
+    , title : String
+    , groupTitle : Maybe String
     , body : String
     , componentOptions : ComponentOptions
     , componentList : List (ChapterComponent state html)
@@ -38,6 +43,32 @@ chapterTitle (Chapter { title }) =
     title
 
 
-chapterSlug : ChapterCustom state html -> String
-chapterSlug (Chapter { slug }) =
-    slug
+chapterUrl : ChapterCustom state html -> String
+chapterUrl (Chapter { url }) =
+    url
+
+
+groupTitle : ChapterCustom state html -> Maybe String
+groupTitle (Chapter chapter) =
+    chapter.groupTitle
+
+
+chapterBreadcrumb : ChapterCustom state html -> String
+chapterBreadcrumb (Chapter chapter) =
+    chapter.groupTitle
+        |> Maybe.map (\t -> t ++ " / ")
+        |> Maybe.withDefault ""
+        |> (\t -> t ++ chapter.title)
+
+
+chapterWithGroup : String -> ChapterCustom state html -> ChapterCustom state html
+chapterWithGroup group (Chapter chapter) =
+    if group == "" then
+        Chapter chapter
+
+    else
+        Chapter
+            { chapter
+                | groupTitle = Just group
+                , url = "/" ++ toSlug group ++ chapter.url
+            }

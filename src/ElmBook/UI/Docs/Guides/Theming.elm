@@ -230,7 +230,7 @@ Your book should look and feel your own, so ElmBook provides a few ways you can 
 
 You can choose a different logo, title and subtitle for your book:
 
-<element with-label="Header with custom logo" with-background=\"""" ++ themeBackground ++ """" />
+<component with-label="Header with custom logo" with-background=\"""" ++ themeBackground ++ """" />
 
     main : ElmBook x
     main =
@@ -243,7 +243,7 @@ You can choose a different logo, title and subtitle for your book:
 
 Or you can go full custom and provide your own thing:
 
-<element with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
+<component with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
 
     main : ElmBook x
     main =
@@ -255,7 +255,7 @@ Or you can go full custom and provide your own thing:
 
 What about colors? I mean… we all love Elm's light blue but maybe it doesn't fit our book. But don't fret, you can customize a lot of what you're seeing.
 
-<element with-label="Theme Builder" />
+<component with-label="Theme Builder" />
 
     main : ElmBook x
     main =

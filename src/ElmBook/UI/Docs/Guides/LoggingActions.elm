@@ -60,7 +60,7 @@ docs =
               )
             ]
         |> render """
-When creating something like a UI catalogue it's often useful to display how each element reacts to user interaction.
+When creating something like a UI catalogue it's often useful to display how each component reacts to user interaction.
 
 For instance, a custom button might receive an `onClick` message. But is that message actually sent when the user clicks on it? And what message should I use on my docs since the button can be used anywhere?
 
@@ -70,11 +70,11 @@ For instance, a custom button might receive an `onClick` message. But is that me
 
 ElmBook provides this function to help on those scenarios. It receives a label and it will print out your message (with it's context) whenever it is called. Try it out below:
 
-<element with-label="button" />
+<component with-label="button" />
 
 ```elm
 chapter "button"
-    |> withElement (
+    |> withComponent (
         myButton {
             onClick = logAction "Clicked button!"
         }
@@ -89,11 +89,11 @@ Sometimes your actions might not be as simple a button click – maybe your comp
 
 Let's try it out with a text input – it sends out a message with the string the user typed in:
 
-<element with-label="input" />
+<component with-label="input" />
 
 ```elm
 chapter "button"
-    |> withElement (
+    |> withComponent (
         myInput {
             onInput =
                 logActionWithString

@@ -1,11 +1,11 @@
 # UI Book
 
-A book that tells the story of the UI elements of your Elm application.
+A book that tells the story of the UI components of your Elm application.
 
 - Plain Elm (no custom setup)
 - Customizable theme colors and header
-- Organize your UI elements into chapters and elements
-- Showcase stateful widgets, not only static elements
+- Organize your UI components into chapters and components
+- Showcase stateful widgets, not only static components
 - Log your actions
 - Built-in integration with elm-ui, elm-css and others
 - Built-in development server (Optional)
@@ -14,7 +14,7 @@ A live example can be found here: https://elm-ui-book.netlify.app/
 
 ## Start with a chapter.
 
-You can create one chapter for each one of your UI elements and split it in elements to showcase all of their possible variants.
+You can create one chapter for each one of your UI components and split it in components to showcase all of their possible variants.
 
     buttonsChapter : UIChapter x
     buttonsChapter =
@@ -24,7 +24,7 @@ You can create one chapter for each one of your UI elements and split it in elem
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
 
-Don't be limited by this pattern though. A chapter and its elements may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
+Don't be limited by this pattern though. A chapter and its components may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
 
 ## Then, create your book.
 
@@ -79,7 +79,7 @@ Log your action intents to showcase how your components would react to interacti
 
 ## Showcase stateful widgets
 
-Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states. But how to accomplish this with Elm's static typing? Simply provide your own custom "state" that can be used and updated by your own elements.
+Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states. But how to accomplish this with Elm's static typing? Simply provide your own custom "state" that can be used and updated by your own components.
 
     type alias MyState =
         { input : String, counter : Int }

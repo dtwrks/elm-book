@@ -1,7 +1,6 @@
 module ElmBook.UI.ElmBook exposing (..)
 
 import ElmBook exposing (ElmBook, book, withChapterGroups, withTheme)
-import ElmBook.Component
 import ElmBook.Theme
 import ElmBook.UI.Docs.ActionLog
 import ElmBook.UI.Docs.Footer
@@ -17,7 +16,6 @@ import ElmBook.UI.Docs.Markdown
 import ElmBook.UI.Docs.Nav
 import ElmBook.UI.Docs.Search
 import ElmBook.UI.Docs.Wrapper
-import ElmBook.UI.Helpers exposing (themeBackground)
 
 
 type alias Model =
@@ -35,9 +33,6 @@ main =
     book "ElmBook's" initialModel
         |> withTheme
             [ ElmBook.Theme.subtitle "Guides & Components"
-            ]
-        |> ElmBook.withComponentOptions
-            [ ElmBook.Component.background themeBackground
             ]
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )

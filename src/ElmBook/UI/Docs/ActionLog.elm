@@ -1,15 +1,16 @@
 module ElmBook.UI.Docs.ActionLog exposing (..)
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, withComponentList)
-import ElmBook.UI.ActionLog exposing (list, preview)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
+import ElmBook.UI.ActionLog exposing (list, preview, previewEmpty)
 
 
 docs : Chapter x
 docs =
     chapter "ActionLog"
         |> renderComponentList
-            [ ( "Preview"
+            [ ( "Empty", previewEmpty )
+            , ( "Preview"
               , preview
                     { lastActionIndex = 0
                     , lastAction = ( "Context", "Action" )

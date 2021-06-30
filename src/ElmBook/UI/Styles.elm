@@ -2,7 +2,7 @@ module ElmBook.UI.Styles exposing (view)
 
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
-import ElmBook.UI.ChapterElement
+import ElmBook.UI.ChapterComponent
 import ElmBook.UI.ChapterHeader
 import ElmBook.UI.Footer
 import ElmBook.UI.Header
@@ -20,7 +20,7 @@ view =
         [ ElmBook.UI.Helpers.baseStyles
         , ElmBook.UI.ActionLog.styles
         , ElmBook.UI.Chapter.styles
-        , ElmBook.UI.ChapterElement.styles
+        , ElmBook.UI.ChapterComponent.styles
         , ElmBook.UI.ChapterHeader.styles
         , ElmBook.UI.Footer.styles
         , ElmBook.UI.Header.styles

@@ -40,7 +40,7 @@ docs =
                         | itemGroups =
                             List.range 0 3
                                 |> List.map itemGroup
-                                |> List.map (Tuple.mapFirst (\_ -> "Group Name"))
+                                |> List.map (\( _, xs ) -> ( "Group Name", xs ))
                     }
               )
             , ( "With unnamed groups"

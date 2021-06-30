@@ -11,7 +11,7 @@ docs =
         |> render """
 Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states.
 
-But how to accomplish this with Elm's static typing? Simply provide your own custom model that can be used and updated by your own elements.
+But how to accomplish this with Elm's static typing? Simply provide your own custom model that can be used and updated by your own components.
 
 ---
 
@@ -101,7 +101,7 @@ updateSharedModel x =
 chapter : ElmBook.Chapter SharedModel
 chapter =
     ElmBook.chapter "InputChapter"
-        |> withStatefulElement (
+        |> withStatefulComponent (
             \\{ inputModel } ->
                 myCounter
                     { value = inputModel.value
@@ -129,7 +129,7 @@ updateSharedModel value x =
 chapter : ElmBook.Chapter SharedModel
 chapter =
     ElmBook.chapter "InputChapter"
-        |> withStatefulElement (
+        |> withStatefulComponent (
             \\{ inputModel } ->
                 myInput
                     { value = inputModel.value
@@ -181,7 +181,7 @@ updateSharedModel msg shared =
 chapter : ElmBook.Chapter SharedModel
 chapter =
     ElmBook.chapter "InputChapter"
-        |> withStatefulElement (
+        |> withStatefulComponent (
             \\{ inputModel } ->
                 view inputModel
                     |> Html.map (updateState1 updateSharedModel)

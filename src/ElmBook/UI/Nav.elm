@@ -95,17 +95,17 @@ view props =
                 |> (==) 0
 
         item : ( String, String ) -> Html msg
-        item ( slug, label ) =
+        item ( url, label ) =
             li []
                 [ a
                     [ classList
                         [ ( "elm-book-nav-item", True )
-                        , ( "active", props.active == Just slug )
-                        , ( "pre-selected", props.preSelected == Just slug )
+                        , ( "active", props.active == Just url )
+                        , ( "pre-selected", props.preSelected == Just url )
                         ]
                     , style "color" themeAccent
-                    , href (Url.Builder.absolute [ props.preffix, slug ] [])
-                    , if props.active == Just slug then
+                    , href url
+                    , if props.active == Just url then
                         style "opacity" "1"
 
                       else

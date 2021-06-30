@@ -14,7 +14,8 @@ styles =
 .elm-book-chapter-header {
     margin: 0;
     padding: 12px 16px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
     color: #333;
 }
 """
@@ -23,6 +24,6 @@ styles =
 view : String -> Html msg
 view title_ =
     div [ class "elm-book" ]
-        [ h1 [ class "elm-book-chapter-header" ]
+        [ p [ class "elm-book-chapter-header" ]
             [ text title_ ]
         ]

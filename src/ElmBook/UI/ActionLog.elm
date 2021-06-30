@@ -62,15 +62,17 @@ list props =
 item : Int -> ( String, String ) -> Html msg
 item index ( preffix, label ) =
     div
-        [ class "elm-book-action-log-item-wrapper elm-book-monospace" ]
-        [ span
+        [ class "elm-book-wrapper elm-book-action-log-item-wrapper elm-book-monospace" ]
+        [ p
             [ class "elm-book-action-log-item-index" ]
             [ text ("(" ++ String.fromInt (index + 1) ++ ")")
             ]
-        , span
-            [ class "elm-book-action-log-item-preffix" ]
-            [ text preffix ]
-        , span [ class "elm-book-action-log-item-label" ] [ text label ]
+        , div [ class "elm-book-action-log__main" ]
+            [ p
+                [ class "elm-book-action-log-item-preffix" ]
+                [ text preffix ]
+            , p [ class "elm-book-action-log-item-label" ] [ text label ]
+            ]
         ]
 
 
@@ -113,8 +115,6 @@ styles =
 .elm-book-action-log-list-wrapper {
     position: relative;
     padding-top: 34px;
-    width: 640px;
-    max-width: 100%;
 }
 .elm-book-action-log-list-header {
     display: flex;
@@ -134,27 +134,31 @@ styles =
     overflow-y: auto;
 }
 .elm-book-action-log-list-item {
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid #e0e0e0;
 }
 
 .elm-book-action-log-item-wrapper {
     display: flex;
-    align-items: baseline;
-    padding: 12px 20px;
+    align-items: center;
+    padding: 8px 20px 8px 0;
     font-size: 14px;
-    background-color: #f3f3f3;
+    background-color: #f5f5f5;
 }
 .elm-book-action-log-item-index {
+    width: 60px;
+    text-align: center;
     display: inline-block;
-    padding-right: 16px;
     color: #a0a0a0;
 }
 .elm-book-action-log-item-preffix {
     padding-right: 16px;
     color: #a0a0a0;
     letter-spacing: 0.5px;
+    font-size: 12px;
 }
 .elm-book-action-log-item-label {
-
+    color: #404040;
+    font-size: 13px;
+    font-weight: bold;
 }
 """

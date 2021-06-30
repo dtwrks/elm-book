@@ -58,9 +58,9 @@ logActionWithFloat action value =
             Finish ->
                 "Finish"
 
-    myCustomElement {
+    myCustomComponent {
         onEvent =
-            logActionMap "My Custom Element: " eventToString
+            logActionMap "My Custom Component: " eventToString
     }
 
 -}
@@ -82,7 +82,7 @@ logActionMap action toString value =
                 { state | counter = state.counter + 1 }
         in
         chapter "Counter"
-            |> withStatefulElement
+            |> withStatefulComponent
                 (\state ->
                     button
                         [ onClick (updateState update) ]
@@ -104,7 +104,7 @@ updateState =
                 { state | input = value }
         in
         chapter "Input"
-            |> withStatefulElement
+            |> withStatefulComponent
                 (\state ->
                     input
                         [ value state.input

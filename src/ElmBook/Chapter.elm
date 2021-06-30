@@ -1,6 +1,5 @@
 module ElmBook.Chapter exposing
     ( Chapter
-    , ChapterCustom
     , chapter
     , render
     , renderComponent
@@ -26,18 +25,14 @@ type alias Chapter state =
     ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state))
 
 
-{-| -}
-type alias ChapterCustom state html =
-    ElmBook.Internal.Chapter.ChapterCustom state html
-
-
 {-| Creates a chapter with some title.
 -}
 chapter : String -> ChapterBuilder state html
 chapter title =
     ChapterBuilder
         { title = title
-        , slug = toSlug title
+        , groupTitle = Nothing
+        , url = "/" ++ toSlug title
         , body = "# " ++ title ++ "\n"
         , componentOptions = ElmBook.Internal.Component.defaultOverrides
         , componentList = []

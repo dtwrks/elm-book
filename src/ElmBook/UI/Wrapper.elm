@@ -266,6 +266,8 @@ styles =
     position: relative;
     z-index: 1;
     margin: 40px;
+    width: 640px;
+    max-width: 100%;
     max-height: calc 100% - 120px;
     overflow-y: auto;
     background-color: #fff;

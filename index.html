@@ -4954,23 +4954,6 @@ function _Browser_load(url)
 }
 
 
-function _Url_percentEncode(string)
-{
-	return encodeURIComponent(string);
-}
-
-function _Url_percentDecode(string)
-{
-	try
-	{
-		return $elm$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch (e)
-	{
-		return $elm$core$Maybe$Nothing;
-	}
-}
-
 
 
 // STRINGS
@@ -5200,7 +5183,24 @@ var _Regex_splitAtMost = F3(function(n, re, str)
 });
 
 var _Regex_infinity = Infinity;
-var $elm$core$List$cons = _List_cons;
+
+
+function _Url_percentEncode(string)
+{
+	return encodeURIComponent(string);
+}
+
+function _Url_percentDecode(string)
+{
+	try
+	{
+		return $elm$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch (e)
+	{
+		return $elm$core$Maybe$Nothing;
+	}
+}var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
 	function (func, baseCase, _v0) {
@@ -5287,46 +5287,30 @@ var $elm$core$Basics$apR = F2(
 var $elm$core$Basics$identity = function (x) {
 	return x;
 };
-var $dtwrks$elm_book$ElmBook$Internal$Component$ComponentOptions = function (a) {
-	return {$: 'ComponentOptions', a: a};
-};
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var $dtwrks$elm_book$ElmBook$Component$background = F2(
-	function (background_, _v0) {
-		var settings = _v0.a;
-		return $dtwrks$elm_book$ElmBook$Internal$Component$ComponentOptions(
-			_Utils_update(
-				settings,
-				{
-					background: $elm$core$Maybe$Just(background_)
-				}));
-	});
-var $dtwrks$elm_book$ElmBook$ElmBookBuilder = function (a) {
+var $dtwrks$elm_book$ElmBook$Internal$Book$ElmBookBuilder = function (a) {
 	return {$: 'ElmBookBuilder', a: a};
 };
 var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $dtwrks$elm_book$ElmBook$Internal$Component$Card = {$: 'Card'};
 var $elm$core$Basics$False = {$: 'False'};
-var $dtwrks$elm_book$ElmBook$Internal$Component$defaultOptions = {background: 'blue', fullWidth: false, hiddenLabel: false, layout: $dtwrks$elm_book$ElmBook$Internal$Component$Card};
+var $dtwrks$elm_book$ElmBook$Internal$Component$defaultOptions = {background: '#fff', fullWidth: false, hiddenLabel: false, layout: $dtwrks$elm_book$ElmBook$Internal$Component$Card};
 var $dtwrks$elm_book$ElmBook$Internal$Theme$Theme = function (a) {
 	return {$: 'Theme', a: a};
 };
 var $dtwrks$elm_book$ElmBook$Internal$Theme$defaultTheme = $dtwrks$elm_book$ElmBook$Internal$Theme$Theme(
 	{accent: '#fff', background: 'linear-gradient(150deg, rgba(0,135,207,1) 0%, rgba(86,207,255,1) 100%)', fontMonospace: 'Fira Code', fontSans: 'IBM Plex Sans', fontSerif: 'IBM Plex Serif', header: $elm$core$Maybe$Nothing, logo: $elm$core$Maybe$Nothing, subtitle: $elm$core$Maybe$Nothing});
-var $dtwrks$elm_book$ElmBook$customBook = function (config) {
-	return $dtwrks$elm_book$ElmBook$ElmBookBuilder(
-		{componentOptions: $dtwrks$elm_book$ElmBook$Internal$Component$defaultOptions, globals: $elm$core$Maybe$Nothing, state: config.state, theme: $dtwrks$elm_book$ElmBook$Internal$Theme$defaultTheme, title: config.title, toHtml: config.toHtml, urlPreffix: 'chapter'});
-};
-var $dtwrks$elm_book$ElmBook$book = F2(
-	function (title, state) {
-		return $dtwrks$elm_book$ElmBook$customBook(
-			{state: state, title: title, toHtml: $elm$core$Basics$identity});
+var $dtwrks$elm_book$ElmBook$Custom$customBook = F3(
+	function (toHtml, title, initialState) {
+		return $dtwrks$elm_book$ElmBook$Internal$Book$ElmBookBuilder(
+			{componentOptions: $dtwrks$elm_book$ElmBook$Internal$Component$defaultOptions, globals: $elm$core$Maybe$Nothing, state: initialState, theme: $dtwrks$elm_book$ElmBook$Internal$Theme$defaultTheme, title: title, toHtml: toHtml, urlPreffix: 'chapter'});
 	});
+var $dtwrks$elm_book$ElmBook$book = $dtwrks$elm_book$ElmBook$Custom$customBook($elm$core$Basics$identity);
 var $elm$core$Basics$append = _Utils_append;
 var $dtwrks$elm_book$ElmBook$Internal$Chapter$ChapterBuilder = function (a) {
 	return {$: 'ChapterBuilder', a: a};
+};
+var $dtwrks$elm_book$ElmBook$Internal$Component$ComponentOptions = function (a) {
+	return {$: 'ComponentOptions', a: a};
 };
 var $dtwrks$elm_book$ElmBook$Internal$Component$defaultOverrides = $dtwrks$elm_book$ElmBook$Internal$Component$ComponentOptions(
 	{background: $elm$core$Maybe$Nothing, fullWidth: $elm$core$Maybe$Nothing, hiddenLabel: $elm$core$Maybe$Nothing, layout: $elm$core$Maybe$Nothing});
@@ -5335,6 +5319,9 @@ var $elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
 var $elm$core$String$join = F2(
 	function (sep, chunks) {
 		return A2(
@@ -5365,8 +5352,9 @@ var $dtwrks$elm_book$ElmBook$Chapter$chapter = function (title) {
 			body: '# ' + (title + '\n'),
 			componentList: _List_Nil,
 			componentOptions: $dtwrks$elm_book$ElmBook$Internal$Component$defaultOverrides,
-			slug: $dtwrks$elm_book$ElmBook$Internal$Helpers$toSlug(title),
-			title: title
+			groupTitle: $elm$core$Maybe$Nothing,
+			title: title,
+			url: '/' + $dtwrks$elm_book$ElmBook$Internal$Helpers$toSlug(title)
 		});
 };
 var $elm$core$String$fromInt = _String_fromNumber;
@@ -5767,7 +5755,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $dtwrks$elm_book$ElmBook$UI$ActionLog$item = F2(
@@ -5778,12 +5766,12 @@ var $dtwrks$elm_book$ElmBook$UI$ActionLog$item = F2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('elm-book-action-log-item-wrapper elm-book-monospace')
+					$elm$html$Html$Attributes$class('elm-book-wrapper elm-book-action-log-item-wrapper elm-book-monospace')
 				]),
 			_List_fromArray(
 				[
 					A2(
-					$elm$html$Html$span,
+					$elm$html$Html$p,
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('elm-book-action-log-item-index')
@@ -5794,24 +5782,33 @@ var $dtwrks$elm_book$ElmBook$UI$ActionLog$item = F2(
 							'(' + ($elm$core$String$fromInt(index + 1) + ')'))
 						])),
 					A2(
-					$elm$html$Html$span,
+					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('elm-book-action-log-item-preffix')
+							$elm$html$Html$Attributes$class('elm-book-action-log__main')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(preffix)
-						])),
-					A2(
-					$elm$html$Html$span,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('elm-book-action-log-item-label')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(label)
+							A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('elm-book-action-log-item-preffix')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(preffix)
+								])),
+							A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('elm-book-action-log-item-label')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(label)
+								]))
 						]))
 				]));
 	});
@@ -5885,7 +5882,6 @@ var $elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $dtwrks$elm_book$ElmBook$UI$Helpers$themeBackgroundVar = '--elm-book-background';
@@ -5980,6 +5976,25 @@ var $dtwrks$elm_book$ElmBook$UI$ActionLog$preview = function (props) {
 					]))
 			]));
 };
+var $dtwrks$elm_book$ElmBook$UI$ActionLog$previewEmpty = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$class('elm-book-monospace elm-book-action-log-preview-empty-wrapper')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('elm-book-action-log-preview-empty')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Your logged actions will appear here.')
+				]))
+		]));
 var $dtwrks$elm_book$ElmBook$Internal$Chapter$Chapter = function (a) {
 	return {$: 'Chapter', a: a};
 };
@@ -6010,6 +6025,7 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$ActionLog$docs = A2(
 	$dtwrks$elm_book$ElmBook$Chapter$renderComponentList,
 	_List_fromArray(
 		[
+			_Utils_Tuple2('Empty', $dtwrks$elm_book$ElmBook$UI$ActionLog$previewEmpty),
 			_Utils_Tuple2(
 			'Preview',
 			$dtwrks$elm_book$ElmBook$UI$ActionLog$preview(
@@ -6031,6 +6047,16 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$ActionLog$docs = A2(
 					A2($elm$core$List$range, 1, 10))))
 		]),
 	$dtwrks$elm_book$ElmBook$Chapter$chapter('ActionLog'));
+var $dtwrks$elm_book$ElmBook$Component$background = F2(
+	function (background_, _v0) {
+		var settings = _v0.a;
+		return $dtwrks$elm_book$ElmBook$Internal$Component$ComponentOptions(
+			_Utils_update(
+				settings,
+				{
+					background: $elm$core$Maybe$Just(background_)
+				}));
+	});
 var $dtwrks$elm_book$ElmBook$Chapter$renderComponent = F2(
 	function (component, _v0) {
 		var builder = _v0.a;
@@ -6285,7 +6311,7 @@ var $dtwrks$elm_book$ElmBook$Chapter$withComponentList = F2(
 	});
 var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$LoggingActions$docs = A2(
 	$dtwrks$elm_book$ElmBook$Chapter$render,
-	'\nWhen creating something like a UI catalogue it\'s often useful to display how each element reacts to user interaction.\n\nFor instance, a custom button might receive an `onClick` message. But is that message actually sent when the user clicks on it? And what message should I use on my docs since the button can be used anywhere?\n\n---\n\n### Introducing `logAction`\n\nElmBook provides this function to help on those scenarios. It receives a label and it will print out your message (with it\'s context) whenever it is called. Try it out below:\n\n<element with-label="button" />\n\n```elm\nchapter "button"\n    |> withElement (\n        myButton {\n            onClick = logAction "Clicked button!"\n        }\n    )\n```\n\n---\n\n### What about actions with parameters?\n\nSometimes your actions might not be as simple a button click – maybe your component sends some information along with the message?\n\nLet\'s try it out with a text input – it sends out a message with the string the user typed in:\n\n<element with-label="input" />\n\n```elm\nchapter "button"\n    |> withElement (\n        myInput {\n            onInput =\n                logActionWithString\n                    "Received input with some value"\n        }\n    )\n```\n\n---\n\nThere are other `logAction*` functions available. Check out the docs!\n\n',
+	'\nWhen creating something like a UI catalogue it\'s often useful to display how each component reacts to user interaction.\n\nFor instance, a custom button might receive an `onClick` message. But is that message actually sent when the user clicks on it? And what message should I use on my docs since the button can be used anywhere?\n\n---\n\n### Introducing `logAction`\n\nElmBook provides this function to help on those scenarios. It receives a label and it will print out your message (with it\'s context) whenever it is called. Try it out below:\n\n<component with-label="button" />\n\n```elm\nchapter "button"\n    |> withComponent (\n        myButton {\n            onClick = logAction "Clicked button!"\n        }\n    )\n```\n\n---\n\n### What about actions with parameters?\n\nSometimes your actions might not be as simple a button click – maybe your component sends some information along with the message?\n\nLet\'s try it out with a text input – it sends out a message with the string the user typed in:\n\n<component with-label="input" />\n\n```elm\nchapter "button"\n    |> withComponent (\n        myInput {\n            onInput =\n                logActionWithString\n                    "Received input with some value"\n        }\n    )\n```\n\n---\n\nThere are other `logAction*` functions available. Check out the docs!\n\n',
 	A2(
 		$dtwrks$elm_book$ElmBook$Chapter$withComponentList,
 		_List_fromArray(
@@ -6334,7 +6360,7 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$LoggingActions$docs = A2(
 		$dtwrks$elm_book$ElmBook$Chapter$chapter('Logging Actions')));
 var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$StatefulChapters$docs = A2(
 	$dtwrks$elm_book$ElmBook$Chapter$render,
-	'\nSometimes it\'s useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states.\n\nBut how to accomplish this with Elm\'s static typing? Simply provide your own custom model that can be used and updated by your own elements.\n\n---\n\n## The Shared Model\n\nEach book has one "shared model" and it\'s your job to slice in the way that makes sense for your book.\n\nLets say we have two stateful chapters, one with an input and the other one with a counter.\n\nLet\'s first define a simple model for the `InputChapter`:\n\n```elm\nmodule InputChapter exposing (Model, init)\n\ntype alias Model =\n    { value : String\n    }\n\ninit : Model\ninit =\n    { value = ""\n    }\n```\n\nThen another even simpler one for the `CounterChapter`:\n\n```elm\nmodule CounterChapter exposing (Model, init)\n\ntype alias Model = Int\n\ninit : Model\ninit = 0\n```\n\nThen, on your book, you put everything together like this:\n\n```elm\nmodule Book exposing (main)\n\nimport ElmBook exposing (..)\nimport CounterChapter\nimport InputChapter\n\ntype alias Model =\n    { inputChapter : InputChapter.Model\n    , counterChapter : CounterChapter.Model\n    }\n\ninitialModel : Model\ninitialModel =\n    { inputChapter = InputChapter.init\n    , counterChapter = CounterChapter.init\n    }\n\nmain : ElmBook Model\nmain =\n    book "Stateful Book" initialModel\n        |> withChapters [\n            CounterChapter.chapter,\n            InputChapter.chapter\n        ]\n```\n\n---\n\n## Using the Shared Model\n\nBy now we have our shared model properly setup, but how can we actually use those models on our chapters? Let\'s see!\n\nYou need to tell your chapter where its state is located in your book. You also need to tell it how to update that state. It\'s pretty simple:\n\n```elm\nmodule CounterChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState)\n\ntype alias Model = Int\n\ntype alias SharedModel\n    = { x | counterModel : Model }\n\nupdateSharedModel : SharedModel -> SharedModel\nupdateSharedModel x =\n    { x | counterModel = x.counterModel + 1 }\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulElement (\n            \\{ inputModel } ->\n                myCounter\n                    { value = inputModel.value\n                    , onIncrease = updateState updateSharedModel\n                    }\n        )\n```\n\nThe same can be done for the InputChapter. But note that it\'s `updateState` now receives one parameter.\n\n```elm\nmodule InputChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState1)\n\ntype alias Model = { value : String }\n\ntype alias SharedModel\n    = { x | inputModel : Model }\n\nupdateSharedModel : Int -> SharedModel -> SharedModel\nupdateSharedModel value x =\n    { x | inputModel = { value = value } }\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulElement (\n            \\{ inputModel } ->\n                myInput\n                    { value = inputModel.value\n                    , onInput = updateState1 updateSharedModel\n                    }\n        )\n```\n\n---\n\n### Nested Elm Architecture Example\n\nLet\'s change our `InputChapter` so it now have it\'s own elm architecture.\n\n```elm\nmodule InputChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState1)\n\n\ntype alias Model = { value = String }\n\n\ntype Msg =\n    UpdateValue String\n\n\nupdate : Msg -> Model -> Model\nupdate msg model =\n    case msg of\n        UpdateValue value ->\n            { value = value }\n\n\nview : Model -> Html Msg\nview model =\n    input [ value model.value, onInput UpdateValue ] []\n\n\ntype alias SharedModel\n    = { x | inputModel : Model }\n\n\nupdateSharedModel : Msg -> SharedModel -> SharedModel\nupdateSharedModel msg shared =\n    { shared | inputModel = update msg shared.inputModel }\n\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulElement (\n            \\{ inputModel } ->\n                view inputModel\n                    |> Html.map (updateState1 updateSharedModel)\n        )\n```\n\n\n',
+	'\nSometimes it\'s useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states.\n\nBut how to accomplish this with Elm\'s static typing? Simply provide your own custom model that can be used and updated by your own components.\n\n---\n\n## The Shared Model\n\nEach book has one "shared model" and it\'s your job to slice in the way that makes sense for your book.\n\nLets say we have two stateful chapters, one with an input and the other one with a counter.\n\nLet\'s first define a simple model for the `InputChapter`:\n\n```elm\nmodule InputChapter exposing (Model, init)\n\ntype alias Model =\n    { value : String\n    }\n\ninit : Model\ninit =\n    { value = ""\n    }\n```\n\nThen another even simpler one for the `CounterChapter`:\n\n```elm\nmodule CounterChapter exposing (Model, init)\n\ntype alias Model = Int\n\ninit : Model\ninit = 0\n```\n\nThen, on your book, you put everything together like this:\n\n```elm\nmodule Book exposing (main)\n\nimport ElmBook exposing (..)\nimport CounterChapter\nimport InputChapter\n\ntype alias Model =\n    { inputChapter : InputChapter.Model\n    , counterChapter : CounterChapter.Model\n    }\n\ninitialModel : Model\ninitialModel =\n    { inputChapter = InputChapter.init\n    , counterChapter = CounterChapter.init\n    }\n\nmain : ElmBook Model\nmain =\n    book "Stateful Book" initialModel\n        |> withChapters [\n            CounterChapter.chapter,\n            InputChapter.chapter\n        ]\n```\n\n---\n\n## Using the Shared Model\n\nBy now we have our shared model properly setup, but how can we actually use those models on our chapters? Let\'s see!\n\nYou need to tell your chapter where its state is located in your book. You also need to tell it how to update that state. It\'s pretty simple:\n\n```elm\nmodule CounterChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState)\n\ntype alias Model = Int\n\ntype alias SharedModel\n    = { x | counterModel : Model }\n\nupdateSharedModel : SharedModel -> SharedModel\nupdateSharedModel x =\n    { x | counterModel = x.counterModel + 1 }\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulComponent (\n            \\{ inputModel } ->\n                myCounter\n                    { value = inputModel.value\n                    , onIncrease = updateState updateSharedModel\n                    }\n        )\n```\n\nThe same can be done for the InputChapter. But note that it\'s `updateState` now receives one parameter.\n\n```elm\nmodule InputChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState1)\n\ntype alias Model = { value : String }\n\ntype alias SharedModel\n    = { x | inputModel : Model }\n\nupdateSharedModel : Int -> SharedModel -> SharedModel\nupdateSharedModel value x =\n    { x | inputModel = { value = value } }\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulComponent (\n            \\{ inputModel } ->\n                myInput\n                    { value = inputModel.value\n                    , onInput = updateState1 updateSharedModel\n                    }\n        )\n```\n\n---\n\n### Nested Elm Architecture Example\n\nLet\'s change our `InputChapter` so it now have it\'s own elm architecture.\n\n```elm\nmodule InputChapter exposing (Model, init, chapter)\n\nimport ElmBook exposing (updateState1)\n\n\ntype alias Model = { value = String }\n\n\ntype Msg =\n    UpdateValue String\n\n\nupdate : Msg -> Model -> Model\nupdate msg model =\n    case msg of\n        UpdateValue value ->\n            { value = value }\n\n\nview : Model -> Html Msg\nview model =\n    input [ value model.value, onInput UpdateValue ] []\n\n\ntype alias SharedModel\n    = { x | inputModel : Model }\n\n\nupdateSharedModel : Msg -> SharedModel -> SharedModel\nupdateSharedModel msg shared =\n    { shared | inputModel = update msg shared.inputModel }\n\n\nchapter : ElmBook.Chapter SharedModel\nchapter =\n    ElmBook.chapter "InputChapter"\n        |> withStatefulComponent (\n            \\{ inputModel } ->\n                view inputModel\n                    |> Html.map (updateState1 updateSharedModel)\n        )\n```\n\n\n',
 	$dtwrks$elm_book$ElmBook$Chapter$chapter('Stateful Chapters'));
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
@@ -6389,6 +6415,7 @@ var $dtwrks$elm_book$ElmBook$UI$Helpers$setTheme = F2(
 							_Utils_Tuple2($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccentVar, accentColor_)
 						]))));
 	});
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$Theming$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-docs__theming__theme {\n    display: flex;\n    align-items: stretch;\n    padding: 16px;\n}\n');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $dtwrks$elm_book$ElmBook$Internal$Msg$UpdateState = function (a) {
@@ -6660,7 +6687,7 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$Theming$docs = function () {
 			]));
 	return A2(
 		$dtwrks$elm_book$ElmBook$Chapter$render,
-		'\nYour book should look and feel your own, so ElmBook provides a few ways you can customize it\'s theme.\n\n## Custom Header\n\nYou can choose a different logo, title and subtitle for your book:\n\n<element with-label="Header with custom logo" with-background=\"' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + ('" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withSubtitle "Custom Subtitle"\n            |> withLogo (img [ src "/mycompanylogo.png" ] [])\n            |> withChapters []\n\n---\n\nOr you can go full custom and provide your own thing:\n\n<element with-label="Custom header" with-background=\"' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + '" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withCustomHeader myCustomHeader\n            |> withChapters []\n\n## Custom Colors\n\nWhat about colors? I mean… we all love Elm\'s light blue but maybe it doesn\'t fit our book. But don\'t fret, you can customize a lot of what you\'re seeing.\n\n<element with-label="Theme Builder" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withSubtitle "Custom Subtitle"\n            |> withLogo (img [ src "/mycompanylogo.png" ] [])\n            |> withChapters []        \n'))),
+		'\nYour book should look and feel your own, so ElmBook provides a few ways you can customize it\'s theme.\n\n## Custom Header\n\nYou can choose a different logo, title and subtitle for your book:\n\n<component with-label="Header with custom logo" with-background=\"' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + ('" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withSubtitle "Custom Subtitle"\n            |> withLogo (img [ src "/mycompanylogo.png" ] [])\n            |> withChapters []\n\n---\n\nOr you can go full custom and provide your own thing:\n\n<component with-label="Custom header" with-background=\"' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + '" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withCustomHeader myCustomHeader\n            |> withChapters []\n\n## Custom Colors\n\nWhat about colors? I mean… we all love Elm\'s light blue but maybe it doesn\'t fit our book. But don\'t fret, you can customize a lot of what you\'re seeing.\n\n<component with-label="Theme Builder" />\n\n    main : ElmBook x\n    main =\n        book "CustomHeader"\n            |> withSubtitle "Custom Subtitle"\n            |> withLogo (img [ src "/mycompanylogo.png" ] [])\n            |> withChapters []        \n'))),
 		A2(
 			$dtwrks$elm_book$ElmBook$Chapter$withStatefulComponentList,
 			_List_fromArray(
@@ -6949,7 +6976,7 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$Guides$Theming$docs = function () {
 }();
 var $dtwrks$elm_book$ElmBook$UI$Docs$Header$docs = function () {
 	var props = {
-		href: '/x',
+		href: '/logAction/href',
 		isMenuOpen: false,
 		onClickHeader: $dtwrks$elm_book$ElmBook$Actions$logAction('onClickHeader'),
 		onClickMenuButton: $dtwrks$elm_book$ElmBook$Actions$logAction('onClickMenuButton'),
@@ -7127,43 +7154,16 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$Icons$docs = function () {
 }();
 var $dtwrks$elm_book$ElmBook$UI$Docs$Intro$Overview$docs = A2(
 	$dtwrks$elm_book$ElmBook$Chapter$render,
-	'\nEvery application, tool or team has their own history worth telling.\n\nElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI elements**, **design tokens**, or anything else really.\n\n---\n\n## It all starts with a chapter\n\nThey can be as simple as a markdown block or as rich as a set of interactive UI elements that talk to each other. Take a look at the ["Creating Chapters"](/chapter/guides--creating-chapters) guide for more details.\n\n```elm\nmodule FirstChapter exposing (chapter)\n\n\nimport ElmBook\n\n\nchapter : ElmBook.Chapter x\nchapter =\n    ElmBook.chapter "The First Chapter"\n        |> withComponent component\n        |> render content\n\n\ncomponent : Html msg\ncomponent =\n    button [] [ text "Click me!" ]\n\n\ncontent : String\ncontent = \"\"\"\n\n# It all starts with a chapter\n\nOh, look – A wide real component!\n\n<component />\n\nWoof! Moving on...\n\n\"\"\"\n```\n\n---\n\n## Together, they become a book\n\nA book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/chapter/guides--creating-books) and ["Theming"](/chapter/guides--theming) guides for more details.\n\n\n```elm\nmodule Book exposing (main)\n\n\nimport ElmBook\nimport FirstChapter\n\n\nmain : ElmBook.Book ()\nmain =\n    ElmBook.book "Book"\n        |> withChapters [\n            FirstChapter.chapter\n        ]\n\n```\n\n---\n\n## Inspiration\n\nThis library takes a lot of inspiration from two libraries:\n\n- [Storybook](http://storybook.js.org) – a JS ecosystem tool that focus on showcasing components and their states, mostly aiming at internal design systems but also enabling the pattern of creating visual components in isolation.\n\n- [HexDocs](http://hexdocs.pm) – an Erlang/Elixir ecosystem tool that enables structured library documentation with guides, function docs, links to code and external sources.\n\nBoth of these tools affected their whole ecosystems greatly. Creating good docs is a common place when you\'re in Elixir world. Using Storybook to facilitate design-engineering iteration is a common place in the JS world.\n\nWhat if the Elm ecosystem can create it\'s own thing with the best of both worlds? ElmBook aims to be just that – making it easy to create attractive documentation websites that can also work as a playground for live components.\n\n---\n\n## Roadmap\n\nThis tool can already be used as-is for great effect.\nCan we add plugins? Sure. Darkmode? Definitely.\n\nThe most interesting thing that is currently sitting on the back of my head though is automatically creating ElmBooks based on doc comments, the same that are used to generate docs on elm-packages.\n\nThis would enable any/all published elm packages to automatically have their own ElmBook with example codes turning into live components. This is both more simple that it sounds and more complex than it could be. I don\'t expect it to happen in the next few weeks but it\'s definitely possible.\n\n---\n\nI really hope we can create something unique to the Elm ecosystem here, so please let me know what you think, ideas to improve it or if you encountered any problems. Find me as **georgesboris** on Elm Slack.\n\n\n',
+	'\nEvery application, tool or team has their own history worth telling.\n\nElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI components**, **design tokens**, or anything else really.\n\n---\n\n## It all starts with a chapter\n\nThey can be as simple as a markdown block or as rich as a set of interactive UI components that talk to each other. Take a look at the ["Creating Chapters"](/guides/creating-chapters) guide for more details.\n\n```elm\nmodule FirstChapter exposing (chapter)\n\n\nimport ElmBook\n\n\nchapter : ElmBook.Chapter x\nchapter =\n    ElmBook.chapter "The First Chapter"\n        |> withComponent component\n        |> render content\n\n\ncomponent : Html msg\ncomponent =\n    button [] [ text "Click me!" ]\n\n\ncontent : String\ncontent = \"\"\"\n\n# It all starts with a chapter\n\nOh, look – A wide real component!\n\n<component />\n\nWoof! Moving on...\n\n\"\"\"\n```\n\n---\n\n## Together, they become a book\n\nA book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/guides/creating-books) and ["Theming"](/guides/theming) guides for more details.\n\n\n```elm\nmodule Book exposing (main)\n\n\nimport ElmBook\nimport FirstChapter\n\n\nmain : ElmBook.Book ()\nmain =\n    ElmBook.book "Book"\n        |> withChapters [\n            FirstChapter.chapter\n        ]\n\n```\n\n---\n\n## Inspiration\n\nThis library takes a lot of inspiration from two libraries:\n\n- [Storybook](http://storybook.js.org) – a JS ecosystem tool that focus on showcasing components and their states, mostly aiming at internal design systems but also enabling the pattern of creating visual components in isolation.\n\n- [HexDocs](http://hexdocs.pm) – an Erlang/Elixir ecosystem tool that enables structured library documentation with guides, function docs, links to code and external sources.\n\nBoth of these tools affected their whole ecosystems greatly. Creating good docs is a common place when you\'re in Elixir world. Using Storybook to facilitate design-engineering iteration is a common place in the JS world.\n\nWhat if the Elm ecosystem can create it\'s own thing with the best of both worlds? ElmBook aims to be just that – making it easy to create attractive documentation websites that can also work as a playground for live components built with Elm.\n\n---\n\n## Roadmap\n\nThis tool can already be used as-is for great effect.\nCan we add plugins? Sure. Darkmode? Definitely.\n\nThe most interesting thing that is currently sitting on the back of my head though is automatically creating ElmBooks based on doc comments, the same that are used to generate docs on elm-packages.\n\nThis would enable any/all published elm packages to automatically have their own ElmBook with example codes turning into live components. This is both more simple that it sounds and more complex than it could be. I don\'t expect it to happen in the next few weeks but it\'s definitely possible.\n\n---\n\nI really hope we can create something unique to the Elm ecosystem here, so please let me know what you think, ideas to improve it or if you encountered any problems. Find me as **georgesboris** on Elm Slack.\n\n\n',
 	$dtwrks$elm_book$ElmBook$Chapter$chapter('Overview'));
 var $dtwrks$elm_book$ElmBook$UI$Docs$Markdown$docs = A2(
 	$dtwrks$elm_book$ElmBook$Chapter$render,
 	'\n# Heading 1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n## Heading 2\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n### Heading 3\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n---\n\n#### Heading 4\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n##### Heading 5\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n###### Heading 6\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n---\n\n# Heading 1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n![image](https://source.unsplash.com/WLUHO9A_xik/1600x900)\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n> Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nLorem ipsum dolor sit amet, `consectetur adipiscing elit`, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n```elm\n-- Elm\n\nview : String -> Html msg\nview content =\n    ElmBook.UI.Markdown.view content\n        |> withOther "stuff"\n        |> withAnd [ "x" [] ]\n```\n\n```html\n<!-- HTML -->\n\n<body>\n    <h1>Title</h1>\n</body>\n```\n\n```css\n/* CSS */\n\nbody {\n    margin: 0;\n    padding: 0;\n}\n```\n\n\n```js\n// Javascript\n\nimport { Elm } from "..";\n\nconst app = Elm.Main.init({\n    node: document.getElementById(\'myapp\')\n});\n```\n\n```js\n// Typescript\n\ninterface User {\n  name: string;\n  id: number;\n}\n\nclass UserAccount {\n  name: string;\n  id: number;\n\n  constructor(name: string, id: number) {\n    this.name = name;\n    this.id = id;\n  }\n}\n\nconst user: User = new UserAccount("Murphy", 1);\n```\n\n```rust\n// Rust (Unknown)\n\nfn used_function() {}\n\n// `#[allow(dead_code)]` is an attribute that disables the `dead_code` lint\n#[allow(dead_code)]\nfn unused_function() {}\n\nfn noisy_unused_function() {}\n// FIXME ^ Add an attribute to suppress the warning\n\nfn main() {\n    used_function();\n}\n```\n\n---\n\n# Heading 1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n* Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n* Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.\n\n1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n| Característica da contratação e aquisição                 | Divulgação                                     | Método de seleção                                                                                   |\n| --------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |\n| Consultoria (serviços de baixa complexidade)              | Trabalhe Conosco (site do Idec) e de parceiros | Contratação simplificada de consultoria pessoa jurídica ou contratação de consultor individual (PF) |\n| Consultoria (equipe multidisciplinar, serviços complexos) | Trabalhe Conosco (site do Idec) e de parceiros | Contratação de pessoa jurídica – Qualidade e preço                                                  |\n| Bens de produção contínua                                 | Carta convite, pesquisa em sites               | Compra direta                                                                                       |\n|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |\n| Bens sob encomenda                                        | Carta convite, pesquisa em sites               | Compra direta                                                                                       |\n|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |\n| Serviços de natureza continuada                           | Carta convite, pesquisa em sites               | Contratação direta                                                                                  |\n|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |   \n',
 	$dtwrks$elm_book$ElmBook$Chapter$chapter('Markdown'));
-var $elm$core$Tuple$mapFirst = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			func(x),
-			y);
-	});
 var $elm$core$List$singleton = function (value) {
 	return _List_fromArray(
 		[value]);
 };
-var $elm$url$Url$Builder$toQueryPair = function (_v0) {
-	var key = _v0.a;
-	var value = _v0.b;
-	return key + ('=' + value);
-};
-var $elm$url$Url$Builder$toQuery = function (parameters) {
-	if (!parameters.b) {
-		return '';
-	} else {
-		return '?' + A2(
-			$elm$core$String$join,
-			'&',
-			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
-	}
-};
-var $elm$url$Url$Builder$absolute = F2(
-	function (pathSegments, parameters) {
-		return '/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters));
-	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -7199,7 +7199,7 @@ var $elm$core$List$isEmpty = function (xs) {
 var $elm$html$Html$nav = _VirtualDom_node('nav');
 var $dtwrks$elm_book$ElmBook$UI$Nav$view = function (props) {
 	var item = function (_v2) {
-		var slug = _v2.a;
+		var url = _v2.a;
 		var label = _v2.b;
 		return A2(
 			$elm$html$Html$li,
@@ -7218,23 +7218,18 @@ var $dtwrks$elm_book$ElmBook$UI$Nav$view = function (props) {
 									'active',
 									_Utils_eq(
 										props.active,
-										$elm$core$Maybe$Just(slug))),
+										$elm$core$Maybe$Just(url))),
 									_Utils_Tuple2(
 									'pre-selected',
 									_Utils_eq(
 										props.preSelected,
-										$elm$core$Maybe$Just(slug)))
+										$elm$core$Maybe$Just(url)))
 								])),
 							A2($elm$html$Html$Attributes$style, 'color', $dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent),
-							$elm$html$Html$Attributes$href(
-							A2(
-								$elm$url$Url$Builder$absolute,
-								_List_fromArray(
-									[props.preffix, slug]),
-								_List_Nil)),
+							$elm$html$Html$Attributes$href(url),
 							_Utils_eq(
 							props.active,
-							$elm$core$Maybe$Just(slug)) ? A2($elm$html$Html$Attributes$style, 'opacity', '1') : A2($elm$html$Html$Attributes$style, 'opacity', '0.8')
+							$elm$core$Maybe$Just(url)) ? A2($elm$html$Html$Attributes$style, 'opacity', '1') : A2($elm$html$Html$Attributes$style, 'opacity', '0.8')
 						]),
 					_List_fromArray(
 						[
@@ -7378,10 +7373,10 @@ var $dtwrks$elm_book$ElmBook$UI$Docs$Nav$docs = function () {
 						{
 							itemGroups: A2(
 								$elm$core$List$map,
-								$elm$core$Tuple$mapFirst(
-									function (_v0) {
-										return 'Group Name';
-									}),
+								function (_v0) {
+									var xs = _v0.b;
+									return _Utils_Tuple2('Group Name', xs);
+								},
 								A2(
 									$elm$core$List$map,
 									itemGroup,
@@ -12752,16 +12747,6 @@ var $elm$core$Basics$never = function (_v0) {
 };
 var $elm$browser$Browser$application = _Browser_application;
 var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $dtwrks$elm_book$ElmBook$chapterGroupSlug = F2(
-	function (group, _v0) {
-		var chapter_ = _v0.a;
-		return (group === '') ? $dtwrks$elm_book$ElmBook$Internal$Chapter$Chapter(chapter_) : $dtwrks$elm_book$ElmBook$Internal$Chapter$Chapter(
-			_Utils_update(
-				chapter_,
-				{
-					slug: $dtwrks$elm_book$ElmBook$Internal$Helpers$toSlug(group) + ('--' + chapter_.slug)
-				}));
-	});
 var $elm$core$Array$appendHelpTree = F2(
 	function (toAppend, array) {
 		var len = array.a;
@@ -12842,26 +12827,10 @@ var $elm$core$Array$append = F2(
 						bTree)));
 		}
 	});
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
-var $dtwrks$elm_book$ElmBook$Route = function (a) {
-	return {$: 'Route', a: a};
+var $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl = function (_v0) {
+	var url = _v0.a.url;
+	return url;
 };
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $elm$core$Array$filter = F2(
 	function (isGood, array) {
 		return $elm$core$Array$fromList(
@@ -12874,297 +12843,28 @@ var $elm$core$Array$filter = F2(
 				_List_Nil,
 				array));
 	});
-var $dtwrks$elm_book$ElmBook$chapterWithSlug = F2(
-	function (targetSlug, chapters) {
+var $dtwrks$elm_book$ElmBook$Internal$Application$parseActiveChapterFromUrl = F2(
+	function (chapters, url) {
 		return A2(
 			$elm$core$Array$get,
 			0,
 			A2(
 				$elm$core$Array$filter,
-				function (_v0) {
-					var slug = _v0.a.slug;
-					return _Utils_eq(slug, targetSlug);
+				function (c) {
+					return _Utils_eq(
+						$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl(c),
+						url.path);
 				},
 				chapters));
 	});
-var $elm$url$Url$Parser$Parser = function (a) {
-	return {$: 'Parser', a: a};
-};
-var $elm$url$Url$Parser$State = F5(
-	function (visited, unvisited, params, frag, value) {
-		return {frag: frag, params: params, unvisited: unvisited, value: value, visited: visited};
-	});
-var $elm$url$Url$Parser$mapState = F2(
-	function (func, _v0) {
-		var visited = _v0.visited;
-		var unvisited = _v0.unvisited;
-		var params = _v0.params;
-		var frag = _v0.frag;
-		var value = _v0.value;
-		return A5(
-			$elm$url$Url$Parser$State,
-			visited,
-			unvisited,
-			params,
-			frag,
-			func(value));
-	});
-var $elm$url$Url$Parser$map = F2(
-	function (subValue, _v0) {
-		var parseArg = _v0.a;
-		return $elm$url$Url$Parser$Parser(
-			function (_v1) {
-				var visited = _v1.visited;
-				var unvisited = _v1.unvisited;
-				var params = _v1.params;
-				var frag = _v1.frag;
-				var value = _v1.value;
-				return A2(
-					$elm$core$List$map,
-					$elm$url$Url$Parser$mapState(value),
-					parseArg(
-						A5($elm$url$Url$Parser$State, visited, unvisited, params, frag, subValue)));
-			});
-	});
-var $elm$url$Url$Parser$oneOf = function (parsers) {
-	return $elm$url$Url$Parser$Parser(
-		function (state) {
-			return A2(
-				$elm$core$List$concatMap,
-				function (_v0) {
-					var parser = _v0.a;
-					return parser(state);
-				},
-				parsers);
-		});
-};
-var $elm$url$Url$Parser$getFirstMatch = function (states) {
-	getFirstMatch:
-	while (true) {
-		if (!states.b) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var state = states.a;
-			var rest = states.b;
-			var _v1 = state.unvisited;
-			if (!_v1.b) {
-				return $elm$core$Maybe$Just(state.value);
-			} else {
-				if ((_v1.a === '') && (!_v1.b.b)) {
-					return $elm$core$Maybe$Just(state.value);
-				} else {
-					var $temp$states = rest;
-					states = $temp$states;
-					continue getFirstMatch;
-				}
-			}
-		}
-	}
-};
-var $elm$url$Url$Parser$removeFinalEmpty = function (segments) {
-	if (!segments.b) {
-		return _List_Nil;
-	} else {
-		if ((segments.a === '') && (!segments.b.b)) {
-			return _List_Nil;
-		} else {
-			var segment = segments.a;
-			var rest = segments.b;
-			return A2(
-				$elm$core$List$cons,
-				segment,
-				$elm$url$Url$Parser$removeFinalEmpty(rest));
-		}
-	}
-};
-var $elm$url$Url$Parser$preparePath = function (path) {
-	var _v0 = A2($elm$core$String$split, '/', path);
-	if (_v0.b && (_v0.a === '')) {
-		var segments = _v0.b;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	} else {
-		var segments = _v0;
-		return $elm$url$Url$Parser$removeFinalEmpty(segments);
-	}
-};
-var $elm$url$Url$Parser$addToParametersHelp = F2(
-	function (value, maybeList) {
-		if (maybeList.$ === 'Nothing') {
-			return $elm$core$Maybe$Just(
-				_List_fromArray(
-					[value]));
-		} else {
-			var list = maybeList.a;
-			return $elm$core$Maybe$Just(
-				A2($elm$core$List$cons, value, list));
-		}
-	});
-var $elm$url$Url$percentDecode = _Url_percentDecode;
-var $elm$url$Url$Parser$addParam = F2(
-	function (segment, dict) {
-		var _v0 = A2($elm$core$String$split, '=', segment);
-		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
-			var rawKey = _v0.a;
-			var _v1 = _v0.b;
-			var rawValue = _v1.a;
-			var _v2 = $elm$url$Url$percentDecode(rawKey);
-			if (_v2.$ === 'Nothing') {
-				return dict;
-			} else {
-				var key = _v2.a;
-				var _v3 = $elm$url$Url$percentDecode(rawValue);
-				if (_v3.$ === 'Nothing') {
-					return dict;
-				} else {
-					var value = _v3.a;
-					return A3(
-						$elm$core$Dict$update,
-						key,
-						$elm$url$Url$Parser$addToParametersHelp(value),
-						dict);
-				}
-			}
-		} else {
-			return dict;
-		}
-	});
-var $elm$url$Url$Parser$prepareQuery = function (maybeQuery) {
-	if (maybeQuery.$ === 'Nothing') {
-		return $elm$core$Dict$empty;
-	} else {
-		var qry = maybeQuery.a;
-		return A3(
-			$elm$core$List$foldr,
-			$elm$url$Url$Parser$addParam,
-			$elm$core$Dict$empty,
-			A2($elm$core$String$split, '&', qry));
-	}
-};
-var $elm$url$Url$Parser$parse = F2(
-	function (_v0, url) {
-		var parser = _v0.a;
-		return $elm$url$Url$Parser$getFirstMatch(
-			parser(
-				A5(
-					$elm$url$Url$Parser$State,
-					_List_Nil,
-					$elm$url$Url$Parser$preparePath(url.path),
-					$elm$url$Url$Parser$prepareQuery(url.query),
-					url.fragment,
-					$elm$core$Basics$identity)));
-	});
-var $elm$url$Url$Parser$s = function (str) {
-	return $elm$url$Url$Parser$Parser(
-		function (_v0) {
-			var visited = _v0.visited;
-			var unvisited = _v0.unvisited;
-			var params = _v0.params;
-			var frag = _v0.frag;
-			var value = _v0.value;
-			if (!unvisited.b) {
-				return _List_Nil;
-			} else {
-				var next = unvisited.a;
-				var rest = unvisited.b;
-				return _Utils_eq(next, str) ? _List_fromArray(
-					[
-						A5(
-						$elm$url$Url$Parser$State,
-						A2($elm$core$List$cons, next, visited),
-						rest,
-						params,
-						frag,
-						value)
-					]) : _List_Nil;
-			}
-		});
-};
-var $elm$url$Url$Parser$slash = F2(
-	function (_v0, _v1) {
-		var parseBefore = _v0.a;
-		var parseAfter = _v1.a;
-		return $elm$url$Url$Parser$Parser(
-			function (state) {
-				return A2(
-					$elm$core$List$concatMap,
-					parseAfter,
-					parseBefore(state));
-			});
-	});
-var $elm$url$Url$Parser$custom = F2(
-	function (tipe, stringToSomething) {
-		return $elm$url$Url$Parser$Parser(
-			function (_v0) {
-				var visited = _v0.visited;
-				var unvisited = _v0.unvisited;
-				var params = _v0.params;
-				var frag = _v0.frag;
-				var value = _v0.value;
-				if (!unvisited.b) {
-					return _List_Nil;
-				} else {
-					var next = unvisited.a;
-					var rest = unvisited.b;
-					var _v2 = stringToSomething(next);
-					if (_v2.$ === 'Just') {
-						var nextValue = _v2.a;
-						return _List_fromArray(
-							[
-								A5(
-								$elm$url$Url$Parser$State,
-								A2($elm$core$List$cons, next, visited),
-								rest,
-								params,
-								frag,
-								value(nextValue))
-							]);
-					} else {
-						return _List_Nil;
-					}
-				}
-			});
-	});
-var $elm$url$Url$Parser$string = A2($elm$url$Url$Parser$custom, 'STRING', $elm$core$Maybe$Just);
-var $dtwrks$elm_book$ElmBook$parseActiveChapterFromUrl = F3(
-	function (preffix, docsList, url) {
-		return A2(
-			$elm$core$Maybe$andThen,
-			function (_v0) {
-				var slug = _v0.a;
-				return A2($dtwrks$elm_book$ElmBook$chapterWithSlug, slug, docsList);
-			},
-			A2(
-				$elm$url$Url$Parser$parse,
-				$elm$url$Url$Parser$oneOf(
-					_List_fromArray(
-						[
-							A2(
-							$elm$url$Url$Parser$map,
-							$dtwrks$elm_book$ElmBook$Route,
-							A2(
-								$elm$url$Url$Parser$slash,
-								$elm$url$Url$Parser$s(preffix),
-								$elm$url$Url$Parser$string))
-						])),
-				url));
-	});
 var $elm$browser$Browser$Navigation$replaceUrl = _Browser_replaceUrl;
-var $dtwrks$elm_book$ElmBook$urlFromChapter = F2(
-	function (preffix, _v0) {
-		var slug = _v0.a.slug;
-		return A2(
-			$elm$url$Url$Builder$absolute,
-			_List_fromArray(
-				[preffix, slug]),
-			_List_Nil);
-	});
-var $dtwrks$elm_book$ElmBook$init = F4(
+var $dtwrks$elm_book$ElmBook$Internal$Application$init = F4(
 	function (props, _v0, url, navKey) {
 		var chapters = A3(
 			$elm$core$List$foldl,
 			F2(
-				function (_v5, acc) {
-					var chapters_ = _v5.b;
+				function (_v6, acc) {
+					var chapters_ = _v6.b;
 					return A2(
 						$elm$core$Array$append,
 						acc,
@@ -13173,14 +12873,20 @@ var $dtwrks$elm_book$ElmBook$init = F4(
 			$elm$core$Array$empty,
 			props.chapterGroups);
 		var chapterGroups = function () {
-			var toIndexedGroup = function (initialIndex) {
-				return $elm$core$Tuple$mapSecond(
-					$elm$core$List$indexedMap(
-						F2(
-							function (i, _v4) {
-								return i + initialIndex;
-							})));
-			};
+			var toIndexedGroup = F2(
+				function (initialIndex, _v5) {
+					var groupTitle = _v5.a;
+					var groupChapters = _v5.b;
+					return _Utils_Tuple2(
+						groupTitle,
+						A2(
+							$elm$core$List$indexedMap,
+							F2(
+								function (i, _v4) {
+									return i + initialIndex;
+								}),
+							groupChapters));
+				});
 			return $elm$core$List$reverse(
 				A3(
 					$elm$core$List$foldl,
@@ -13203,7 +12909,7 @@ var $dtwrks$elm_book$ElmBook$init = F4(
 					_Utils_Tuple2(_List_Nil, 0),
 					props.chapterGroups).a);
 		}();
-		var activeChapter = A3($dtwrks$elm_book$ElmBook$parseActiveChapterFromUrl, props.config.urlPreffix, chapters, url);
+		var activeChapter = A2($dtwrks$elm_book$ElmBook$Internal$Application$parseActiveChapterFromUrl, chapters, url);
 		return _Utils_Tuple2(
 			{actionLog: _List_Nil, actionLogModal: false, chapterActive: activeChapter, chapterGroups: chapterGroups, chapterPreSelected: 0, chapters: chapters, chaptersSearched: chapters, config: props.config, isMenuOpen: false, isMetaPressed: false, isSearching: false, isShiftPressed: false, navKey: navKey, search: ''},
 			function () {
@@ -13218,7 +12924,7 @@ var $dtwrks$elm_book$ElmBook$init = F4(
 							A2(
 								$elm$core$Basics$composeL,
 								$elm$browser$Browser$Navigation$replaceUrl(navKey),
-								$dtwrks$elm_book$ElmBook$urlFromChapter(props.config.urlPreffix)),
+								$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl),
 							A2($elm$core$Array$get, 0, chapters)));
 				}
 			}());
@@ -13230,7 +12936,7 @@ var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyEnter = {$: 'KeyEnter'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyK = {$: 'KeyK'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyMetaOn = {$: 'KeyMetaOn'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyShiftOn = {$: 'KeyShiftOn'};
-var $dtwrks$elm_book$ElmBook$keyDownDecoder = A2(
+var $dtwrks$elm_book$ElmBook$Internal$Application$keyDownDecoder = A2(
 	$elm$json$Json$Decode$map,
 	function (string) {
 		var _v0 = $elm$core$String$toLower(string);
@@ -13254,7 +12960,7 @@ var $dtwrks$elm_book$ElmBook$keyDownDecoder = A2(
 	A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
 var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyMetaOff = {$: 'KeyMetaOff'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$KeyShiftOff = {$: 'KeyShiftOff'};
-var $dtwrks$elm_book$ElmBook$keyUpDecoder = A2(
+var $dtwrks$elm_book$ElmBook$Internal$Application$keyUpDecoder = A2(
 	$elm$json$Json$Decode$map,
 	function (string) {
 		var _v0 = $elm$core$String$toLower(string);
@@ -13467,9 +13173,10 @@ var $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterTitle = function (_v0) {
 	return title;
 };
 var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
+var $elm$browser$Browser$Navigation$load = _Browser_load;
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
-var $dtwrks$elm_book$ElmBook$searchChapters = F2(
+var $dtwrks$elm_book$ElmBook$Internal$Application$searchChapters = F2(
 	function (search, chapters) {
 		if (search === '') {
 			return chapters;
@@ -13529,7 +13236,7 @@ var $elm$url$Url$toString = function (url) {
 					_Utils_ap(http, url.host)),
 				url.path)));
 };
-var $dtwrks$elm_book$ElmBook$update = F2(
+var $dtwrks$elm_book$ElmBook$Internal$Application$update = F2(
 	function (msg, model) {
 		var logAction_ = F2(
 			function (context, action) {
@@ -13558,15 +13265,20 @@ var $dtwrks$elm_book$ElmBook$update = F2(
 				var request = msg.a;
 				if (request.$ === 'External') {
 					var url = request.a;
-					return A2(logAction_, defaultLogContext, 'Navigate to: ' + url);
+					return _Utils_Tuple2(
+						model,
+						$elm$browser$Browser$Navigation$load(url));
 				} else {
 					var url = request.a;
-					return ((url.path === '/') || A2($elm$core$String$startsWith, '/' + (model.config.urlPreffix + '/'), url.path)) ? _Utils_Tuple2(
+					return A2($elm$core$String$startsWith, '/logAction', url.path) ? A2(
+						logAction_,
+						defaultLogContext,
+						'Navigate to: ' + A3($elm$core$String$replace, '/logAction', '', url.path)) : _Utils_Tuple2(
 						model,
 						A2(
 							$elm$browser$Browser$Navigation$pushUrl,
 							model.navKey,
-							$elm$url$Url$toString(url))) : A2(logAction_, defaultLogContext, 'Navigate to: ' + url.path);
+							$elm$url$Url$toString(url)));
 				}
 			case 'OnUrlChange':
 				var url = msg.a;
@@ -13581,7 +13293,7 @@ var $dtwrks$elm_book$ElmBook$update = F2(
 							A2(
 								$elm$browser$Browser$Navigation$pushUrl,
 								model.navKey,
-								A2($dtwrks$elm_book$ElmBook$urlFromChapter, model.config.urlPreffix, chapter_)));
+								$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl(chapter_)));
 					} else {
 						var _v3 = _v2.b;
 						return _Utils_Tuple2(
@@ -13591,7 +13303,7 @@ var $dtwrks$elm_book$ElmBook$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
-					var activeChapter = A3($dtwrks$elm_book$ElmBook$parseActiveChapterFromUrl, model.config.urlPreffix, model.chapters, url);
+					var activeChapter = A2($dtwrks$elm_book$ElmBook$Internal$Application$parseActiveChapterFromUrl, model.chapters, url);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -13653,7 +13365,7 @@ var $dtwrks$elm_book$ElmBook$update = F2(
 						model,
 						{
 							chapterPreSelected: 0,
-							chaptersSearched: A2($dtwrks$elm_book$ElmBook$searchChapters, value, model.chapters),
+							chaptersSearched: A2($dtwrks$elm_book$ElmBook$Internal$Application$searchChapters, value, model.chapters),
 							search: value
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -13728,7 +13440,7 @@ var $dtwrks$elm_book$ElmBook$update = F2(
 							A2(
 								$elm$browser$Browser$Navigation$pushUrl,
 								model.navKey,
-								A2($dtwrks$elm_book$ElmBook$urlFromChapter, model.config.urlPreffix, chapter_)));
+								$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl(chapter_)));
 					} else {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
@@ -13747,9 +13459,20 @@ var $dtwrks$elm_book$ElmBook$Internal$Msg$Search = function (a) {
 var $dtwrks$elm_book$ElmBook$Internal$Msg$SearchBlur = {$: 'SearchBlur'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$SearchFocus = {$: 'SearchFocus'};
 var $dtwrks$elm_book$ElmBook$Internal$Msg$ToggleMenu = {$: 'ToggleMenu'};
-var $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug = function (_v0) {
-	var slug = _v0.a.slug;
-	return slug;
+var $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterBreadcrumb = function (_v0) {
+	var chapter = _v0.a;
+	return function (t) {
+		return _Utils_ap(t, chapter.title);
+	}(
+		A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (t) {
+					return t + ' / ';
+				},
+				chapter.groupTitle)));
 };
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -13760,6 +13483,14 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
+	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -13790,25 +13521,6 @@ var $elm$core$List$member = F2(
 			},
 			xs);
 	});
-var $dtwrks$elm_book$ElmBook$UI$ActionLog$previewEmpty = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$class('elm-book-monospace elm-book-action-log-preview-empty-wrapper')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('elm-book-action-log-preview-empty')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Your logged actions will appear here.')
-				]))
-		]));
 var $dtwrks$elm_book$ElmBook$Internal$Component$toValidOptions = F2(
 	function (validSettings, _v0) {
 		var settings = _v0.a;
@@ -17056,6 +16768,7 @@ var $dillonkearns$elm_markdown$Markdown$InlineParser$decodeUrlRegex = A2(
 	$elm$core$Maybe$withDefault,
 	$elm$regex$Regex$never,
 	$elm$regex$Regex$fromString('%(?:3B|2C|2F|3F|3A|40|26|3D|2B|24|23|25)'));
+var $elm$url$Url$percentDecode = _Url_percentDecode;
 var $elm$url$Url$percentEncode = _Url_percentEncode;
 var $dillonkearns$elm_markdown$Markdown$InlineParser$encodeUrl = A2(
 	$elm$core$Basics$composeR,
@@ -17093,6 +16806,15 @@ var $dillonkearns$elm_markdown$Markdown$InlineParser$refLabelRegex = A2(
 	$elm$core$Maybe$withDefault,
 	$elm$regex$Regex$never,
 	$elm$regex$Regex$fromString('^\\[\\s*(' + ($dillonkearns$elm_markdown$Markdown$Helpers$insideSquareBracketRegex + ')\\s*\\]')));
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $dillonkearns$elm_markdown$Markdown$Helpers$cleanWhitespaces = function (original) {
 	return original;
 };
@@ -25133,14 +24855,16 @@ var $dillonkearns$elm_markdown$Markdown$Html$tag = F2(
 					return _Utils_eq(tagName, expectedTag) ? $elm$core$Result$Ok(a) : $elm$core$Result$Err('Expected ' + (expectedTag + (' but was ' + tagName)));
 				}));
 	});
-var $dtwrks$elm_book$ElmBook$UI$ChapterElement$view = F3(
-	function (chapterTitle, backgroundColor_, _v0) {
+var $elm$core$Debug$log = _Debug_log;
+var $dtwrks$elm_book$ElmBook$UI$ChapterComponent$view = F3(
+	function (chapterTitle, options_, _v0) {
 		var label = _v0.a;
 		var html = _v0.b;
 		return A2(
 			$elm$html$Html$map,
 			function (msg) {
 				var actionContext = (label !== '') ? (chapterTitle + (' / ' + (label + ' / '))) : (chapterTitle + ' / ');
+				var _v1 = A2($elm$core$Debug$log, 'msg', msg);
 				if (msg.$ === 'LogAction') {
 					var label_ = msg.b;
 					return A2($dtwrks$elm_book$ElmBook$Internal$Msg$LogAction, actionContext, label_);
@@ -25152,15 +24876,15 @@ var $dtwrks$elm_book$ElmBook$UI$ChapterElement$view = F3(
 				$elm$html$Html$article,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('elm-book__chapter-element')
+						$elm$html$Html$Attributes$class('elm-book__chapter-component')
 					]),
 				_List_fromArray(
 					[
-						(label === '') ? $elm$html$Html$text('') : A2(
+						(options_.hiddenLabel || (label === '')) ? $elm$html$Html$text('') : A2(
 						$elm$html$Html$p,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('elm-book elm-book__chapter-element__title elm-book-sans')
+								$elm$html$Html$Attributes$class('elm-book elm-book__chapter-component__title elm-book-sans')
 							]),
 						_List_fromArray(
 							[
@@ -25170,8 +24894,8 @@ var $dtwrks$elm_book$ElmBook$UI$ChapterElement$view = F3(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('elm-book__chapter-element__background elm-book-shadows-light'),
-								A2($elm$html$Html$Attributes$style, 'background', backgroundColor_)
+								$elm$html$Html$Attributes$class('elm-book__chapter-component__background elm-book-shadows-light'),
+								A2($elm$html$Html$Attributes$style, 'background', options_.background)
 							]),
 						_List_fromArray(
 							[
@@ -25179,7 +24903,7 @@ var $dtwrks$elm_book$ElmBook$UI$ChapterElement$view = F3(
 								$elm$html$Html$div,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('elm-book__chapter-element__content')
+										$elm$html$Html$Attributes$class('elm-book__chapter-component__content')
 									]),
 								_List_fromArray(
 									[html]))
@@ -25236,7 +24960,7 @@ var $dillonkearns$elm_markdown$Markdown$Html$withOptionalAttribute = F2(
 				}));
 	});
 var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
-	function (chapterTitle, chapterElements, componentOptions) {
+	function (chapterTitle, chapterComponents, componentOptions) {
 		return _Utils_update(
 			$dtwrks$elm_book$ElmBook$UI$Markdown$defaultRenderer,
 			{
@@ -25260,7 +24984,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 											'with-label',
 											A2(
 												$dillonkearns$elm_markdown$Markdown$Html$tag,
-												'element',
+												'component',
 												F6(
 													function (labelFilter, hiddenLabel_, background_, layout_, fullWidth_, _v0) {
 														var section_ = function () {
@@ -25274,9 +24998,9 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																	A2(
 																		$elm$core$Dict$get,
 																		label_,
-																		$elm$core$Dict$fromList(chapterElements)));
+																		$elm$core$Dict$fromList(chapterComponents)));
 															} else {
-																return $elm$core$List$head(chapterElements);
+																return $elm$core$List$head(chapterComponents);
 															}
 														}();
 														var options_ = A2(
@@ -25289,7 +25013,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																$elm$html$Html$div,
 																_List_fromArray(
 																	[
-																		$elm$html$Html$Attributes$class('elm-book__element-wrapper elm-book-sans elm-book__element-empty')
+																		$elm$html$Html$Attributes$class('elm-book__component-wrapper elm-book-sans elm-book__component-empty')
 																	]),
 																_List_fromArray(
 																	[
@@ -25306,7 +25030,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																				$elm$html$Html$Attributes$classList(
 																				_List_fromArray(
 																					[
-																						_Utils_Tuple2('elm-book__element-wrapper', true),
+																						_Utils_Tuple2('elm-book__component-wrapper', true),
 																						_Utils_Tuple2('full', options_.fullWidth)
 																					]))
 																			]),
@@ -25315,7 +25039,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																},
 																A2(
 																	$elm$core$Maybe$map,
-																	A2($dtwrks$elm_book$ElmBook$UI$ChapterElement$view, chapterTitle, options_.background),
+																	A2($dtwrks$elm_book$ElmBook$UI$ChapterComponent$view, chapterTitle, options_),
 																	section_)));
 													}))))))),
 							A2(
@@ -25346,7 +25070,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																$elm$html$Html$Attributes$classList(
 																_List_fromArray(
 																	[
-																		_Utils_Tuple2('elm-book__element-wrapper', true),
+																		_Utils_Tuple2('elm-book__component-wrapper', true),
 																		_Utils_Tuple2('full', options_.fullWidth)
 																	]))
 															]),
@@ -25356,7 +25080,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																$elm$html$Html$ul,
 																_List_fromArray(
 																	[
-																		$elm$html$Html$Attributes$class('elm-book-md__element-list')
+																		$elm$html$Html$Attributes$class('elm-book-md__component-list')
 																	]),
 																A2(
 																	$elm$core$List$map,
@@ -25365,21 +25089,21 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer = F3(
 																			$elm$html$Html$li,
 																			_List_fromArray(
 																				[
-																					$elm$html$Html$Attributes$class('elm-book elm-book-md__element-list__item')
+																					$elm$html$Html$Attributes$class('elm-book elm-book-md__component-list__item')
 																				]),
 																			_List_fromArray(
 																				[
-																					A3($dtwrks$elm_book$ElmBook$UI$ChapterElement$view, chapterTitle, options_.background, section)
+																					A3($dtwrks$elm_book$ElmBook$UI$ChapterComponent$view, chapterTitle, options_, section)
 																				]));
 																	},
-																	chapterElements))
+																	chapterComponents))
 															]));
 												}))))))
 						]))
 			});
 	});
 var $dtwrks$elm_book$ElmBook$UI$Markdown$view = F3(
-	function (chapterTitle, chapterElements, componentOptions) {
+	function (chapterTitle, chapterComponents, componentOptions) {
 		return A2(
 			$elm$core$Basics$composeR,
 			$dillonkearns$elm_markdown$Markdown$Parser$parse,
@@ -25389,7 +25113,7 @@ var $dtwrks$elm_book$ElmBook$UI$Markdown$view = F3(
 				A2(
 					$elm$core$Basics$composeR,
 					$dillonkearns$elm_markdown$Markdown$Renderer$render(
-						A3($dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer, chapterTitle, chapterElements, componentOptions)),
+						A3($dtwrks$elm_book$ElmBook$UI$Markdown$sectionRenderer, chapterTitle, chapterComponents, componentOptions)),
 					A2(
 						$elm$core$Basics$composeR,
 						$elm$core$Result$withDefault(_List_Nil),
@@ -25412,7 +25136,7 @@ var $dtwrks$elm_book$ElmBook$UI$Chapter$view = function (props) {
 			]),
 		_List_fromArray(
 			[
-				A4($dtwrks$elm_book$ElmBook$UI$Markdown$view, props.title, props.elements, props.componentOptions, props.body)
+				A4($dtwrks$elm_book$ElmBook$UI$Markdown$view, props.title, props.components, props.componentOptions, props.body)
 			]));
 };
 var $dtwrks$elm_book$ElmBook$UI$ChapterHeader$view = function (title_) {
@@ -25425,7 +25149,7 @@ var $dtwrks$elm_book$ElmBook$UI$ChapterHeader$view = function (title_) {
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$h1,
+				$elm$html$Html$p,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class('elm-book-chapter-header')
@@ -25437,26 +25161,26 @@ var $dtwrks$elm_book$ElmBook$UI$ChapterHeader$view = function (title_) {
 			]));
 };
 var $dtwrks$elm_book$ElmBook$UI$Helpers$baseStyles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n@import url(\'https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400;1,600&display=swap\');\n\n@keyframes fade-in {\n  from { opacity: 0; }\n  to   { opacity: 1; }\n}\n\n.elm-book-fade-in {\n    animation: 0.3s linear fade-in;\n}\n\n.elm-book-wrapper * {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\n.elm-book-wrapper,\n.elm-book {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n}\n\n.elm-book-sans {\n    font-family: "IBM Plex Sans", "sans-serif";\n}\n\n.elm-book-serif {\n    font-family: "IBM Plex Serif", "serif";\n}\n\n.elm-book-monospace {\n    font-family: "Fira Code", "monospace";\n}\n\n.elm-book-inset {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n}\n\n.elm-book-shadows {\n    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);\n}\n\n.elm-book-shadows-light {\n    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);\n}\n');
-var $dtwrks$elm_book$ElmBook$UI$ActionLog$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-action-log-preview-wrapper {\n    padding: 8px;\n}\n.elm-book-action-log-preview {\n    display: block;\n    width: 100%;\n    padding: 0;\n    margin: 0;\n    border: none;\n    border-radius: 4px;\n    background-color: transparent;\n    text-align: left;\n    font-size: 14px;\n    cursor: pointer;\n}\n.elm-book-action-log-preview:hover {\n    opacity: 0.9;\n}\n.elm-book-action-log-preview:hover {\n    opacity: 0.8;\n}\n\n.elm-book-action-log-preview-empty-wrapper {\n    padding: 8px;\n    font-size: 14px;\n    color: #aaa;\n}\n.elm-book-action-log-preview-empty {\n    padding: 12px 20px;\n    background-color: #f3f3f3;\n    border-radius: 4px;\n}\n\n.elm-book-action-log-list-wrapper {\n    position: relative;\n    padding-top: 34px;\n    width: 640px;\n    max-width: 100%;\n}\n.elm-book-action-log-list-header {\n    display: flex;\n    align-items: center;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    height: 34px;\n    padding: 0 20px;\n    font-weight: bold;\n    color: #fff;\n}\n.elm-book-action-log-list {\n    list-style-type: none;\n    max-height: 70vh;\n    overflow-y: auto;\n}\n.elm-book-action-log-list-item {\n    border-top: 1px solid #f5f5f5;\n}\n\n.elm-book-action-log-item-wrapper {\n    display: flex;\n    align-items: baseline;\n    padding: 12px 20px;\n    font-size: 14px;\n    background-color: #f3f3f3;\n}\n.elm-book-action-log-item-index {\n    display: inline-block;\n    padding-right: 16px;\n    color: #a0a0a0;\n}\n.elm-book-action-log-item-preffix {\n    padding-right: 16px;\n    color: #a0a0a0;\n    letter-spacing: 0.5px;\n}\n.elm-book-action-log-item-label {\n\n}\n');
+var $dtwrks$elm_book$ElmBook$UI$ActionLog$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-action-log-preview-wrapper {\n    padding: 8px;\n}\n.elm-book-action-log-preview {\n    display: block;\n    width: 100%;\n    padding: 0;\n    margin: 0;\n    border: none;\n    border-radius: 4px;\n    background-color: transparent;\n    text-align: left;\n    font-size: 14px;\n    cursor: pointer;\n}\n.elm-book-action-log-preview:hover {\n    opacity: 0.9;\n}\n.elm-book-action-log-preview:hover {\n    opacity: 0.8;\n}\n\n.elm-book-action-log-preview-empty-wrapper {\n    padding: 8px;\n    font-size: 14px;\n    color: #aaa;\n}\n.elm-book-action-log-preview-empty {\n    padding: 12px 20px;\n    background-color: #f3f3f3;\n    border-radius: 4px;\n}\n\n.elm-book-action-log-list-wrapper {\n    position: relative;\n    padding-top: 34px;\n}\n.elm-book-action-log-list-header {\n    display: flex;\n    align-items: center;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    height: 34px;\n    padding: 0 20px;\n    font-weight: bold;\n    color: #fff;\n}\n.elm-book-action-log-list {\n    list-style-type: none;\n    max-height: 70vh;\n    overflow-y: auto;\n}\n.elm-book-action-log-list-item {\n    border-top: 1px solid #e0e0e0;\n}\n\n.elm-book-action-log-item-wrapper {\n    display: flex;\n    align-items: center;\n    padding: 8px 20px 8px 0;\n    font-size: 14px;\n    background-color: #f5f5f5;\n}\n.elm-book-action-log-item-index {\n    width: 60px;\n    text-align: center;\n    display: inline-block;\n    color: #a0a0a0;\n}\n.elm-book-action-log-item-preffix {\n    padding-right: 16px;\n    color: #a0a0a0;\n    letter-spacing: 0.5px;\n    font-size: 12px;\n}\n.elm-book-action-log-item-label {\n    color: #404040;\n    font-size: 13px;\n    font-weight: bold;\n}\n');
 var $dtwrks$elm_book$ElmBook$UI$Chapter$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-chapter {\n    padding: 40px;\n    width: 100%;\n}\n');
-var $dtwrks$elm_book$ElmBook$UI$ChapterElement$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book__chapter-element {}\n\n.elm-book__chapter-element__title {\n    padding-bottom: 12px;\n    font-size: 14px;\n    letter-spacing: 0.5px;\n    color: #999;\n}\n\n.elm-book__chapter-element__background {\n    padding: 12px;\n    border-radius: 4px;\n}\n.elm-book__chapter-element__content {\n    border: 1px dashed transparent;\n    position: relative;\n}\n.elm-book__chapter-element__content:hover {\n    border-color: #eaeaea;\n}\n');
-var $dtwrks$elm_book$ElmBook$UI$ChapterHeader$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-chapter-header {\n    margin: 0;\n    padding: 12px 16px;\n    font-size: 16px;\n    color: #333;\n}\n');
+var $dtwrks$elm_book$ElmBook$UI$ChapterComponent$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book__chapter-component {}\n\n.elm-book__chapter-component__title {\n    padding-bottom: 12px;\n    font-size: 14px;\n    letter-spacing: 0.5px;\n    color: #999;\n}\n\n.elm-book__chapter-component__background {\n    padding: 12px;\n    border-radius: 4px;\n}\n.elm-book__chapter-component__content {\n    border: 1px dashed transparent;\n    position: relative;\n}\n.elm-book__chapter-component__content:hover {\n    border-color: #eaeaea;\n}\n');
+var $dtwrks$elm_book$ElmBook$UI$ChapterHeader$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-chapter-header {\n    margin: 0;\n    padding: 12px 16px;\n    font-size: 14px;\n    font-weight: bold;\n    color: #333;\n}\n');
 var $dtwrks$elm_book$ElmBook$UI$Footer$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-footer {\n    display: flex;\n    align-items: center;\n    width: 100%;\n    margin: 0;\n    padding: 13px 12px 13px;\n    opacity: 0.8;\n    transition: opacity 200ms;\n    text-decoration: none;\n}\n.elm-book-footer:hover {\n    opacity: 1;\n}\n\n.elm-book-footer--text {\n    padding-left: 8px;\n    font-size: 10px;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    color: currentColor;\n}\n');
-var $dtwrks$elm_book$ElmBook$UI$Header$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n}\n\n.elm-book-header--link {\n    display: block;\n    padding: 8px 12px;\n    text-decoration: none;\n}\n.elm-book-header--link:hover {\n    opacity: 0.9;\n}\n.elm-book-header--link:active {\n    opacity: 0.8;\n}\n\n.elm-book-header--button {\n    display: none;\n    padding: 12px;\n    border-radius: 4px;\n    box-shadow: none;\n    background-color: transparent;\n    cursor: pointer;\n}\n.elm-book-header--button:hover {\n    opacity: 0.9;\n    background-color: rgba(255, 255, 255, 0.1);\n}\n.elm-book-header--button:active {\n    opacity: 0.4;\n}\n@media screen and (max-width: 768px) {\n    display: flex;\n    align-items: center;\n}\n\n.elm-book-header-default {\n    display: flex;\n    align-items: center;\n}\n\n.elm-book-header-default--wrapper {\n    display: block;\n    padding-left: 16px;\n    font-weight: 600;\n    font-size: 16px;\n}\n\n.elm-book-header-default--title {\n    display: block;\n    padding-right: 4px;\n}\n\n.elm-book-header-default--subtitle {\n    display: block;\n    font-weight: 400;\n}\n');
+var $dtwrks$elm_book$ElmBook$UI$Header$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n}\n\n.elm-book-header--link {\n    display: block;\n    padding: 8px 12px;\n    text-decoration: none;\n}\n.elm-book-header--link:hover {\n    opacity: 0.9;\n}\n.elm-book-header--link:active {\n    opacity: 0.8;\n}\n\n.elm-book-header--button {\n    display: none;\n    padding: 12px;\n    border: none;\n    border-radius: 4px;\n    box-shadow: none;\n    background-color: transparent;\n    cursor: pointer;\n}\n.elm-book-header--button:hover {\n    opacity: 0.9;\n    background-color: rgba(255, 255, 255, 0.1);\n}\n.elm-book-header--button:active {\n    opacity: 0.4;\n}\n@media screen and (max-width: 768px) {\n    .elm-book-header--button {\n        display: flex;\n        align-items: center;\n    }\n}\n\n.elm-book-header-default {\n    display: flex;\n    align-items: center;\n}\n\n.elm-book-header-default--wrapper {\n    display: block;\n    padding-left: 16px;\n    font-weight: 600;\n    font-size: 16px;\n}\n\n.elm-book-header-default--title {\n    display: block;\n    padding-right: 4px;\n}\n\n.elm-book-header-default--subtitle {\n    display: block;\n    font-weight: 400;\n}\n');
 var $dtwrks$elm_book$ElmBook$UI$Helpers$mediaLargeScreen = '@media screen and (min-width: 1720px)';
-var $dtwrks$elm_book$ElmBook$UI$Markdown$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book__element-wrapper {\n    max-width: 720px;\n    margin: 0 auto;\n    padding-bottom: 36px;\n}\n.elm-book__element-wrapper.full {\n    max-width: 100%;\n}\n.elm-book__element-empty {\n    padding: 20px;\n    background-color: #eaeaea;\n    border-radius: 4px;\n    border: 2px solid #dadada;\n    color: #666;\n}\n\n.elm-book-md__element-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n.elm-book-md__element-list__item + .elm-book-md__element-list__item {\n    padding-top: 36px;\n}\n\n.elm-book-md {\n    max-width: 720px;\n    margin: 0 auto;\n    padding-bottom: 36px;\n    color: rgb(41,41,41);\n}\n.elm-book-md * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaLargeScreen + ' {\n    .elm-book__element-wrapper {\n        max-width: 960px;\n    }\n    .elm-book__element-wrapper.full {\n        max-width: 100%;\n    }\n    .elm-book-md {\n        max-width: 960px;\n    }\n}\n\n.elm-book-md h1 {\n    font-size: 46px;\n}\n.elm-book-md h2 {\n    font-size: 32px;\n}\n.elm-book-md h3 {\n    font-size: 24px;\n}\n.elm-book-md h4 {\n    font-size: 20px;\n    font-weight: normal;\n    text-transform: uppercase;\n}\n.elm-book-md h5 {\n    font-size: 18px;\n    font-weight: normal;\n    text-transform: uppercase;\n}\n.elm-book-md h6 {\n    font-size: 16px;\n    font-weight: normal;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n}\n\n.elm-book-md h1,\n.elm-book-md h2,\n.elm-book-md h3 {\n    font-weight: bold;\n}\n\n.elm-book-md h1,\n.elm-book-md h2,\n.elm-book-md h3,\n.elm-book-md h4,\n.elm-book-md h5,\n.elm-book-md h6 {\n    padding-top: 24px;\n}\n\n.elm-book-md__default {\n    line-height: 1.8em;\n    color: rgb(80, 80, 90);\n    font-size: 20px;\n}\n\n.elm-book-md a {\n    color: #000;\n    text-decoration: underline;\n}\n.elm-book-md a:hover {\n    opacity: 0.8;   \n}\n\n.elm-book-md blockquote {\n    font-size: 18px;\n    margin-left: 0;\n    padding: 8px 0 8px 24px;\n    border-left: 4px solid #f0f0f0;\n}\n.elm-book-md code {\n    display: inline-block;\n    border-radius: 4px;\n    padding: 0 12px;\n    background-color: #eaeaea;\n}\n.elm-book-md img {\n    max-width: 100%;\n}\n.elm-book-md ul {\n    padding-left: 32px;\n}\n.elm-book-md ol {\n    padding-left: 32px;\n}\n\n.elm-book-md hr {\n    border: none;\n    height: 2px;\n    background-color: #f0f0f0;\n}\n\n.elm-book-md table {\n    border-collapse: collapse;\n    overflow-x: auto;\n    border: 2px solid #f0f0f0;\n}\n.elm-book-md thead {\n    border: none;\n}\n.elm-book-md tbody {\n    border: none;\n}\n.elm-book-md tr {\n    border: none;\n    border-top: 2px solid #f0f0f0;\n}\n.elm-book-md th,\n.elm-book-md td {\n    border: none;\n    border-right: 2px solid #f0f0f0;\n    padding: 12px;\n}\n.elm-book-md th:last-child,\n.elm-book-md td:last-child {\n    border-right: none;\n}\n\n.elm-book-md__code,\n.elm-book-md__code code {\n    font-size: 18px;\n    line-height: 22px;\n    padding: 36px 24px;\n    background-color: #31353b;\n    border-radius: 6px;\n}\n.elm-book-md__code-default {\n\n}\n\n.elm-book-md pre.elmsh {\n    padding: 10px;\n    margin: 0;\n    text-align: left;\n    overflow: auto;\n}\n\n.elm-book-md code.elmsh {\n    padding: 0;\n}\n\n.elm-book-md .elmsh {\n    color: #f8f8f2;\n}\n.elm-book-md .elmsh-hl {\n    background: #343434;\n}\n.elm-book-md .elmsh-add {\n    background: #003800;\n}\n.elm-book-md .elmsh-del {\n    background: #380000;\n}\n.elm-book-md .elmsh-comm {\n    color: #75715e;\n}\n.elm-book-md .elmsh1 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh2 {\n    color: #46ff9a;\n}\n.elm-book-md .elmsh3 {\n    color: #f92672;\n}\n.elm-book-md .elmsh4 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh5 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh6 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh7 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-elm-ts, .elm-book-md .elmsh-js-dk, .elm-book-md .elmsh-css-p {\n    font-style: italic;\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-js-ce {\n    font-style: italic;\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-css-ar-i {\n    font-weight: bold;\n    color: #46f0ff;\n}\n'));
+var $dtwrks$elm_book$ElmBook$UI$Markdown$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book__component-wrapper {\n    max-width: 720px;\n    margin: 0 auto;\n    padding-bottom: 36px;\n}\n.elm-book__component-wrapper.full {\n    max-width: 100%;\n}\n.elm-book__component-empty {\n    padding: 20px;\n    background-color: #eaeaea;\n    border-radius: 4px;\n    border: 2px solid #dadada;\n    color: #666;\n}\n\n.elm-book-md__component-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n.elm-book-md__component-list__item + .elm-book-md__component-list__item {\n    padding-top: 36px;\n}\n\n.elm-book-md {\n    max-width: 720px;\n    margin: 0 auto;\n    padding-bottom: 36px;\n    color: rgb(41,41,41);\n}\n.elm-book-md * {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaLargeScreen + ' {\n    .elm-book__component-wrapper {\n        max-width: 960px;\n    }\n    .elm-book__component-wrapper.full {\n        max-width: 100%;\n    }\n    .elm-book-md {\n        max-width: 960px;\n    }\n}\n\n.elm-book-md h1 {\n    font-size: 46px;\n}\n.elm-book-md h2 {\n    font-size: 32px;\n}\n.elm-book-md h3 {\n    font-size: 24px;\n}\n.elm-book-md h4 {\n    font-size: 20px;\n    font-weight: normal;\n    text-transform: uppercase;\n}\n.elm-book-md h5 {\n    font-size: 18px;\n    font-weight: normal;\n    text-transform: uppercase;\n}\n.elm-book-md h6 {\n    font-size: 16px;\n    font-weight: normal;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n}\n\n.elm-book-md h1,\n.elm-book-md h2,\n.elm-book-md h3 {\n    font-weight: bold;\n}\n\n.elm-book-md h1,\n.elm-book-md h2,\n.elm-book-md h3,\n.elm-book-md h4,\n.elm-book-md h5,\n.elm-book-md h6 {\n    padding-top: 24px;\n}\n\n.elm-book-md__default {\n    line-height: 1.8em;\n    color: rgb(80, 80, 90);\n    font-size: 20px;\n}\n\n.elm-book-md a {\n    color: #000;\n    text-decoration: underline;\n}\n.elm-book-md a:hover {\n    opacity: 0.8;   \n}\n\n.elm-book-md blockquote {\n    font-size: 18px;\n    margin-left: 0;\n    padding: 8px 0 8px 24px;\n    border-left: 4px solid #f0f0f0;\n}\n.elm-book-md code {\n    display: inline-block;\n    border-radius: 4px;\n    padding: 0 12px;\n    background-color: #eaeaea;\n}\n.elm-book-md img {\n    max-width: 100%;\n}\n.elm-book-md ul {\n    padding-left: 32px;\n}\n.elm-book-md ol {\n    padding-left: 32px;\n}\n\n.elm-book-md hr {\n    border: none;\n    height: 2px;\n    background-color: #f0f0f0;\n}\n\n.elm-book-md table {\n    border-collapse: collapse;\n    overflow-x: auto;\n    border: 2px solid #f0f0f0;\n}\n.elm-book-md thead {\n    border: none;\n}\n.elm-book-md tbody {\n    border: none;\n}\n.elm-book-md tr {\n    border: none;\n    border-top: 2px solid #f0f0f0;\n}\n.elm-book-md th,\n.elm-book-md td {\n    border: none;\n    border-right: 2px solid #f0f0f0;\n    padding: 12px;\n}\n.elm-book-md th:last-child,\n.elm-book-md td:last-child {\n    border-right: none;\n}\n\n.elm-book-md__code,\n.elm-book-md__code code {\n    font-size: 18px;\n    line-height: 22px;\n    padding: 36px 24px;\n    background-color: #2a354d;\n    border-radius: 6px;\n}\n.elm-book-md__code-default {\n\n}\n\n.elm-book-md pre.elmsh {\n    padding: 10px;\n    margin: 0;\n    text-align: left;\n    overflow: auto;\n}\n\n.elm-book-md code.elmsh {\n    padding: 0;\n}\n\n.elm-book-md .elmsh {\n    color: #f8f8f2;\n}\n.elm-book-md .elmsh-hl {\n    background: #343434;\n}\n.elm-book-md .elmsh-add {\n    background: #003800;\n}\n.elm-book-md .elmsh-del {\n    background: #380000;\n}\n.elm-book-md .elmsh-comm {\n    color: #75715e;\n}\n.elm-book-md .elmsh1 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh2 {\n    color: #a5fb98;\n}\n.elm-book-md .elmsh3 {\n    color: #ff8f00;\n}\n.elm-book-md .elmsh4 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh5 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh6 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh7 {\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-elm-ts, .elm-book-md .elmsh-js-dk, .elm-book-md .elmsh-css-p {\n    font-style: italic;\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-js-ce {\n    font-style: italic;\n    color: #46f0ff;\n}\n.elm-book-md .elmsh-css-ar-i {\n    font-weight: bold;\n    color: #46f0ff;\n}\n'));
 var $dtwrks$elm_book$ElmBook$UI$Nav$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-nav-empty {\n    padding: 12px 20px;\n    font-size: 14px;\n    opacity: 0.6;\n}\n\n.elm-book-nav-list-wrapper {\n    padding-bottom: 16px;\n}\n\n.elm-book-nav-list-title {\n    padding: 12px 20px 8px;\n    font-weight: bold;\n    font-size: 12px;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n}\n\n.elm-book-nav-list {\n    list-style-type: none;\n}\n\n.elm-book-nav-item {\n    position: relative;\n    display: flex;\n    font-size: 14px;\n    letter-spacing: 1px;\n    text-decoration: none;\n}\n.elm-book-nav-item:focus {\n    outline: none;\n}\n\n.elm-book-nav-item-content {\n    position: relative;\n    z-index: 1;\n    padding: 8px 20px;\n}\n\n.elm-book-nav-item-bg {\n    opacity: 0;\n}\n.elm-book-nav-item.pre-selected .elm-book-nav-item-bg {\n    opacity: 0.1;\n}\n.elm-book-nav-item.active .elm-book-nav-item-bg {\n    opacity: 0.25;\n}\n.elm-book-nav-item.active.pre-selected .elm-book-nav-item-bg {\n    opacity: 0.3;\n}\n.elm-book-nav-item:hover .elm-book-nav-item-bg {\n    opacity: 0.15;\n}\n.elm-book-nav-item:active .elm-book-nav-item-bg {\n    opacity: 0.1;\n}\n.elm-book-nav-item.active:hover .elm-book-nav-item-bg {\n    opacity: 0.3;\n}\n.elm-book-nav-item.active:active .elm-book-nav-item-bg {\n    opacity: 0.25;\n}\n');
 var $dtwrks$elm_book$ElmBook$UI$Search$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book-search-wrapper {\n    position: relative;\n    width: 100%;\n}\n\n#elm-book-search {\n    position: relative;\n    z-index: 1;\n    width: 100%;\n    padding: 10px 12px;\n    border: 0;\n    border-radius: 4px;\n    background: none;\n    font-size: 14px;\n    color: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + (';\n    transition: 0.2s;\n}\n#elm-book-search:focus {\n    outline: none;\n}\n#elm-book-search::placeholder {\n    border-radius: 4px;\n    color: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + (';\n    opacity: 0.7;\n}\n\n.elm-book-search-bg {\n    opacity: 0.2;\n    border-radius: 4px;\n    background-color: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + (';\n}\n.elm-book-search-border {\n    opacity: 0.5;\n    border-radius: 4px;\n    border: 0px solid ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + ';\n    transition: 0.2s;\n}\n\n.elm-book-search-wrapper:hover .elm-book-search-bg {\n    opacity: 0.25;\n}\n.elm-book-search-wrapper:hover .elm-book-search-border {\n    border-width: 3px;\n}\n.elm-book-search-wrapper:focus-within .elm-book-search-border {\n    opacity: 1;\n    border-width: 3px;\n}\n'))))))));
 var $dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile = '@media screen and (max-width: 768px)';
 var $dtwrks$elm_book$ElmBook$UI$Wrapper$modalZ = '99999';
 var $dtwrks$elm_book$ElmBook$UI$Wrapper$sidebarSize = '300px';
-var $dtwrks$elm_book$ElmBook$UI$Wrapper$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book--wrapper--globals {\n    display: none;\n}\n\n.elm-book--wrapper {\n    display: flex;\n    align-items: stretch;\n    background: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + (';\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper {\n        flex-direction: column;\n    }\n}\n\n.elm-book--wrapper--sidebar {\n    display: flex;\n    flex-direction: column;\n    width: ' + ($dtwrks$elm_book$ElmBook$UI$Wrapper$sidebarSize + (';\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--sidebar {\n        width: 100%;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--sidebar {\n        flex-grow: 1;\n    }\n}\n\n.elm-book--wrapper--header {\n    padding: 8px 8px 4px;\n}\n\n.elm-book--wrapper--menu {\n    display: flex;\n    flex-direction: column;\n    flex-grow: 1;\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--menu {\n        display: none;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--menu {\n        display: flex;\n    }\n}\n\n.elm-book--wrapper--menu--header {\n    padding: 8px;\n}\n\n.elm-book--wrapper--menu--separator {\n    display: block;\n    margin: 0;\n    padding: 0;\n    opacity: 0.25;\n    border-bottom: 1px solid ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + (';\n}\n\n.elm-book--wrapper--menu--main-wrapper {\n    position: relative;\n    flex-grow: 1;\n}\n\n.elm-book--wrapper--menu--main {\n    overflow: auto;\n    padding: 8px 0;\n}\n\n.elm-book--wrapper--menu--footer {\n    padding: 8px;\n}\n\n.elm-book--wrapper--main {\n    flex-grow: 1;\n    display: flex;\n    flex-direction: column;\n    padding: 8px 8px 0 0;\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--main {\n        display: flex;\n        padding-left: 8px;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--main {\n        display: none;\n    }\n}\n\n.elm-book--wrapper--main--wrapper {\n    flex-grow: 1;\n    display: flex;\n    flex-direction: column;\n    background-color: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$wrapperMainBackground + (';\n    border-radius: 4px 4px 0 0;\n    overflow: hidden;\n}\n\n.elm-book--wrapper--main--header {\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--main--content {\n    position: relative;\n    flex-grow: 1;\n}\n\n.elm-book--wrapper--main--inner {\n    overflow: auto;\n}\n\n.elm-book--wrapper--main--footer {\n    border-top: 1px solid rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--modal {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: ' + ($dtwrks$elm_book$ElmBook$UI$Wrapper$modalZ + ';\n}\n\n.elm-book--wrapper--modal--bg {\n    z-index: 0;\n    cursor: pointer;\n    background-color: rgba(0, 0, 0, 0.15);\n    transition: background-color 300ms;\n}\n.elm-book--wrapper--modal--bg:hover {\n    background-color: rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--modal--content {\n    position: relative;\n    z-index: 1;\n    margin: 40px;\n    max-height: calc 100% - 120px;\n    overflow-y: auto;\n    background-color: #fff;\n    border-radius: 8px;\n}\n'))))))))))))))))));
+var $dtwrks$elm_book$ElmBook$UI$Wrapper$styles = $dtwrks$elm_book$ElmBook$UI$Helpers$css_('\n.elm-book--wrapper--globals {\n    display: none;\n}\n\n.elm-book--wrapper {\n    display: flex;\n    align-items: stretch;\n    background: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground + (';\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper {\n        flex-direction: column;\n    }\n}\n\n.elm-book--wrapper--sidebar {\n    display: flex;\n    flex-direction: column;\n    width: ' + ($dtwrks$elm_book$ElmBook$UI$Wrapper$sidebarSize + (';\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--sidebar {\n        width: 100%;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--sidebar {\n        flex-grow: 1;\n    }\n}\n\n.elm-book--wrapper--header {\n    padding: 8px 8px 4px;\n}\n\n.elm-book--wrapper--menu {\n    display: flex;\n    flex-direction: column;\n    flex-grow: 1;\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--menu {\n        display: none;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--menu {\n        display: flex;\n    }\n}\n\n.elm-book--wrapper--menu--header {\n    padding: 8px;\n}\n\n.elm-book--wrapper--menu--separator {\n    display: block;\n    margin: 0;\n    padding: 0;\n    opacity: 0.25;\n    border-bottom: 1px solid ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$themeAccent + (';\n}\n\n.elm-book--wrapper--menu--main-wrapper {\n    position: relative;\n    flex-grow: 1;\n}\n\n.elm-book--wrapper--menu--main {\n    overflow: auto;\n    padding: 8px 0;\n}\n\n.elm-book--wrapper--menu--footer {\n    padding: 8px;\n}\n\n.elm-book--wrapper--main {\n    flex-grow: 1;\n    display: flex;\n    flex-direction: column;\n    padding: 8px 8px 0 0;\n}\n' + ($dtwrks$elm_book$ElmBook$UI$Helpers$mediaMobile + (' {\n    .elm-book--wrapper--main {\n        display: flex;\n        padding-left: 8px;\n    }\n    .elm-book--wrapper.is-open .elm-book--wrapper--main {\n        display: none;\n    }\n}\n\n.elm-book--wrapper--main--wrapper {\n    flex-grow: 1;\n    display: flex;\n    flex-direction: column;\n    background-color: ' + ($dtwrks$elm_book$ElmBook$UI$Helpers$wrapperMainBackground + (';\n    border-radius: 4px 4px 0 0;\n    overflow: hidden;\n}\n\n.elm-book--wrapper--main--header {\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--main--content {\n    position: relative;\n    flex-grow: 1;\n}\n\n.elm-book--wrapper--main--inner {\n    overflow: auto;\n}\n\n.elm-book--wrapper--main--footer {\n    border-top: 1px solid rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--modal {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: ' + ($dtwrks$elm_book$ElmBook$UI$Wrapper$modalZ + ';\n}\n\n.elm-book--wrapper--modal--bg {\n    z-index: 0;\n    cursor: pointer;\n    background-color: rgba(0, 0, 0, 0.15);\n    transition: background-color 300ms;\n}\n.elm-book--wrapper--modal--bg:hover {\n    background-color: rgba(0, 0, 0, 0.1);\n}\n\n.elm-book--wrapper--modal--content {\n    position: relative;\n    z-index: 1;\n    margin: 40px;\n    width: 640px;\n    max-width: 100%;\n    max-height: calc 100% - 120px;\n    overflow-y: auto;\n    background-color: #fff;\n    border-radius: 8px;\n}\n'))))))))))))))))));
 var $dtwrks$elm_book$ElmBook$UI$Styles$view = A2(
 	$elm$html$Html$div,
 	_List_Nil,
 	_List_fromArray(
-		[$dtwrks$elm_book$ElmBook$UI$Helpers$baseStyles, $dtwrks$elm_book$ElmBook$UI$ActionLog$styles, $dtwrks$elm_book$ElmBook$UI$Chapter$styles, $dtwrks$elm_book$ElmBook$UI$ChapterElement$styles, $dtwrks$elm_book$ElmBook$UI$ChapterHeader$styles, $dtwrks$elm_book$ElmBook$UI$Footer$styles, $dtwrks$elm_book$ElmBook$UI$Header$styles, $dtwrks$elm_book$ElmBook$UI$Markdown$styles, $dtwrks$elm_book$ElmBook$UI$Nav$styles, $dtwrks$elm_book$ElmBook$UI$Search$styles, $dtwrks$elm_book$ElmBook$UI$Wrapper$styles]));
-var $dtwrks$elm_book$ElmBook$view = function (model) {
+		[$dtwrks$elm_book$ElmBook$UI$Helpers$baseStyles, $dtwrks$elm_book$ElmBook$UI$ActionLog$styles, $dtwrks$elm_book$ElmBook$UI$Chapter$styles, $dtwrks$elm_book$ElmBook$UI$ChapterComponent$styles, $dtwrks$elm_book$ElmBook$UI$ChapterHeader$styles, $dtwrks$elm_book$ElmBook$UI$Footer$styles, $dtwrks$elm_book$ElmBook$UI$Header$styles, $dtwrks$elm_book$ElmBook$UI$Markdown$styles, $dtwrks$elm_book$ElmBook$UI$Nav$styles, $dtwrks$elm_book$ElmBook$UI$Search$styles, $dtwrks$elm_book$ElmBook$UI$Wrapper$styles]));
+var $dtwrks$elm_book$ElmBook$Internal$Application$view = function (model) {
 	return {
 		body: _List_fromArray(
 			[
@@ -25481,13 +25205,13 @@ var $dtwrks$elm_book$ElmBook$view = function (model) {
 									{
 										body: activeChapter_.body,
 										componentOptions: A2($dtwrks$elm_book$ElmBook$Internal$Component$toValidOptions, model.config.componentOptions, activeChapter_.componentOptions),
-										elements: A2(
+										components: A2(
 											$elm$core$List$map,
-											function (element) {
+											function (component) {
 												return _Utils_Tuple2(
-													element.label,
+													component.label,
 													model.config.toHtml(
-														element.view(model.config.state)));
+														component.view(model.config.state)));
 											},
 											activeChapter_.componentList),
 										title: activeChapter_.title
@@ -25510,16 +25234,16 @@ var $dtwrks$elm_book$ElmBook$view = function (model) {
 							$elm$core$List$head(model.actionLog))),
 					mainHeader: A2(
 						$elm$core$Maybe$map,
-						A2($elm$core$Basics$composeL, $dtwrks$elm_book$ElmBook$UI$ChapterHeader$view, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterTitle),
+						A2($elm$core$Basics$composeL, $dtwrks$elm_book$ElmBook$UI$ChapterHeader$view, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterBreadcrumb),
 						model.chapterActive),
 					menu: function () {
-						var visibleChapterSlugs = A2(
+						var visibleChapterUrls = A2(
 							$elm$core$List$map,
-							$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug,
+							$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl,
 							$elm$core$Array$toList(model.chaptersSearched));
 						return $dtwrks$elm_book$ElmBook$UI$Nav$view(
 							{
-								active: A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug, model.chapterActive),
+								active: A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl, model.chapterActive),
 								itemGroups: A2(
 									$elm$core$List$map,
 									$elm$core$Tuple$mapSecond(
@@ -25536,19 +25260,19 @@ var $dtwrks$elm_book$ElmBook$view = function (model) {
 													$elm$core$Basics$composeR,
 													$elm$core$List$map(
 														function (_v1) {
-															var slug = _v1.a.slug;
+															var url = _v1.a.url;
 															var title = _v1.a.title;
-															return _Utils_Tuple2(slug, title);
+															return _Utils_Tuple2(url, title);
 														}),
 													$elm$core$List$filter(
 														function (_v2) {
 															var slug = _v2.a;
-															return A2($elm$core$List$member, slug, visibleChapterSlugs);
+															return A2($elm$core$List$member, slug, visibleChapterUrls);
 														}))))),
 									model.chapterGroups),
 								preSelected: model.isSearching ? A2(
 									$elm$core$Maybe$map,
-									$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug,
+									$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl,
 									A2($elm$core$Array$get, model.chapterPreSelected, model.chaptersSearched)) : $elm$core$Maybe$Nothing,
 								preffix: model.config.urlPreffix
 							});
@@ -25582,37 +25306,24 @@ var $dtwrks$elm_book$ElmBook$view = function (model) {
 		}()
 	};
 };
-var $dtwrks$elm_book$ElmBook$withActionLogReset = F2(
+var $dtwrks$elm_book$ElmBook$Internal$Application$withActionLogReset = F2(
 	function (previousModel, _v0) {
 		var model = _v0.a;
 		var cmd = _v0.b;
-		var chapterSlugPrevious = A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug, previousModel.chapterActive);
-		var chapterSlugActive = A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterSlug, model.chapterActive);
+		var chapterSlugPrevious = A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl, previousModel.chapterActive);
+		var chapterSlugActive = A2($elm$core$Maybe$map, $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterUrl, model.chapterActive);
 		return (!_Utils_eq(chapterSlugActive, chapterSlugPrevious)) ? _Utils_Tuple2(
 			_Utils_update(
 				model,
 				{actionLog: _List_Nil}),
 			cmd) : _Utils_Tuple2(model, cmd);
 	});
-var $dtwrks$elm_book$ElmBook$withChapterGroups = F2(
-	function (chapterGroups_, _v0) {
+var $dtwrks$elm_book$ElmBook$Internal$Application$application = F2(
+	function (chapterGroups, _v0) {
 		var config = _v0.a;
-		var chapterGroups = A2(
-			$elm$core$List$map,
-			function (_v2) {
-				var group = _v2.a;
-				var chapters = _v2.b;
-				return _Utils_Tuple2(
-					group,
-					A2(
-						$elm$core$List$map,
-						$dtwrks$elm_book$ElmBook$chapterGroupSlug(group),
-						chapters));
-			},
-			chapterGroups_);
 		return $elm$browser$Browser$application(
 			{
-				init: $dtwrks$elm_book$ElmBook$init(
+				init: $dtwrks$elm_book$ElmBook$Internal$Application$init(
 					{chapterGroups: chapterGroups, config: config}),
 				onUrlChange: $dtwrks$elm_book$ElmBook$Internal$Msg$OnUrlChange,
 				onUrlRequest: $dtwrks$elm_book$ElmBook$Internal$Msg$OnUrlRequest,
@@ -25620,33 +25331,47 @@ var $dtwrks$elm_book$ElmBook$withChapterGroups = F2(
 					return $elm$core$Platform$Sub$batch(
 						_List_fromArray(
 							[
-								$elm$browser$Browser$Events$onKeyDown($dtwrks$elm_book$ElmBook$keyDownDecoder),
-								$elm$browser$Browser$Events$onKeyUp($dtwrks$elm_book$ElmBook$keyUpDecoder)
+								$elm$browser$Browser$Events$onKeyDown($dtwrks$elm_book$ElmBook$Internal$Application$keyDownDecoder),
+								$elm$browser$Browser$Events$onKeyUp($dtwrks$elm_book$ElmBook$Internal$Application$keyUpDecoder)
 							]));
 				},
 				update: F2(
 					function (msg, model) {
 						return A2(
-							$dtwrks$elm_book$ElmBook$withActionLogReset,
+							$dtwrks$elm_book$ElmBook$Internal$Application$withActionLogReset,
 							model,
-							A2($dtwrks$elm_book$ElmBook$update, msg, model));
+							A2($dtwrks$elm_book$ElmBook$Internal$Application$update, msg, model));
 					}),
-				view: $dtwrks$elm_book$ElmBook$view
+				view: $dtwrks$elm_book$ElmBook$Internal$Application$view
 			});
 	});
-var $dtwrks$elm_book$ElmBook$withComponentOptions = F2(
-	function (componentAttributes, _v0) {
-		var config = _v0.a;
-		return $dtwrks$elm_book$ElmBook$ElmBookBuilder(
+var $dtwrks$elm_book$ElmBook$Internal$Chapter$chapterWithGroup = F2(
+	function (group, _v0) {
+		var chapter = _v0.a;
+		return (group === '') ? $dtwrks$elm_book$ElmBook$Internal$Chapter$Chapter(chapter) : $dtwrks$elm_book$ElmBook$Internal$Chapter$Chapter(
 			_Utils_update(
-				config,
+				chapter,
 				{
-					componentOptions: A2(
-						$dtwrks$elm_book$ElmBook$Internal$Component$toValidOptions,
-						config.componentOptions,
-						A2($dtwrks$elm_book$ElmBook$Internal$Component$applyAttributes, componentAttributes, $dtwrks$elm_book$ElmBook$Internal$Component$defaultOverrides))
+					groupTitle: $elm$core$Maybe$Just(group),
+					url: '/' + ($dtwrks$elm_book$ElmBook$Internal$Helpers$toSlug(group) + chapter.url)
 				}));
 	});
+var $dtwrks$elm_book$ElmBook$withChapterGroups = function (chapterGroups_) {
+	return $dtwrks$elm_book$ElmBook$Internal$Application$application(
+		A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var group = _v0.a;
+				var chapters = _v0.b;
+				return _Utils_Tuple2(
+					group,
+					A2(
+						$elm$core$List$map,
+						$dtwrks$elm_book$ElmBook$Internal$Chapter$chapterWithGroup(group),
+						chapters));
+			},
+			chapterGroups_));
+};
 var $dtwrks$elm_book$ElmBook$Internal$Theme$applyAttributes = F2(
 	function (fns, theme) {
 		return A3($elm$core$List$foldl, $elm$core$Basics$apL, theme, fns);
@@ -25654,7 +25379,7 @@ var $dtwrks$elm_book$ElmBook$Internal$Theme$applyAttributes = F2(
 var $dtwrks$elm_book$ElmBook$withTheme = F2(
 	function (themeAttributes, _v0) {
 		var config = _v0.a;
-		return $dtwrks$elm_book$ElmBook$ElmBookBuilder(
+		return $dtwrks$elm_book$ElmBook$Internal$Book$ElmBookBuilder(
 			_Utils_update(
 				config,
 				{
@@ -25679,18 +25404,12 @@ var $dtwrks$elm_book$ElmBook$UI$ElmBook$main = A2(
 				[$dtwrks$elm_book$ElmBook$UI$Docs$Wrapper$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Header$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Search$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Nav$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Footer$docs, $dtwrks$elm_book$ElmBook$UI$Docs$ActionLog$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Icons$docs, $dtwrks$elm_book$ElmBook$UI$Docs$Markdown$docs]))
 		]),
 	A2(
-		$dtwrks$elm_book$ElmBook$withComponentOptions,
+		$dtwrks$elm_book$ElmBook$withTheme,
 		_List_fromArray(
 			[
-				$dtwrks$elm_book$ElmBook$Component$background($dtwrks$elm_book$ElmBook$UI$Helpers$themeBackground)
+				$dtwrks$elm_book$ElmBook$Theme$subtitle('Guides & Components')
 			]),
-		A2(
-			$dtwrks$elm_book$ElmBook$withTheme,
-			_List_fromArray(
-				[
-					$dtwrks$elm_book$ElmBook$Theme$subtitle('Guides & Components')
-				]),
-			A2($dtwrks$elm_book$ElmBook$book, 'ElmBook\'s', $dtwrks$elm_book$ElmBook$UI$ElmBook$initialModel))));
+		A2($dtwrks$elm_book$ElmBook$book, 'ElmBook\'s', $dtwrks$elm_book$ElmBook$UI$ElmBook$initialModel)));
 _Platform_export({'ElmBook':{'UI':{'ElmBook':{'init':$dtwrks$elm_book$ElmBook$UI$ElmBook$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"ElmBook.Internal.Msg.Msg { themingModel : { themeAccent : String.String, themeBackgroundEnd : String.String, themeBackgroundStart : String.String } }","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"}},"unions":{"ElmBook.Internal.Msg.Msg":{"args":["state"],"tags":{"DoNothing":[],"OnUrlRequest":["Browser.UrlRequest"],"OnUrlChange":["Url.Url"],"UpdateState":["state -> state"],"LogAction":["String.String","String.String"],"ActionLogShow":[],"ActionLogHide":[],"SearchFocus":[],"SearchBlur":[],"Search":["String.String"],"ToggleMenu":[],"KeyArrowDown":[],"KeyArrowUp":[],"KeyShiftOn":[],"KeyShiftOff":[],"KeyMetaOn":[],"KeyMetaOff":[],"KeyEnter":[],"KeyK":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}}}}})}}}});}(this));
 

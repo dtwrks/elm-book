@@ -35,6 +35,7 @@ styles =
 .elm-book-header--button {
     display: none;
     padding: 12px;
+    border: none;
     border-radius: 4px;
     box-shadow: none;
     background-color: transparent;
@@ -48,8 +49,10 @@ styles =
     opacity: 0.4;
 }
 @media screen and (max-width: 768px) {
-    display: flex;
-    align-items: center;
+    .elm-book-header--button {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .elm-book-header-default {
