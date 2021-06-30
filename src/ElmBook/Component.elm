@@ -25,14 +25,14 @@ hiddenLabel hiddenLabel_ (ComponentOptions settings) =
 
 inline : ComponentOptions -> ComponentOptions
 inline (ComponentOptions settings) =
-    ComponentOptions { settings | layout = Just Inline }
+    ComponentOptions { settings | display = Just Inline }
 
 
 block : ComponentOptions -> ComponentOptions
 block (ComponentOptions settings) =
-    ComponentOptions { settings | layout = Just Block }
+    ComponentOptions { settings | display = Just Block }
 
 
 card : ComponentOptions -> ComponentOptions
 card (ComponentOptions settings) =
-    ComponentOptions { settings | layout = Just Card }
+    ComponentOptions { settings | display = Just Card }

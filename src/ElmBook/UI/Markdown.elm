@@ -42,13 +42,13 @@ sectionRenderer chapterTitle chapterComponents componentOptions =
         | html =
             Markdown.Html.oneOf
                 [ Markdown.Html.tag "component"
-                    (\labelFilter hiddenLabel_ background_ layout_ fullWidth_ _ ->
+                    (\labelFilter hiddenLabel_ background_ display_ fullWidth_ _ ->
                         let
                             options_ =
                                 ElmBook.Internal.Component.markdownOptions
                                     componentOptions
                                     { hiddenLabel = hiddenLabel_
-                                    , layout = layout_
+                                    , display = display_
                                     , background = background_
                                     , fullWidth = fullWidth_
                                     }
@@ -84,16 +84,16 @@ sectionRenderer chapterTitle chapterComponents componentOptions =
                     |> Markdown.Html.withOptionalAttribute "with-label"
                     |> Markdown.Html.withOptionalAttribute "with-hidden-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
-                    |> Markdown.Html.withOptionalAttribute "with-layout"
+                    |> Markdown.Html.withOptionalAttribute "with-display"
                     |> Markdown.Html.withOptionalAttribute "with-full-width"
                 , Markdown.Html.tag "component-list"
-                    (\hiddenLabel_ background_ layout_ fullWidth_ _ ->
+                    (\hiddenLabel_ background_ display_ fullWidth_ _ ->
                         let
                             options_ =
                                 ElmBook.Internal.Component.markdownOptions
                                     componentOptions
                                     { hiddenLabel = hiddenLabel_
-                                    , layout = layout_
+                                    , display = display_
                                     , background = background_
                                     , fullWidth = fullWidth_
                                     }
@@ -121,7 +121,7 @@ sectionRenderer chapterTitle chapterComponents componentOptions =
                     )
                     |> Markdown.Html.withOptionalAttribute "with-hidden-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
-                    |> Markdown.Html.withOptionalAttribute "with-layout"
+                    |> Markdown.Html.withOptionalAttribute "with-display"
                     |> Markdown.Html.withOptionalAttribute "with-full-width"
                 ]
     }

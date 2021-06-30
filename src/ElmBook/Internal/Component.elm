@@ -4,7 +4,7 @@ module ElmBook.Internal.Component exposing (..)
 type alias ValidComponentOptions =
     { hiddenLabel : Bool
     , background : String
-    , layout : Layout
+    , display : Layout
     , fullWidth : Bool
     }
 
@@ -19,7 +19,7 @@ type ComponentOptions
     = ComponentOptions
         { hiddenLabel : Maybe Bool
         , background : Maybe String
-        , layout : Maybe Layout
+        , display : Maybe Layout
         , fullWidth : Maybe Bool
         }
 
@@ -32,7 +32,7 @@ defaultOptions : ValidComponentOptions
 defaultOptions =
     { hiddenLabel = False
     , background = "#fff"
-    , layout = Card
+    , display = Card
     , fullWidth = False
     }
 
@@ -42,7 +42,7 @@ defaultOverrides =
     ComponentOptions
         { hiddenLabel = Nothing
         , background = Nothing
-        , layout = Nothing
+        , display = Nothing
         , fullWidth = Nothing
         }
 
@@ -52,7 +52,7 @@ markdownOptions :
     ->
         { hiddenLabel : Maybe String
         , background : Maybe String
-        , layout : Maybe String
+        , display : Maybe String
         , fullWidth : Maybe String
         }
     -> ValidComponentOptions
@@ -61,7 +61,7 @@ markdownOptions validOptions options =
         (ComponentOptions
             { hiddenLabel = parseBool options.hiddenLabel
             , background = options.background
-            , layout = parseLayout options.layout
+            , display = parseDisplay options.display
             , fullWidth = parseBool options.fullWidth
             }
         )
@@ -75,9 +75,9 @@ toValidOptions validSettings (ComponentOptions settings) =
     , background =
         settings.background
             |> Maybe.withDefault validSettings.background
-    , layout =
-        settings.layout
-            |> Maybe.withDefault validSettings.layout
+    , display =
+        settings.display
+            |> Maybe.withDefault validSettings.display
     , fullWidth =
         settings.fullWidth
             |> Maybe.withDefault validSettings.fullWidth
@@ -94,9 +94,9 @@ parseBool v =
             Nothing
 
 
-parseLayout : Maybe String -> Maybe Layout
-parseLayout layoutString =
-    case layoutString of
+parseDisplay : Maybe String -> Maybe Layout
+parseDisplay displayString =
+    case displayString of
         Just "block" ->
             Just Block
 

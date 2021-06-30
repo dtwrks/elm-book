@@ -3,20 +3,16 @@ module ElmBook.UI.ChapterComponent exposing
     , view
     )
 
-import Browser
-import ElmBook.Internal.Component exposing (ValidComponentOptions)
+import ElmBook.Internal.Component exposing (Layout(..), ValidComponentOptions)
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.UI.Helpers exposing (css_)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Url
 
 
 styles : Html msg
 styles =
     css_ """
-.elm-book__chapter-component {}
-
 .elm-book__chapter-component__title {
     padding-bottom: 12px;
     font-size: 14px;
@@ -38,15 +34,39 @@ styles =
 """
 
 
-view : String -> ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
-view chapterTitle options_ ( label, html ) =
-    article
-        [ class "elm-book__chapter-component" ]
-        [ if options_.hiddenLabel || label == "" then
+viewLabel : ValidComponentOptions -> String -> Html (Msg state)
+viewLabel options_ label =
+    case ( label, options_.hiddenLabel, options_.display ) of
+        ( "", _, _ ) ->
             text ""
 
-          else
-            p [ class "elm-book elm-book__chapter-component__title elm-book-sans" ] [ text label ]
+        ( _, True, _ ) ->
+            text ""
+
+        ( _, _, Inline ) ->
+            text ""
+
+        _ ->
+            p
+                [ class "elm-book elm-book__chapter-component__title elm-book-sans"
+                ]
+                [ text label ]
+
+
+viewBlock : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewBlock options_ ( label, html ) =
+    article
+        [ class "elm-book__chapter-component" ]
+        [ viewLabel options_ label
+        , div [] [ html ]
+        ]
+
+
+viewCard : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewCard options_ ( label, html ) =
+    article
+        [ class "elm-book__chapter-component" ]
+        [ viewLabel options_ label
         , div
             [ class "elm-book__chapter-component__background elm-book-shadows-light"
             , style "background" options_.background
@@ -56,12 +76,27 @@ view chapterTitle options_ ( label, html ) =
                 [ html ]
             ]
         ]
+
+
+viewDisplay : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewDisplay options_ ( label, html ) =
+    case options_.display of
+        Inline ->
+            html
+
+        Block ->
+            viewBlock options_ ( label, html )
+
+        Card ->
+            viewCard options_ ( label, html )
+
+
+view : String -> ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+view chapterTitle options_ ( label, html ) =
+    viewDisplay options_ ( label, html )
         |> Html.map
             (\msg ->
                 let
-                    _ =
-                        Debug.log "msg" msg
-
                     actionContext =
                         if label /= "" then
                             chapterTitle ++ " / " ++ label ++ " / "

@@ -268,7 +268,11 @@ myCustomHeader =
 
 What about colors? I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't fret, you can customize a lot of what you're seeing.
 
-<component with-label="Theme Builder" />
+<component
+    with-label="Theme Builder"
+    with-display="block"
+    with-full-width="true"
+    />
 
     main : ElmBook x
     main =
