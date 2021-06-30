@@ -4,7 +4,7 @@ module ElmBook.Application exposing
     , subscriptions
     )
 
-import ElmBook.Internal.ApplicationOptions exposing (ApplicationOptions)
+import ElmBook.Internal.ApplicationOptions exposing (Attribute)
 import ElmBook.Internal.Msg exposing (Msg)
 
 
@@ -21,7 +21,7 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
         ]
 
 -}
-globals : List html -> ApplicationOptions state html -> ApplicationOptions state html
+globals : List html -> Attribute state html
 globals globals_ options =
     { options | globals = Just globals_ }
 
@@ -39,7 +39,7 @@ globals globals_ options =
         ]
 
 -}
-initialState : state -> ApplicationOptions state html -> ApplicationOptions state html
+initialState : state -> Attribute state html
 initialState state options =
     { options | state = Just state }
 
@@ -69,6 +69,6 @@ initialState state options =
         ]
 
 -}
-subscriptions : Sub (Msg state) -> ApplicationOptions state html -> ApplicationOptions state html
+subscriptions : Sub (Msg state) -> Attribute state html
 subscriptions subscriptions_ options =
     { options | subscriptions = Just subscriptions_ }

@@ -14,9 +14,11 @@ styles =
 .elm-book-chapter-header {
     margin: 0;
     padding: 12px 16px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
-    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #b0b4ba;
 }
 """
 

@@ -20,15 +20,16 @@ ElmBook tries to help them by making it easy to create rich documents that showc
 They can be as simple as a markdown block or as rich as a set of interactive UI components that talk to each other. Take a look at the ["Creating Chapters"](/guides/creating-chapters) guide for more details.
 
 ```elm
-module FirstChapter exposing (chapter)
+module FirstChapter exposing (firstChapter)
 
 
-import ElmBook
+import ElmBook.Chapter exposing (chapter)
+import Html exposing (..)
 
 
-chapter : ElmBook.Chapter x
-chapter =
-    ElmBook.chapter "The First Chapter"
+firstChapter : ElmBook.Chapter x
+firstChapter =
+    chapter "The First Chapter"
         |> withComponent component
         |> render content
 
@@ -40,7 +41,6 @@ component =
 
 content : String
 content = \"\"\"
-
 # It all starts with a chapter
 
 Oh, look – A wide real component!
@@ -48,7 +48,6 @@ Oh, look – A wide real component!
 <component />
 
 Woof! Moving on...
-
 \"\"\"
 ```
 
@@ -63,16 +62,16 @@ A book can hold a number of chapters and there are many ways to customize it fro
 module Book exposing (main)
 
 
-import ElmBook
-import FirstChapter
+import ElmBook exposing (book, withChapters)
+import FirstChapter exposing (firstChapter)
 
 
 main : ElmBook.Book ()
 main =
-    ElmBook.book "Book"
-        |> withChapters [
-            FirstChapter.chapter
-        ]
+    book "Book"
+        |> withChapters
+            [ firstChapter
+            ]
 
 ```
 
@@ -104,6 +103,5 @@ This would enable any/all published elm packages to automatically have their own
 ---
 
 I really hope we can create something unique to the Elm ecosystem here, so please let me know what you think, ideas to improve it or if you encountered any problems. Find me as **georgesboris** on Elm Slack.
-
 
 """

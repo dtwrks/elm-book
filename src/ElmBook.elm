@@ -164,11 +164,13 @@ import ElmBook.Application
 import ElmBook.Component
 import ElmBook.Custom
 import ElmBook.Internal.Application exposing (Application)
+import ElmBook.Internal.ApplicationOptions
 import ElmBook.Internal.Book exposing (ElmBookBuilder(..))
 import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes)
 import ElmBook.Internal.Msg exposing (Msg)
+import ElmBook.Internal.Theme
 import ElmBook.Theme
 import Html exposing (Html)
 
@@ -186,7 +188,10 @@ book =
 
 
 {-| -}
-withApplicationOptions : List (ElmBook.Application.Attribute state html) -> ElmBookBuilder state html -> ElmBookBuilder state html
+withApplicationOptions :
+    List (ElmBook.Internal.ApplicationOptions.Attribute state html)
+    -> ElmBookBuilder state html
+    -> ElmBookBuilder state html
 withApplicationOptions applicationAttributes (ElmBookBuilder config) =
     ElmBookBuilder
         { config | application = applyAttributes applicationAttributes config.application }
@@ -194,7 +199,7 @@ withApplicationOptions applicationAttributes (ElmBookBuilder config) =
 
 {-| Customize your book's theme using any of the attributes available on `ElmBook.Theme`.
 -}
-withThemeOptions : List ElmBook.Theme.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeOptions : List ElmBook.Internal.Theme.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
 withThemeOptions themeAttributes (ElmBookBuilder config) =
     ElmBookBuilder
         { config | theme = applyAttributes themeAttributes config.theme }
@@ -202,7 +207,7 @@ withThemeOptions themeAttributes (ElmBookBuilder config) =
 
 {-| Define the default options for your embedded components.
 -}
-withComponentOptions : List ElmBook.Component.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
+withComponentOptions : List ElmBook.Internal.Component.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
 withComponentOptions componentAttributes (ElmBookBuilder config) =
     ElmBookBuilder
         { config

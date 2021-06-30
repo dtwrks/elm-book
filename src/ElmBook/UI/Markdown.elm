@@ -453,16 +453,15 @@ styles =
     padding: 36px 24px;
     background-color: #2a354d;
     border-radius: 6px;
+    overflow: auto;
 }
 .elm-book-md__code-default {
 
 }
 
 .elm-book-md pre.elmsh {
-    padding: 10px;
+    padding: 0;
     margin: 0;
-    text-align: left;
-    overflow: auto;
 }
 
 .elm-book-md code.elmsh {

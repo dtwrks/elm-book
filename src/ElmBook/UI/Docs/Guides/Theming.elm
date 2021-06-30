@@ -53,7 +53,9 @@ docs =
     let
         headerProps =
             { href = "/x"
-            , theme = defaultTheme
+            , theme =
+                defaultTheme
+                    |> ElmBook.Theme.subtitle "Custom Subtitle"
             , title = "Title"
             , isMenuOpen = False
             , onClickHeader = logAction "onClickHeader"
@@ -235,8 +237,10 @@ You can choose a different logo, title and subtitle for your book:
     main : ElmBook x
     main =
         book "CustomHeader"
-            |> withSubtitle "Custom Subtitle"
-            |> withLogo (img [ src "/mycompanylogo.png" ] [])
+            |> withThemeOptions
+                [ ElmBook.Theme.subtitle "Custom Subtitle",
+                , ElmBook.Theme.logo (img [ src "/mycompanylogo.png" ] [])
+                ]
             |> withChapters []
 
 ---
@@ -245,22 +249,33 @@ Or you can go full custom and provide your own thing:
 
 <component with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
 
-    main : ElmBook x
-    main =
-        book "CustomHeader"
-            |> withCustomHeader myCustomHeader
-            |> withChapters []
+```elm
+main : ElmBook x
+main =
+    book "CustomHeader"
+        |> withThemeOptions
+            [ ElmBook.Theme.header myCustomHeader
+            ]
+        |> withChapters []
+
+
+myCustomHeader : Html msg
+myCustomHeader =
+    ...
+```
 
 ## Custom Colors
 
-What about colors? I mean… we all love Elm's light blue but maybe it doesn't fit our book. But don't fret, you can customize a lot of what you're seeing.
+What about colors? I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't fret, you can customize a lot of what you're seeing.
 
 <component with-label="Theme Builder" />
 
     main : ElmBook x
     main =
         book "CustomHeader"
-            |> withSubtitle "Custom Subtitle"
-            |> withLogo (img [ src "/mycompanylogo.png" ] [])
+            |> withThemeOptions
+                [ ElmBook.Theme.background "slategray"
+                , ElmBook.Theme.accent "white"
+                ]
             |> withChapters []        
 """)

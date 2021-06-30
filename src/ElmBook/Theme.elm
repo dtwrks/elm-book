@@ -8,7 +8,7 @@ module ElmBook.Theme exposing
     , subtitle
     )
 
-import ElmBook.Internal.Theme exposing (Theme(..))
+import ElmBook.Internal.Theme
 import Html exposing (Html)
 
 
@@ -21,38 +21,37 @@ type alias Attribute =
 
 
 header : Html Never -> Attribute
-header header_ (Theme theme) =
-    Theme { theme | header = Just header_ }
+header header_ theme =
+    { theme | header = Just header_ }
 
 
 logo : Html Never -> Attribute
-logo logo_ (Theme theme) =
-    Theme { theme | header = Just logo_ }
+logo logo_ theme =
+    { theme | logo = Just logo_ }
 
 
 subtitle : String -> Attribute
-subtitle subtitle_ (Theme theme) =
-    Theme { theme | subtitle = Just subtitle_ }
+subtitle subtitle_ theme =
+    { theme | subtitle = Just subtitle_ }
 
 
 background : String -> Attribute
-background background_ (Theme theme) =
-    Theme { theme | background = background_ }
+background background_ theme =
+    { theme | background = background_ }
 
 
 backgroundGradient : String -> String -> Attribute
-backgroundGradient startColor endColor (Theme theme) =
-    Theme
-        { theme
-            | background =
-                "linear-gradient(150deg, "
-                    ++ startColor
-                    ++ " 0%, "
-                    ++ endColor
-                    ++ " 100%)"
-        }
+backgroundGradient startColor endColor theme =
+    { theme
+        | background =
+            "linear-gradient(150deg, "
+                ++ startColor
+                ++ " 0%, "
+                ++ endColor
+                ++ " 100%)"
+    }
 
 
 accent : String -> Attribute
-accent background_ (Theme theme) =
-    Theme { theme | background = background_ }
+accent background_ theme =
+    { theme | background = background_ }
