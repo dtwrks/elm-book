@@ -1,5 +1,6 @@
 module ElmBook.Custom exposing
-    ( Chapter
+    ( Builder
+    , Chapter
     , Msg
     , customBook
     )
@@ -21,7 +22,11 @@ type alias Chapter state html =
     ElmBook.Internal.Chapter.ChapterCustom state html
 
 
-customBook : (html -> Html (Msg state)) -> String -> ElmBookBuilder state html
+type alias Builder state html =
+    ElmBookBuilder state html
+
+
+customBook : (html -> Html (Msg state)) -> String -> Builder state html
 customBook toHtml title =
     ElmBookBuilder
         { title = title

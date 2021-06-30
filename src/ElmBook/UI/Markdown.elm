@@ -7,7 +7,7 @@ import Dict
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.UI.ChapterComponent
-import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen)
+import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen, mediaMobile)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Markdown.Block as Block
@@ -378,6 +378,13 @@ styles =
     padding-top: 24px;
 }
 
+""" ++ mediaMobile ++ """ {
+    .elm-book-md h1 {
+        font-size: 40px;
+        padding-top: 12px;
+    }
+}
+
 .elm-book-md__default {
     line-height: 1.8em;
     color: rgb(80, 80, 90);
@@ -450,7 +457,7 @@ styles =
 .elm-book-md__code code {
     font-size: 18px;
     line-height: 22px;
-    padding: 36px 24px;
+    padding: 20px 24px;
     background-color: #2a354d;
     border-radius: 6px;
     overflow: auto;

@@ -11,13 +11,13 @@ docs =
         |> render """
 Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states.
 
-But how to accomplish this with Elm's static typing? Simply provide your own custom model that can be used and updated by your own components.
+But how to accomplish this with Elm's static typing? Simply provide your own custom model that can be used and updated by your own components across all your chapters.
 
 ---
 
 ## The Shared Model
 
-Each book has one "shared model" and it's your job to slice in the way that makes sense for your book.
+Each book has one "shared state" and it's your job to slice in the way that makes sense for your book.
 
 Lets say we have two stateful chapters, one with an input and the other one with a counter.
 
@@ -26,9 +26,11 @@ Let's first define a simple model for the `InputChapter`:
 ```elm
 module InputChapter exposing (Model, init)
 
+
 type alias Model =
     { value : String
     }
+
 
 init : Model
 init =
@@ -41,7 +43,9 @@ Then another even simpler one for the `CounterChapter`:
 ```elm
 module CounterChapter exposing (Model, init)
 
+
 type alias Model = Int
+
 
 init : Model
 init = 0
@@ -52,24 +56,32 @@ Then, on your book, you put everything together like this:
 ```elm
 module Book exposing (main)
 
+
 import ElmBook exposing (..)
+import ElmBook.Application
 import CounterChapter
 import InputChapter
+
 
 type alias Model =
     { inputChapter : InputChapter.Model
     , counterChapter : CounterChapter.Model
     }
 
-initialModel : Model
-initialModel =
+
+initialState : SharedState
+initialState =
     { inputChapter = InputChapter.init
     , counterChapter = CounterChapter.init
     }
 
-main : ElmBook Model
+
+main : ElmBook SharedState
 main =
-    book "Stateful Book" initialModel
+    book "Stateful Book"
+        |> withApplicationOptions
+            [ ElmBook.Application.initialState initialState
+            ]
         |> withChapters [
             CounterChapter.chapter,
             InputChapter.chapter
@@ -78,62 +90,74 @@ main =
 
 ---
 
-## Using the Shared Model
+## Using the Shared State
 
-By now we have our shared model properly setup, but how can we actually use those models on our chapters? Let's see!
+By now we have our shared state properly setup, but how can we actually use that on our chapters? Let's see!
 
 You need to tell your chapter where its state is located in your book. You also need to tell it how to update that state. It's pretty simple:
 
 ```elm
 module CounterChapter exposing (Model, init, chapter)
 
-import ElmBook exposing (updateState)
+
+import ElmBook.Chapter exposing (Chapter, chapter, renderStatefulComponent)
+import ElmBook.Actions exposing (updateState)
+
 
 type alias Model = Int
 
-type alias SharedModel
+
+type alias SharedState
     = { x | counterModel : Model }
 
-updateSharedModel : SharedModel -> SharedModel
-updateSharedModel x =
+
+updateSharedState : SharedState -> SharedState
+updateSharedState x =
     { x | counterModel = x.counterModel + 1 }
 
-chapter : ElmBook.Chapter SharedModel
+
+chapter : Chapter SharedState
 chapter =
-    ElmBook.chapter "InputChapter"
-        |> withStatefulComponent (
+    chapter "InputChapter"
+        |> renderStatefulComponent (
             \\{ inputModel } ->
                 myCounter
                     { value = inputModel.value
-                    , onIncrease = updateState updateSharedModel
+                    , onIncrease = updateState updateSharedState
                     }
         )
 ```
 
-The same can be done for the InputChapter. But note that it's `updateState` now receives one parameter.
+The same can be done for the InputChapter. But note that the `updateState` is replaced with `updateStateWith` now that it receives one parameter.
 
 ```elm
 module InputChapter exposing (Model, init, chapter)
 
-import ElmBook exposing (updateStateWith)
+
+import ElmBook.Chapter exposing (Chapter, chapter, renderStatefulComponent)
+import ElmBook.Actions exposing (updateStateWith)
+
 
 type alias Model = { value : String }
 
-type alias SharedModel
+
+type alias SharedState
     = { x | inputModel : Model }
 
-updateSharedModel : Int -> SharedModel -> SharedModel
-updateSharedModel value x =
+
+updateSharedState : Int -> SharedState -> SharedState
+updateSharedState value x =
     { x | inputModel = { value = value } }
 
-chapter : ElmBook.Chapter SharedModel
+
+chapter : ElmBook.Chapter SharedState
 chapter =
     ElmBook.chapter "InputChapter"
         |> withStatefulComponent (
             \\{ inputModel } ->
                 myInput
                     { value = inputModel.value
-                    , onInput = updateStateWith updateSharedModel
+                    , onInput = updateStateWith updateSharedState
                     }
         )
 ```
@@ -147,7 +171,9 @@ Let's change our `InputChapter` so it now have it's own elm architecture.
 ```elm
 module InputChapter exposing (Model, init, chapter)
 
-import ElmBook exposing (updateStateWith)
+
+import ElmBook.Chapter exposing (Chapter, chapter, renderStatefulComponent)
+import ElmBook.Actions exposing (updateStateWith)
 
 
 type alias Model = { value = String }
@@ -169,22 +195,22 @@ view model =
     input [ value model.value, onInput UpdateValue ] []
 
 
-type alias SharedModel
+type alias SharedState
     = { x | inputModel : Model }
 
 
-updateSharedModel : Msg -> SharedModel -> SharedModel
-updateSharedModel msg shared =
+updateSharedState : Msg -> SharedState -> SharedState
+updateSharedState msg shared =
     { shared | inputModel = update msg shared.inputModel }
 
 
-chapter : ElmBook.Chapter SharedModel
+chapter : ElmBook.Chapter SharedState
 chapter =
     ElmBook.chapter "InputChapter"
         |> withStatefulComponent (
             \\{ inputModel } ->
                 view inputModel
-                    |> Html.map (updateStateWith updateSharedModel)
+                    |> Html.map (updateStateWith updateSharedState)
         )
 ```
 

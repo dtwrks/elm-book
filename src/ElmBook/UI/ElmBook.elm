@@ -5,8 +5,9 @@ import ElmBook.Application
 import ElmBook.Theme
 import ElmBook.UI.Docs.ActionLog
 import ElmBook.UI.Docs.Footer
-import ElmBook.UI.Docs.Guides.CreatingBooks
-import ElmBook.UI.Docs.Guides.CreatingChapters
+import ElmBook.UI.Docs.Guides.Books
+import ElmBook.UI.Docs.Guides.Chapters
+import ElmBook.UI.Docs.Guides.Interop
 import ElmBook.UI.Docs.Guides.LoggingActions
 import ElmBook.UI.Docs.Guides.StatefulChapters
 import ElmBook.UI.Docs.Guides.Theming
@@ -41,11 +42,12 @@ main =
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )
             , ( "Guides"
-              , [ ElmBook.UI.Docs.Guides.CreatingChapters.docs
-                , ElmBook.UI.Docs.Guides.CreatingBooks.docs
+              , [ ElmBook.UI.Docs.Guides.Chapters.docs
+                , ElmBook.UI.Docs.Guides.Books.docs
                 , ElmBook.UI.Docs.Guides.Theming.docs
                 , ElmBook.UI.Docs.Guides.LoggingActions.docs
                 , ElmBook.UI.Docs.Guides.StatefulChapters.docs
+                , ElmBook.UI.Docs.Guides.Interop.docs
                 ]
               )
             , ( "Private Components"

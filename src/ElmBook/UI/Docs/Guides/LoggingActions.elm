@@ -73,6 +73,9 @@ ElmBook provides this function to help on those scenarios. It receives a label a
 <component with-label="button" />
 
 ```elm
+import ElmBook.Actions exposing (logAction)
+
+
 chapter "button"
     |> withComponent (
         myButton {
@@ -92,6 +95,9 @@ Let's try it out with a text input – it sends out a message with the string th
 <component with-label="input" />
 
 ```elm
+import ElmBook.Actions exposing (logActionWithString)
+
+
 chapter "button"
     |> withComponent (
         myInput {

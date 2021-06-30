@@ -1,4 +1,8 @@
-module ElmBook.Internal.ApplicationOptions exposing (..)
+module ElmBook.Internal.ApplicationOptions exposing
+    ( ApplicationOptions
+    , Attribute
+    , defaultOptions
+    )
 
 import ElmBook.Internal.Msg exposing (Msg)
 
@@ -10,7 +14,7 @@ type alias Attribute state html =
 type alias ApplicationOptions state html =
     { globals : Maybe (List html)
     , state : Maybe state
-    , subscriptions : Maybe (Sub (Msg state))
+    , subscriptions : List (Sub (Msg state))
     }
 
 
@@ -18,5 +22,5 @@ defaultOptions : ApplicationOptions state html
 defaultOptions =
     { globals = Nothing
     , state = Nothing
-    , subscriptions = Nothing
+    , subscriptions = []
     }

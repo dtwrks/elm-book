@@ -69,6 +69,6 @@ initialState state options =
         ]
 
 -}
-subscriptions : Sub (Msg state) -> Attribute state html
+subscriptions : List (Sub (Msg state)) -> Attribute state html
 subscriptions subscriptions_ options =
-    { options | subscriptions = Just subscriptions_ }
+    { options | subscriptions = subscriptions_ }

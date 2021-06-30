@@ -21,10 +21,15 @@ type alias Props state =
 
 styles : Html msg
 styles =
-    css_ """
+    css_ <| """
 .elm-book-chapter {
     padding: 40px;
     width: 100%;
+}
+""" ++ mediaMobile ++ """ {
+    .elm-book-chapter {
+        padding: 24px;
+    }
 }
 """
 

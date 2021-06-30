@@ -84,6 +84,7 @@ application chapterGroups (ElmBookBuilder config) =
                 Sub.batch
                     [ onKeyDown keyDownDecoder
                     , onKeyUp keyUpDecoder
+                    , Sub.batch config.application.subscriptions
                     ]
         }
 
@@ -191,7 +192,9 @@ update msg model =
                             |> logAction_ defaultLogContext
 
                     else
-                        ( model, Browser.Navigation.pushUrl model.navKey (Url.toString url) )
+                        ( model
+                        , Browser.Navigation.pushUrl model.navKey (Url.toString url)
+                        )
 
         OnUrlChange url ->
             case ( url.path, Array.get 0 model.chapters ) of
@@ -214,7 +217,9 @@ update msg model =
                       }
                     , case activeChapter of
                         Just _ ->
-                            Cmd.none
+                            Task.attempt
+                                (\_ -> DoNothing)
+                                (Browser.Dom.setViewportOf "elm-book-main" 0 0)
 
                         Nothing ->
                             Browser.Navigation.replaceUrl model.navKey "/"

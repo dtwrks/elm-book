@@ -80,7 +80,10 @@ view props =
                     , -- Main Main
                       div
                         [ class "elm-book--wrapper--main--content" ]
-                        [ div [ class "elm-book--wrapper--main--inner elm-book-inset" ]
+                        [ div
+                            [ id "elm-book-main"
+                            , class "elm-book--wrapper--main--inner elm-book-inset"
+                            ]
                             [ props.main ]
                         ]
                     , -- Main Footer

@@ -17,7 +17,7 @@ ElmBook tries to help them by making it easy to create rich documents that showc
 
 ## It all starts with a chapter
 
-They can be as simple as a markdown block or as rich as a set of interactive UI components that talk to each other. Take a look at the ["Creating Chapters"](/guides/creating-chapters) guide for more details.
+They can be as simple as a markdown block or as rich as a set of interactive UI components that talk to each other. Take a look at the ["Creating Chapters"](/guides/chapters) guide for more details.
 
 ```elm
 module FirstChapter exposing (firstChapter)
@@ -55,7 +55,7 @@ Woof! Moving on...
 
 ## Together, they become a book
 
-A book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/guides/creating-books) and ["Theming"](/guides/theming) guides for more details.
+A book can hold a number of chapters and there are many ways to customize it from chapter grouping to custom themes. Take a look at the ["Creating Books"](/guides/books) and ["Theming"](/guides/theming) guides for more details.
 
 
 ```elm

@@ -1,11 +1,11 @@
-module ElmBook.UI.Docs.Guides.CreatingChapters exposing (..)
+module ElmBook.UI.Docs.Guides.Chapters exposing (..)
 
 import ElmBook.Chapter exposing (Chapter, chapter, render)
 
 
 docs : Chapter x
 docs =
-    chapter "Creating Chapters"
+    chapter "Chapters"
         |> render """
 Chapters are what books are made of. They can be library guides, component examples, design tokens showcases, you name it.
 
