@@ -150,6 +150,9 @@ styles =
     display: inline-block;
     color: #a0a0a0;
 }
+.elm-book-action-log__main {
+    flex-grow: 1;
+}
 .elm-book-action-log-item-preffix {
     padding-right: 16px;
     color: #a0a0a0;
