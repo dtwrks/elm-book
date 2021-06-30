@@ -1,6 +1,7 @@
 module ElmBook.Internal.Chapter exposing
     ( ChapterBuilder(..)
     , ChapterComponent
+    , ChapterComponentView(..)
     , ChapterConfig
     , ChapterCustom(..)
     , chapterBreadcrumb
@@ -34,8 +35,13 @@ type alias ChapterConfig state html =
 
 type alias ChapterComponent state html =
     { label : String
-    , view : state -> html
+    , view : ChapterComponentView state html
     }
+
+
+type ChapterComponentView state html
+    = ChapterComponentViewStateless html
+    | ChapterComponentViewStateful (state -> html)
 
 
 chapterTitle : ChapterCustom state html -> String

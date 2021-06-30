@@ -13,9 +13,9 @@ module ElmBook.Chapter exposing
     )
 
 import ElmBook.Component exposing (Attribute)
-import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterCustom(..))
+import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..))
 import ElmBook.Internal.Component
-import ElmBook.Internal.Helpers exposing (toSlug)
+import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
 import ElmBook.Internal.Msg exposing (Msg)
 import Html exposing (Html)
 
@@ -44,8 +44,7 @@ withComponentOptions attributes (ChapterBuilder config) =
     ChapterBuilder
         { config
             | componentOptions =
-                config.componentOptions
-                    |> ElmBook.Internal.Component.applyAttributes attributes
+                applyAttributes attributes config.componentOptions
         }
 
 
@@ -61,8 +60,7 @@ withComponent : html -> ChapterBuilder state html -> ChapterBuilder state html
 withComponent html (ChapterBuilder builder) =
     ChapterBuilder
         { builder
-            | componentList =
-                toStateful ( "", html ) :: builder.componentList
+            | componentList = fromTuple ( "", html ) :: builder.componentList
         }
 
 
@@ -82,7 +80,7 @@ withComponentList componentList (ChapterBuilder builder) =
     ChapterBuilder
         { builder
             | componentList =
-                List.map toStateful componentList ++ builder.componentList
+                List.map fromTuple componentList ++ builder.componentList
         }
 
 
@@ -93,7 +91,10 @@ withStatefulComponent view_ (ChapterBuilder builder) =
     ChapterBuilder
         { builder
             | componentList =
-                { label = "", view = view_ } :: builder.componentList
+                { label = ""
+                , view = ChapterComponentViewStateful view_
+                }
+                    :: builder.componentList
         }
 
 
@@ -104,7 +105,7 @@ withStatefulComponentList componentList (ChapterBuilder builder) =
     ChapterBuilder
         { builder
             | componentList =
-                List.map fromTuple componentList ++ builder.componentList
+                List.map fromTupleStateful componentList ++ builder.componentList
         }
 
 
@@ -154,7 +155,7 @@ renderComponent component (ChapterBuilder builder) =
     Chapter
         { builder
             | body = builder.body ++ "<component-list />"
-            , componentList = toStateful ( "", component ) :: builder.componentList
+            , componentList = fromTuple ( "", component ) :: builder.componentList
         }
 
 
@@ -176,7 +177,7 @@ renderComponentList componentList (ChapterBuilder builder) =
         { builder
             | body = builder.body ++ "<component-list />"
             , componentList =
-                List.map toStateful componentList ++ builder.componentList
+                List.map fromTuple componentList ++ builder.componentList
         }
 
 
@@ -192,13 +193,11 @@ renderWithComponents body (ChapterBuilder builder) =
 -- Helpers
 
 
-toStateful : ( String, html ) -> ChapterComponent state html
-toStateful ( label, html ) =
-    { label = label
-    , view = \_ -> html
-    }
+fromTupleStateful : ( String, state -> html ) -> ChapterComponent state html
+fromTupleStateful ( label, view_ ) =
+    { label = label, view = ChapterComponentViewStateful view_ }
 
 
-fromTuple : ( String, state -> html ) -> ChapterComponent state html
+fromTuple : ( String, html ) -> ChapterComponent state html
 fromTuple ( label, view_ ) =
-    { label = label, view = view_ }
+    { label = label, view = ChapterComponentViewStateless view_ }

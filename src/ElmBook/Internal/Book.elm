@@ -3,6 +3,7 @@ module ElmBook.Internal.Book exposing
     , ElmBookConfig
     )
 
+import ElmBook.Internal.ApplicationOptions exposing (ApplicationOptions)
 import ElmBook.Internal.Component exposing (ValidComponentOptions)
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme exposing (Theme)
@@ -10,13 +11,11 @@ import Html exposing (Html)
 
 
 type alias ElmBookConfig state html =
-    { urlPreffix : String
-    , title : String
+    { title : String
+    , toHtml : html -> Html (Msg state)
+    , application : ApplicationOptions state html
     , theme : Theme
     , componentOptions : ValidComponentOptions
-    , state : state
-    , toHtml : html -> Html (Msg state)
-    , globals : Maybe (List html)
     }
 
 

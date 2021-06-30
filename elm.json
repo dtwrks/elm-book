@@ -5,7 +5,13 @@
     "license": "MPL-2.0",
     "version": "1.0.0",
     "exposed-modules": [
-        "ElmBook"
+        "ElmBook",
+        "ElmBook.Custom",
+        "ElmBook.Actions",
+        "ElmBook.Component",
+        "ElmBook.Theme",
+        "ElmBook.Chapter",
+        "ElmBook.Application"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {

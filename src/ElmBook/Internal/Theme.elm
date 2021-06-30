@@ -2,7 +2,6 @@ module ElmBook.Internal.Theme exposing
     ( Attribute
     , Theme(..)
     , accent
-    , applyAttributes
     , background
     , defaultTheme
     , fontMonospace
@@ -46,11 +45,6 @@ defaultTheme =
         , fontSerif = "IBM Plex Serif"
         , fontMonospace = "Fira Code"
         }
-
-
-applyAttributes : List Attribute -> Theme -> Theme
-applyAttributes fns theme =
-    List.foldl (<|) theme fns
 
 
 header : Theme -> Maybe (Html Never)

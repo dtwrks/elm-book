@@ -1,7 +1,6 @@
 module ElmBook exposing
     ( book, withChapters, withChapterGroups, ElmBook
-    , withGlobals
-    , withComponentOptions, withTheme
+    , withApplicationOptions, withComponentOptions, withThemeOptions
     )
 
 {-| A book that tells the story of the UI components of your Elm application.
@@ -161,14 +160,15 @@ Sometimes it's useful to display a complex component so people can understand ho
 -}
 
 import Browser exposing (UrlRequest(..))
+import ElmBook.Application
 import ElmBook.Component
 import ElmBook.Custom
 import ElmBook.Internal.Application exposing (Application)
 import ElmBook.Internal.Book exposing (ElmBookBuilder(..))
 import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
 import ElmBook.Internal.Component
+import ElmBook.Internal.Helpers exposing (applyAttributes)
 import ElmBook.Internal.Msg exposing (Msg)
-import ElmBook.Internal.Theme
 import ElmBook.Theme
 import Html exposing (Html)
 
@@ -180,20 +180,24 @@ type alias ElmBook state =
 
 {-| Kickoff the creation of an ElmBook application.
 -}
-book : String -> state -> ElmBookBuilder state (Html (Msg state))
+book : String -> ElmBookBuilder state (Html (Msg state))
 book =
     ElmBook.Custom.customBook identity
 
 
+{-| -}
+withApplicationOptions : List (ElmBook.Application.Attribute state html) -> ElmBookBuilder state html -> ElmBookBuilder state html
+withApplicationOptions applicationAttributes (ElmBookBuilder config) =
+    ElmBookBuilder
+        { config | application = applyAttributes applicationAttributes config.application }
+
+
 {-| Customize your book's theme using any of the attributes available on `ElmBook.Theme`.
 -}
-withTheme : List ElmBook.Theme.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
-withTheme themeAttributes (ElmBookBuilder config) =
+withThemeOptions : List ElmBook.Theme.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
+withThemeOptions themeAttributes (ElmBookBuilder config) =
     ElmBookBuilder
-        { config
-            | theme =
-                ElmBook.Internal.Theme.applyAttributes themeAttributes config.theme
-        }
+        { config | theme = applyAttributes themeAttributes config.theme }
 
 
 {-| Define the default options for your embedded components.
@@ -203,29 +207,9 @@ withComponentOptions componentAttributes (ElmBookBuilder config) =
     ElmBookBuilder
         { config
             | componentOptions =
-                ElmBook.Internal.Component.applyAttributes componentAttributes ElmBook.Internal.Component.defaultOverrides
+                applyAttributes componentAttributes ElmBook.Internal.Component.defaultOverrides
                     |> ElmBook.Internal.Component.toValidOptions config.componentOptions
         }
-
-
-{-| Add global components to your book. This can be helpful for things like CSS resets.
-
-For instance, if you're using elm-tailwind-modules, this would be really helpful:
-
-    import Css.Global exposing (global)
-    import Tailwind.Utilities exposing (globalStyles)
-    import ElmBook.ElmCSS exposing (book)
-
-    book "MyApp"
-        |> withGlobals [
-            global globalStyles
-        ]
-
--}
-withGlobals : List html -> ElmBookBuilder state html -> ElmBookBuilder state html
-withGlobals globals (ElmBookBuilder config) =
-    ElmBookBuilder
-        { config | globals = Just globals }
 
 
 {-| List the chapters that should be displayed on your book.

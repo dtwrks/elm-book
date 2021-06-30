@@ -11,7 +11,7 @@ import Browser.Dom
 import Browser.Events exposing (onKeyDown, onKeyUp)
 import Browser.Navigation
 import ElmBook.Internal.Book exposing (ElmBookBuilder(..), ElmBookConfig)
-import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
+import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme
@@ -25,7 +25,7 @@ import ElmBook.UI.Nav
 import ElmBook.UI.Search
 import ElmBook.UI.Styles
 import ElmBook.UI.Wrapper
-import Html exposing (text)
+import Html exposing (Html, text)
 import Json.Decode as Decode
 import Task
 import Url
@@ -221,13 +221,27 @@ update msg model =
                     )
 
         UpdateState fn ->
-            let
-                config =
-                    model.config
-            in
-            ( { model | config = { config | state = fn config.state } }
-            , Cmd.none
-            )
+            model.config.application.state
+                |> Maybe.map
+                    (\state_ ->
+                        let
+                            config =
+                                model.config
+
+                            application_ =
+                                model.config.application
+
+                            application__ =
+                                { application_ | state = Just (fn state_) }
+
+                            config_ =
+                                { config | application = application__ }
+                        in
+                        ( { model | config = config_ }
+                        , Cmd.none
+                        )
+                    )
+                |> Maybe.withDefault ( model, Cmd.none )
 
         LogAction context action ->
             logAction_ context action
@@ -360,7 +374,7 @@ view model =
             { theme = model.config.theme
             , isMenuOpen = model.isMenuOpen
             , globals =
-                model.config.globals
+                model.config.application.globals
                     |> Maybe.withDefault []
                     |> List.map model.config.toHtml
             , header =
@@ -386,8 +400,7 @@ view model =
                             |> List.map chapterUrl
                 in
                 ElmBook.UI.Nav.view
-                    { preffix = model.config.urlPreffix
-                    , active = Maybe.map chapterUrl model.chapterActive
+                    { active = Maybe.map chapterUrl model.chapterActive
                     , preSelected =
                         if model.isSearching then
                             Array.get model.chapterPreSelected model.chaptersSearched
@@ -426,8 +439,10 @@ view model =
                                         |> List.map
                                             (\component ->
                                                 ( component.label
-                                                , component.view model.config.state
-                                                    |> model.config.toHtml
+                                                , componentView
+                                                    model.config.toHtml
+                                                    model.config.application.state
+                                                    component.view
                                                 )
                                             )
                                 }
@@ -455,6 +470,23 @@ view model =
             }
         ]
     }
+
+
+componentView :
+    (html -> Html (Msg state))
+    -> Maybe state
+    -> ChapterComponentView state html
+    -> Html (Msg state)
+componentView toHtml state_ componentView_ =
+    case componentView_ of
+        ChapterComponentViewStateless html ->
+            toHtml html
+
+        ChapterComponentViewStateful html ->
+            state_
+                |> Maybe.map (toHtml << html)
+                |> Maybe.withDefault
+                    (text "")
 
 
 

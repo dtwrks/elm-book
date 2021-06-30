@@ -67,11 +67,6 @@ markdownOptions validOptions options =
         )
 
 
-applyAttributes : List (ComponentOptions -> ComponentOptions) -> ComponentOptions -> ComponentOptions
-applyAttributes fns settings =
-    List.foldl (\fn acc -> fn acc) settings fns
-
-
 toValidOptions : ValidComponentOptions -> ComponentOptions -> ValidComponentOptions
 toValidOptions validSettings (ComponentOptions settings) =
     { hiddenLabel =

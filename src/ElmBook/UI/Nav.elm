@@ -7,7 +7,6 @@ import ElmBook.UI.Helpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Url.Builder
 
 
 styles : Html msg
@@ -80,8 +79,7 @@ styles =
 
 
 view :
-    { preffix : String
-    , active : Maybe String
+    { active : Maybe String
     , preSelected : Maybe String
     , itemGroups : List ( String, List ( String, String ) )
     }

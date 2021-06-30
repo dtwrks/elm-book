@@ -17,8 +17,7 @@ docs =
             )
 
         props =
-            { preffix = "x"
-            , active = Nothing
+            { active = Nothing
             , preSelected = Nothing
             , itemGroups = List.singleton (itemGroup 0)
             }
