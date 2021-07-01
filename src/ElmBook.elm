@@ -1,169 +1,47 @@
 module ElmBook exposing
     ( book, withChapters, withChapterGroups
-    , Book, withApplicationOptions, withComponentOptions, withThemeOptions
+    , withThemeOptions, withComponentOptions, withApplicationOptions
+    , Book
     )
 
-{-| A book that tells the story of the UI components of your Elm application.
+{-| **Tip:** If you're just getting started, it's usually better to start by creating a chapter (checkout the `ElmBook.Chapter` module).
+
+Check out the ["Books"](https://elm-book-in-elm-book.netlify.app/guides/books) guide for more examples.
 
 
-# Start with a chapter.
+# Creating your Book
 
-You can create one chapter for each one of your UI components and split it in components to showcase all of their possible variants.
+This module is used to create your books main output. You need to list your book's chapters here and also provide any global options you may want to define.
 
-    buttonsChapter : UIChapter x
-    buttonsChapter =
-        chapter "Buttons"
-            |> withComponents
-                [ ( "Default", button [] [] )
-                , ( "Disabled", button [ disabled True ] [] )
-                ]
-
-Don't be limited by this pattern though. A chapter and its components may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
-
-@docs chapter, withComponent, withComponents, UIChapter
-
-
-# Then, create your book.
-
-Your ElmBook is a collection of chapters.
-
-    book : ElmBook ()
-    book =
-        book "MyApp" ()
-            |> withChapters
-                [ colorsChapter
-                , buttonsChapter
-                , inputsChapter
-                , chartsChapter
-                ]
-
-**Important**: Please note that you always need to use the `withChapters` functions as the final step of your setup.
-
-This returns a standard `Browser.application`. You can choose to use it just as you would any Elm application – however, this package can also be added as a NPM dependency to be used as zero-config dev server to get things started.
-
-If you want to use our zero-config dev server, just install `elm-ui-book` as a devDependency then run `npx elm-ui-book {MyBookModule}.elm` and you should see your brand new Book running on your browser.
-
-@docs book, withChapters, withChapterGroups, ElmBook
-
-
-# Customize the book's style.
-
-You can configure your book with a few extra settings to make it more personalized. Want to change the theme color so it's more fitting to your brand? Sure. Want to use your app's logo as the header? Go crazy.
-
-    book "MyApp" ()
-        |> withColor "#007"
-        |> withSubtitle "Design System"
-        |> withChapters [ ... ]
-
-@docs withLogo, withSubtitle, withHeader, withGlobals, withThemeBackground, withThemeBackgroundAlt, withThemeAccent, withThemeAccentAlt, themeBackground, themeBackgroundAlt, themeAccent, themeAccentAlt, withColor
-
-
-# Integrate it with elm-css, elm-ui and others.
-
-If you're using one of these two common ways of styling your Elm app, just import the proper definitions and you're good to go.
-
-    import ElmBook exposing (withChapters)
-    import ElmBook.ElmCSS exposing (ElmBook, book)
-
-    main : ElmBook ()
+    main : Book ()
     main =
-        book "MyElmCSSApp" ()
-            |> withChapters []
-
-If you're using other packages that also work with a custom html, don't worry , defining a custom setup is pretty simple as well:
-
-    module ElmBookCustom exposing (ElmBook, UIChapter, book)
-
-    import ElmBook
-    import MyCustomHtmlLibrary exposing (CustomHtml, toHtml)
-
-    type alias ElmBookHtml state =
-        CustomHtml (ElmBook.ElmBookMsg state)
-
-    type alias UIChapter state =
-        ElmBook.ChapterCustom state (ElmBookHtml state)
-
-    type alias ElmBook state =
-        ElmBook.ElmBookCustom state (ElmBookHtml state)
-
-    book : String -> state -> ElmBook.ElmBookBuilder state (ElmBookHtml state)
-    book title state =
-        ElmBook.customBook
-            { title = title
-            , state = state
-            , toHtml = toHtml
-            }
-
-Then you can `import ElmBookCustom exposing (ElmBook, UIChapter, book)` just as you would with `ElmBook.ElmCSS`.
-
-@docs ChapterCustom, ElmBookCustom, ElmBookBuilder, ElmBookMsg, customBook
-
-
-# Interact with it.
-
-Log your action intents to showcase how your components would react to interactions.
-
-@docs logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionWith
-
-
-# Showcase stateful widgets
-
-Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states. But how to accomplish this with Elm's static typing? Simply provide your own custom "state" that can be used and updated by your own components.
-
-    type alias MyState =
-        { input : String, counter : Int }
-
-    initialState : MyState
-    initialState =
-        { input = "", counter = 0 }
-
-    main : ElmBook MyState
-    main =
-        book "MyStatefulApp" initialState
+        book "My Book"
             |> withChapters
-                [ inputChapter
-                , counterChapter
+                [ firstChapter
+                , secondChapter
                 ]
 
-    counterChapter : UIChapter { x | counter : Int }
-    counterChapter =
-        let
-            updateCounter state =
-                { state | counter = state.counter + 1 }
-        in
-        chapter "Counter"
-            |> withStatefulComponent
-                (\state ->
-                    button
-                        [ onClick (updateState updateCounter) ]
-                        [ text <| String.fromInt state.counter ]
-                )
+@docs book, withChapters, withChapterGroups
 
-    inputChapter : UIChapter { x | input : String }
-    inputChapter =
-        let
-            updateInput value state =
-                { state | input = value }
-        in
-        chapter "Input"
-            |> withStatefulComponent
-                (\state ->
-                    input
-                        [ value state.input
-                        , onInput (updateStateWith updateInput)
-                        ]
-                        []
-                )
 
-@docs withStatefulComponent, withStatefulComponents, updateState, updateStateWith
+# Customizing your book
+
+You can pipe any of the customization functions on your book's creation. Just make sure you're passing these functions before you call `withChapters` or `withChapterGroups` functions.
+
+@docs withThemeOptions, withComponentOptions, withApplicationOptions
+
+
+# Types
+
+@docs Book
 
 -}
 
 import Browser exposing (UrlRequest(..))
 import ElmBook.Custom
-import ElmBook.Internal.Application exposing (Application)
+import ElmBook.Internal.Application exposing (BookApplication)
 import ElmBook.Internal.ApplicationOptions
-import ElmBook.Internal.Book exposing (ElmBookBuilder(..))
+import ElmBook.Internal.Book exposing (BookBuilder(..))
 import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes)
@@ -172,59 +50,55 @@ import ElmBook.Internal.Theme
 import Html exposing (Html)
 
 
-{-| -}
+{-| Defines a book with some state. If you're creating a stateful book, you will need to pass your `SharedState` as an argument.
+
+    import FirstChapter
+    import SecondChapter
+
+    type alias SharedState =
+        { firstChapter : FirstChapter.Model
+        , secondChapter : SecondChapter.Model
+        }
+
+    initialState : SharedState
+    initialState =
+        { firstChapter = FirstChapter.init
+        , secondChapter = SecondChapter.init
+        }
+
+    main : Book SharedState
+    main =
+        book "MyApp"
+            |> withApplicationOptions
+                [ ElmBook.Application.initialState
+                    initialState
+                ]
+
+-}
 type alias Book state =
-    Application state (Html (Msg state))
+    BookApplication state (Html (Msg state))
 
 
 {-| Kickoff the creation of an ElmBook application.
 -}
-book : String -> ElmBookBuilder state (Html (Msg state))
+book : String -> BookBuilder state (Html (Msg state))
 book =
     ElmBook.Custom.customBook identity
 
 
-{-| -}
-withApplicationOptions :
-    List (ElmBook.Internal.ApplicationOptions.Attribute state html)
-    -> ElmBookBuilder state html
-    -> ElmBookBuilder state html
-withApplicationOptions applicationAttributes (ElmBookBuilder config) =
-    ElmBookBuilder
-        { config | application = applyAttributes applicationAttributes config.application }
-
-
-{-| Customize your book's theme using any of the attributes available on `ElmBook.Theme`.
--}
-withThemeOptions : List ElmBook.Internal.Theme.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
-withThemeOptions themeAttributes (ElmBookBuilder config) =
-    ElmBookBuilder
-        { config | theme = applyAttributes themeAttributes config.theme }
-
-
-{-| Define the default options for your embedded components.
--}
-withComponentOptions : List ElmBook.Internal.Component.Attribute -> ElmBookBuilder state html -> ElmBookBuilder state html
-withComponentOptions componentAttributes (ElmBookBuilder config) =
-    ElmBookBuilder
-        { config
-            | componentOptions =
-                applyAttributes componentAttributes ElmBook.Internal.Component.defaultOverrides
-                    |> ElmBook.Internal.Component.toValidOptions config.componentOptions
-        }
-
-
-{-| List the chapters that should be displayed on your book.
+{-| List the chapters that should be displayed on your book. Checkout `ElmBook.Chapter` if you want to create a chapter.
 
 **Should be used as the final step on your setup.**
 
 -}
-withChapters : List (ChapterCustom state html) -> ElmBookBuilder state html -> Application state html
+withChapters : List (ChapterCustom state html) -> BookBuilder state html -> BookApplication state html
 withChapters chapters =
     withChapterGroups [ ( "", chapters ) ]
 
 
-{-| List the chapters, divided by groups, that should be displayed on your book.
+{-| Organize your book's chapters into groups.
+
+**Should be used as the final step on your setup.**
 
     book "MyApp"
         |> withChapterGroups
@@ -233,7 +107,7 @@ withChapters chapters =
                 , sendingRequestsChapter
                 ]
               )
-            , ( "UI Widgets"
+            , ( "UI Components"
               , [ buttonsChapter
                 , formsChapter
                 , ...
@@ -241,13 +115,11 @@ withChapters chapters =
               )
             ]
 
-**Should be used as the final step on your setup.**
-
 -}
 withChapterGroups :
     List ( String, List (ChapterCustom state html) )
-    -> ElmBookBuilder state html
-    -> Application state html
+    -> BookBuilder state html
+    -> BookApplication state html
 withChapterGroups chapterGroups_ =
     ElmBook.Internal.Application.application
         (chapterGroups_
@@ -258,3 +130,77 @@ withChapterGroups chapterGroups_ =
                     )
                 )
         )
+
+
+{-| You can customize your book with any of the options available on the `ElmBook.Theme` module. Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/theming) guide for some examples.
+
+    main : Book x
+    main =
+        book "My Themed Book"
+            |> withThemeOptions
+                [ ElmBook.Theme.background "slategray"
+                , ElmBook.Theme.accent "white"
+                ]
+            |> withChapters []
+
+-}
+withThemeOptions : List ElmBook.Internal.Theme.Attribute -> BookBuilder state html -> BookBuilder state html
+withThemeOptions themeAttributes (BookBuilder config) =
+    BookBuilder
+        { config | theme = applyAttributes themeAttributes config.theme }
+
+
+{-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.Component`.
+
+Please note that component options are "inherited". So you can override these options one a particular chapter and even on an specific component.
+
+    main : Book ()
+    main =
+        book "My Book"
+            |> withComponentOptions
+                [ ElmBook.Component.background "black"
+                , ElmBook.Component.hiddenLabel True
+                ]
+            |> withChapters [ ... ]
+
+-}
+withComponentOptions : List ElmBook.Internal.Component.Attribute -> BookBuilder state html -> BookBuilder state html
+withComponentOptions componentAttributes (BookBuilder config) =
+    BookBuilder
+        { config
+            | componentOptions =
+                applyAttributes componentAttributes ElmBook.Internal.Component.defaultOverrides
+                    |> ElmBook.Internal.Component.toValidOptions config.componentOptions
+        }
+
+
+{-| Application options are used to both set global elements to your book (e.g. these is where you should add your CSS resets) and also to define things needed for your live elm components, take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
+
+Attributes for this function are defined on `ElmBook.Application`.
+
+    import Css.Global exposing (global)
+    import Tailwind.Utilities exposing (globalStyles)
+
+    type alias SharedState = { ... }
+
+    initialState : SharedState
+    initialState = ...
+
+    main : Book SharedState
+    main =
+        book "MyApp"
+            |> withApplicationOptions
+                [ ElmBook.Application.globals
+                    [ global globalStyles ]
+                , ElmBook.Application.initialState
+                    initialState
+                ]
+
+-}
+withApplicationOptions :
+    List (ElmBook.Internal.ApplicationOptions.Attribute state html)
+    -> BookBuilder state html
+    -> BookBuilder state html
+withApplicationOptions applicationAttributes (BookBuilder config) =
+    BookBuilder
+        { config | application = applyAttributes applicationAttributes config.application }

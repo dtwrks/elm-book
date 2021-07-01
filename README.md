@@ -1,143 +1,18 @@
-# UI Book
+# ElmBook
 
-A book that tells the story of the UI components of your Elm application.
+Every application, tool or team has their own history worth telling.
 
-- Plain Elm (no custom setup)
-- Customizable theme colors and header
-- Organize your UI components into chapters and components
-- Showcase stateful widgets, not only static components
-- Log your actions
-- Built-in integration with elm-ui, elm-css and others
+ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI components**, **design tokens**, or anything else really.
+
+- Showcase your live interactive Elm components
+- Create documents based on markdown
+- Embed Elm components inside your markdown
+- Fully customizable theme
+- Lots of helpers to make your development experience easier
+- Works with elm-ui, elm-css and others
+- Plain Elm (no javascript)
 - Built-in development server (Optional)
 
-A live example can be found here: https://elm-ui-book.netlify.app/
+Checkout the rich documentation for this library created on ElmBook itself:
 
-## Start with a chapter.
-
-You can create one chapter for each one of your UI components and split it in components to showcase all of their possible variants.
-
-    buttonsChapter : UIChapter x
-    buttonsChapter =
-        chapter "Buttons"
-            |> withElements
-                [ ( "Default", button [] [] )
-                , ( "Disabled", button [ disabled True ] [] )
-                ]
-
-Don't be limited by this pattern though. A chapter and its components may be used however you want. For instance, if it's useful to have a catalog of possible colors or typographic styles in your documentation, why not dedicate a chapter to it?
-
-## Then, create your book.
-
-Your ElmBook is a collection of chapters.
-
-    book : ElmBook ()
-    book =
-        book "MyApp" ()
-            |> withChapters
-                [ colorsChapter
-                , buttonsChapter
-                , inputsChapter
-                , chartsChapter
-                ]
-
-This returns a standard `Browser.application`. You can choose to use it just as you would any Elm application – however, this package can also be added as a NPM dependency to be used as zero-config dev server to get things started.
-
-If you want to use our zero-config dev server, just install `elm-ui-book` as a devDependency then run `npx elm-ui-book {MyBookModule}.elm` and you should see your brand new Book running on your browser.
-
-## Customize the book's style.
-
-You can configure your book with a few extra settings to make it more personalized. Want to change the theme color so it's more fitting to your brand? Sure. Want to use your app's logo as the header? Go crazy.
-
-    book "MyApp" ()
-        |> withColor "#007"
-        |> withSubtitle "Design System"
-        |> withChapters [ ... ]
-
-## Built-in integration with [elm-css](https://package.elm-lang.org/packages/rtfeldman/elm-css/latest), [elm-ui](https://package.elm-lang.org/packages/mdgriffith/elm-ui/latest/) and others.
-
-If you're using one of these two common ways of styling your Elm app, just import the proper definitions and you're good to go.
-
-    import ElmBook.ElmCSS exposing (ElmBook, book)
-    import ElmBook exposing (withChapters)
-
-    main : ElmBook ()
-    main =
-        book "MyElmCSSApp" ()
-            |> withChapters []
-
-If you're using other packages that also work with a custom html, don't worry , defining a custom setup is pretty simple as well. Check the docs!
-
-## Log your actions
-
-Log your action intents to showcase how your components would react to interactions.
-
-    -- Will log "Clicked!" after pressing the button
-    button [ onClick <| logAction "Clicked!" ] []
-
-    -- Will log "Input: x" after pressing the "x" key
-    input [ onInput <| logActionWithString "Input: " ] []
-
-## Showcase stateful widgets
-
-Sometimes it's useful to display a complex component so people can understand how it works on an isolated environment, not only see their possible static states. But how to accomplish this with Elm's static typing? Simply provide your own custom "state" that can be used and updated by your own components.
-
-    type alias MyState =
-        { input : String, counter : Int }
-
-
-    initialState : MyState
-    initialState =
-        { input = "", counter = 0 }
-
-
-    main : ElmBook MyState
-    main =
-        book "MyStatefulApp" initialState
-            |> withChapters
-                [ inputChapter
-                , counterChapter
-                ]
-
-
-    counterChapter : UIChapter { x | counter : Int }
-    counterChapter =
-        let
-            updateCounter state =
-                { state | counter = state.counter + 1 }
-        in
-        chapter "Counter"
-            |> withStatefulElement
-                (\state ->
-                    button
-                        [ onClick (updateState updateCounter) ]
-                        [ text <| String.fromInt state.counter ]
-                )
-
-
-    inputChapter : UIChapter { x | input : String }
-    inputChapter =
-        let
-            updateInput value state =
-                { state | input = value }
-        in
-        chapter "Input"
-            |> withStatefulElement
-                (\state ->
-                    input
-                        [ value state.input
-                        , onInput (updateState1 updateInput)
-                        ]
-                        []
-                )
-
-## Built-in Development Server
-
-If you want to use our zero-config dev server, just install `elm-ui-book` as an npm devDependency then run `npx elm-ui-book {MyBookModule}.elm` and you should see your brand new Book running on your browser.
-
-🤫 I'll let you in on a secret… this is just an instance of [elm-live](https://www.elm-live.com) with a few predefined arguments passed in! So any additional arguments you pass to this command will work exactly like it would with elm-live, so `npx elm-ui-book {MyBookModule}.elm --port=3000 --dir=./static` would start your development server on port 3000 with static files from the `./static` folder.
-
-## What's next?
-
-So far this project has been following a lot of the same standards as [storybook](http://storybook.js.org/) – however, why should we limit ourselves by it? I'm thinking about exploring more book-like features that would make this project more useful for design systems and documentations and not only a library of UI components. Let's see! :)
-
-If you have any ideas or problems, please reach me on Elm's slack as georgesboris.
+https://elm-book-in-elm-book.netlify.app/

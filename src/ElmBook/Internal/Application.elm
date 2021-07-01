@@ -1,5 +1,5 @@
 module ElmBook.Internal.Application exposing
-    ( Application
+    ( BookApplication
     , Model
     , application
     , init
@@ -10,7 +10,7 @@ import Browser
 import Browser.Dom
 import Browser.Events exposing (onKeyDown, onKeyUp)
 import Browser.Navigation
-import ElmBook.Internal.Book exposing (ElmBookBuilder(..), ElmBookConfig)
+import ElmBook.Internal.Book exposing (BookBuilder(..), ElmBookConfig)
 import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg(..))
@@ -57,15 +57,15 @@ type alias Model state html =
 -- Application
 
 
-type alias Application state html =
+type alias BookApplication state html =
     Program () (Model state html) (Msg state)
 
 
 application :
     List ( String, List (ChapterCustom state html) )
-    -> ElmBookBuilder state html
-    -> Application state html
-application chapterGroups (ElmBookBuilder config) =
+    -> BookBuilder state html
+    -> BookApplication state html
+application chapterGroups (BookBuilder config) =
     Browser.application
         { init =
             init

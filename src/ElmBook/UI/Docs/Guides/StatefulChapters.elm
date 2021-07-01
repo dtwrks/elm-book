@@ -76,7 +76,7 @@ initialState =
     }
 
 
-main : ElmBook SharedState
+main : Book SharedState
 main =
     book "Stateful Book"
         |> withApplicationOptions

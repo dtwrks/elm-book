@@ -183,7 +183,7 @@ You can choose a different logo, title and subtitle for your book:
 
 <component with-label="Header with custom logo" with-background=\"""" ++ themeBackground ++ """" />
 
-    main : ElmBook x
+    main : Book x
     main =
         book "CustomHeader"
             |> withThemeOptions
@@ -199,7 +199,7 @@ Or you can go full custom and provide your own thing:
 <component with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
 
 ```elm
-main : ElmBook x
+main : Book x
 main =
     book "CustomHeader"
         |> withThemeOptions
@@ -222,7 +222,7 @@ What about colors? I mean… we all love Elm's light blue but maybe it doesn't f
     with-display="block"
     />
 
-    main : ElmBook x
+    main : Book x
     main =
         book "CustomHeader"
             |> withThemeOptions

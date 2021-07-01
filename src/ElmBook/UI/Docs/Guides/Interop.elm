@@ -13,8 +13,8 @@ When building our UIs with Elm, we're lucky to have such awesome libraries to ch
 
 Since working with Elm-UI and Elm-CSS is so common we also provide two packages that can be used alongside ElmBook to make this process even simpler:
 
-- [elm-book-interop-elm-ui]()
-- [elm-book-interop-elm-css]()
+- [elm-book-interop-elm-ui](https://package.elm-lang.org/packages/dtwrks/elm-book-interop-elm-ui/latest/)
+- [elm-book-interop-elm-css](https://package.elm-lang.org/packages/dtwrks/elm-book-interop-elm-css/latest/)
 
 ## Do it yourself
 

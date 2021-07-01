@@ -18,7 +18,7 @@ import FirstChapter exposing (firstChapter)
 import SecondChapter exposing (secondChapter)
 
 
-main : ElmBook ()
+main : Book ()
 main =
     book "My Book"
         |> withChapters
@@ -31,9 +31,7 @@ main =
 
 ## Grouping Chapters
 
-Let's make it more organized, grouping chapters into guides and component documentations.
-
-After creating a few chapters, it's time to put your book together.
+Let's make it more organized by grouping chapters into guides and component documentations.
 
 ```elm
 module MyBook exposing (main)
@@ -42,7 +40,7 @@ module MyBook exposing (main)
 import ElmBook exposing (ElmBook, book, withChapterGroups)
 ...
 
-main : ElmBook ()
+main : Book ()
 main =
     book "My Book"
         |> withChapterGroups
@@ -68,7 +66,7 @@ There are a few ways to customize your book:
 
 - Make it interactive (we call those "stateful" books). Check the ["Stateful Chapters"](/guides/stateful-chapters) guide for more info.
 - Customize its visual features (colors, header, ...). See the ["Theming"](/guides/theming) guide for more details.
-- Customize the default visual features for components (hide component labels, make them full width, remove the card wrappers, ...). [Check the docs]().
+- Customize the default visual features for components (hide component labels, make them full width, remove the card wrappers, ...). [Check the docs](https://package.elm-lang.org/packages/dtwrks/elm-book/latest/).
 
 Each of those are accomplished using optional "attribute" functions. Similar to what you would see when using `Html.Attribute`. Take a look:
 
@@ -83,7 +81,7 @@ import ElmBook.Component
 ...
 
 
-main : ElmBook SharedState
+main : Book SharedState
 main =
     book "My Book"
         |> withApplicationOptions

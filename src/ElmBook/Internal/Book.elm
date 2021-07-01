@@ -1,5 +1,5 @@
 module ElmBook.Internal.Book exposing
-    ( ElmBookBuilder(..)
+    ( BookBuilder(..)
     , ElmBookConfig
     )
 
@@ -20,5 +20,5 @@ type alias ElmBookConfig state html =
 
 
 {-| -}
-type ElmBookBuilder state html
-    = ElmBookBuilder (ElmBookConfig state html)
+type BookBuilder state html
+    = BookBuilder (ElmBookConfig state html)

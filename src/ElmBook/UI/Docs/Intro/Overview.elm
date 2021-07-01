@@ -66,7 +66,7 @@ import ElmBook exposing (book, withChapters)
 import FirstChapter exposing (firstChapter)
 
 
-main : ElmBook.Book ()
+main : Book ()
 main =
     book "Book"
         |> withChapters

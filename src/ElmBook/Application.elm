@@ -1,8 +1,23 @@
 module ElmBook.Application exposing
     ( globals
-    , initialState
-    , subscriptions
+    , initialState, subscriptions
     )
+
+{-| Attributes used by `ElmBook.withApplicationOptions`.
+
+
+# Setting up Global CSS
+
+@docs globals
+
+
+# Stateful Books
+
+The attributes below are mostly used for Stateful Books. Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
+
+@docs initialState, subscriptions
+
+-}
 
 import ElmBook.Internal.ApplicationOptions exposing (Attribute)
 import ElmBook.Internal.Msg exposing (Msg)
@@ -26,7 +41,7 @@ globals globals_ options =
     { options | globals = Just globals_ }
 
 
-{-| Add an initial state to your stateful book.
+{-| Add an initial state to your book.
 
     type alias SharedState =
         { value : String }
@@ -44,7 +59,7 @@ initialState state options =
     { options | state = Just state }
 
 
-{-| Add subscriptions to your book. Mostly useful for stateful books.
+{-| Add subscriptions to your book.
 
     import ElmBook.Actions exposing (updateState)
 

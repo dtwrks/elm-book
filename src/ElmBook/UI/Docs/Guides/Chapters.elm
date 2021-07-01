@@ -58,7 +58,7 @@ docs =
 
 ---
 
-## Markdown with embedded components
+## Markdown and embedded components
 
 I dare you to name one single thing that does not become more interesting with some added markdown. Yeah, you can't! …right?
 
@@ -120,8 +120,8 @@ They can also be disabled! Unbelievable.
 
 ---
 
-This is not the only thing you can do with Chapters though! You can customize how each component is displayed, you can define some state and use your components to interact with it.
+If you want to create interactive chapters, take a look at the ["Stateful Chapters"](/guides/stateful-chapters) guide to know more.
 
-Take a look at the docs to know more.
+This is not the only thing you can do with Chapters though! You can customize how each component is displayed and more. Take a look at [the docs](https://package.elm-lang.org/packages/dtwrks/elm-book/latest/) for the details.
 
 """

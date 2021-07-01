@@ -1,14 +1,28 @@
 module ElmBook.Actions exposing
-    ( logAction
-    , logActionWith
-    , logActionWithFloat
-    , logActionWithInt
-    , logActionWithString
-    , updateState
-    , updateStateWith
-    , updateStateWithCmd
-    , updateStateWithCmdWith
+    ( logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionWith
+    , updateState, updateStateWith, updateStateWithCmd, updateStateWithCmdWith
     )
+
+{-| This module focuses on actions – a.k.a messages your book may send to its runtime. There are mainly two types of actions:
+
+  - **log actions** will not deal with any state. They will just print out some message to the action logger. This is pretty useful to get things running quickly.
+  - **update actions** are used to update your book's shared state. A bit trickier to use but you can do a lot more powerful things with it.
+
+
+# Logging Actions
+
+Take a look at the ["Logging Actions"](https://elm-book-in-elm-book.netlify.app/guides/logging-actions) guide for some examples.
+
+@docs logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionWith
+
+
+# Updating Actions
+
+**Tip:** I highly recommend you read the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/logging-actions) guide to learn more about update actions and stateful chapters.
+
+@docs updateState, updateStateWith, updateStateWithCmd, updateStateWithCmdWith
+
+-}
 
 import ElmBook.Internal.Msg exposing (..)
 
@@ -27,7 +41,7 @@ logAction action =
 {-| Logs an action that takes one `String` input.
 
     -- Will log "Input: x" after pressing the "x" key
-    input [ onInput <| logActionWithString "Input: " ] []
+    input [ onInput <| logActionWithString "Input" ] []
 
 -}
 logActionWithString : String -> String -> Msg state
@@ -62,7 +76,9 @@ logActionWithFloat action value =
 
     myCustomComponent {
         onEvent =
-            logActionWith "My Custom Component: " eventToString
+            logActionWith
+                eventToString
+                "Received event"
     }
 
 -}
@@ -77,7 +93,7 @@ logActionWith toString action value =
 
 {-| Updates the state of your stateful book.
 
-    counterChapter : UIChapter { x | counter : Int }
+    counterChapter : Chapter { x | counter : Int }
     counterChapter =
         let
             update state =
@@ -99,7 +115,7 @@ updateState =
 
 {-| Used when updating the state based on an argument.
 
-    inputChapter : UIChapter { x | input : String }
+    inputChapter : Chapter { x | input : String }
     inputChapter =
         let
             updateInput value state =
@@ -123,11 +139,14 @@ updateStateWith fn =
 
 {-| Updates the state of your stateful book and possibly sends out a command. HTTP requests inside your book? Oh yeah! Get ready to go full over-engineering master.
 
-    counterChapter : UIChapter { x | counter : Int }
+    counterChapter : Chapter { x | counter : Int }
     counterChapter =
         let
             fetchCurrentCounter state =
-                ( state, fetchCounterFromServer <| updateState update )
+                ( state
+                , fetchCounterFromServer <|
+                    updateState updateCounter
+                )
 
             updateCounter newCounter state =
                 { state | counter = newCounter }

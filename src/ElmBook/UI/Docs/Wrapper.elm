@@ -1,7 +1,7 @@
 module ElmBook.UI.Docs.Wrapper exposing (..)
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponents, withComponentList)
+import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponentList, withComponentList)
 import ElmBook.Internal.Theme exposing (defaultTheme)
 import ElmBook.UI.Wrapper exposing (view)
 import Html exposing (..)
@@ -41,7 +41,7 @@ docs =
               , wrapper (view { props | modal = Just mockModalContent })
               )
             ]
-        |> renderWithComponents """
+        |> renderWithComponentList """
 Since ElmBook is basically a "one layout" app – it's easier to maintain all it's skeleton in a single place. This is all inside the `Wrapper` module. Take a look at the possible states below.
 
 """
