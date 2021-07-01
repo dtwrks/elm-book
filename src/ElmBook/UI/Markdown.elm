@@ -4,7 +4,7 @@ module ElmBook.UI.Markdown exposing
     )
 
 import Dict
-import ElmBook.Internal.Component
+import ElmBook.Internal.Component exposing (Layout(..))
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.UI.ChapterComponent
 import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen, mediaMobile)
@@ -67,13 +67,17 @@ sectionRenderer chapterTitle chapterComponents componentOptions =
                             |> Maybe.map (ElmBook.UI.ChapterComponent.view chapterTitle options_)
                             |> Maybe.map
                                 (\c ->
-                                    div
-                                        [ classList
-                                            [ ( "elm-book__component-wrapper", True )
-                                            , ( "full", options_.fullWidth )
+                                    if options_.display == Inline then
+                                        c
+
+                                    else
+                                        div
+                                            [ classList
+                                                [ ( "elm-book__component-wrapper", True )
+                                                , ( "full", options_.fullWidth )
+                                                ]
                                             ]
-                                        ]
-                                        [ c ]
+                                            [ c ]
                                 )
                             |> Maybe.withDefault
                                 (div

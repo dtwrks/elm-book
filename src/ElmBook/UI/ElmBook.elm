@@ -1,6 +1,6 @@
 module ElmBook.UI.ElmBook exposing (..)
 
-import ElmBook exposing (ElmBook, book, withApplicationOptions, withChapterGroups, withThemeOptions)
+import ElmBook exposing (Book, book, withApplicationOptions, withChapterGroups, withThemeOptions)
 import ElmBook.Application
 import ElmBook.Theme
 import ElmBook.UI.Docs.ActionLog
@@ -20,24 +20,23 @@ import ElmBook.UI.Docs.Search
 import ElmBook.UI.Docs.Wrapper
 
 
-type alias SharedModel =
-    { themingModel : ElmBook.UI.Docs.Guides.Theming.Model }
+type alias SharedState =
+    { theming : ElmBook.UI.Docs.Guides.Theming.Model }
 
 
-initialState : SharedModel
+initialState : SharedState
 initialState =
-    { themingModel = ElmBook.UI.Docs.Guides.Theming.init
-    }
+    { theming = ElmBook.UI.Docs.Guides.Theming.init }
 
 
-main : ElmBook SharedModel
+main : Book SharedState
 main =
     book "ElmBook's"
-        |> withThemeOptions
-            [ ElmBook.Theme.subtitle "Guides & Components"
-            ]
         |> withApplicationOptions
             [ ElmBook.Application.initialState initialState
+            ]
+        |> withThemeOptions
+            [ ElmBook.Theme.subtitle "Guides & Components"
             ]
         |> withChapterGroups
             [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )

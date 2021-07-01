@@ -12,7 +12,6 @@ module ElmBook.Chapter exposing
     , withStatefulComponentList
     )
 
-import ElmBook.Component
 import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..))
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)

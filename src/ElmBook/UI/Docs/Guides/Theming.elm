@@ -2,53 +2,81 @@ module ElmBook.UI.Docs.Guides.Theming exposing
     ( Model
     , docs
     , init
-    , styles
     )
 
-import ElmBook.Actions exposing (logAction, updateStateWith)
-import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
+import ElmBook.Actions exposing (logAction, updateStateWithCmd, updateStateWithCmdWith)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponent, withStatefulComponentList)
 import ElmBook.Component
+import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme exposing (defaultTheme)
 import ElmBook.Theme
 import ElmBook.UI.Header
-import ElmBook.UI.Helpers exposing (css_, setTheme, themeAccent, themeBackground, wrapperMainBackground)
+import ElmBook.UI.Helpers exposing (css_, themeBackground)
 import ElmBook.UI.Icons exposing (iconElm)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Task
 
 
-styles : Html msg
-styles =
-    css_ """
-.elm-book-docs__theming__theme {
-    display: flex;
-    align-items: stretch;
-    padding: 16px;
-}
-"""
-
-
-type alias Model =
-    { themeBackgroundStart : String
-    , themeBackgroundEnd : String
-    , themeAccent : String
-    }
-
-
-type alias SharedModel x =
-    { x | themingModel : Model }
+type alias SharedState m =
+    { m | theming : Model }
 
 
 init : Model
 init =
-    { themeBackgroundStart = "rgba(0,135,207,1)"
-    , themeBackgroundEnd = "rgba(86,207,255,1)"
-    , themeAccent = "#fff"
+    { backgroundStart = ElmBook.Internal.Theme.defaultBackgroundStart
+    , backgroundEnd = ElmBook.Internal.Theme.defaultBackgroundEnd
+    , accent = ElmBook.Internal.Theme.defaultAccent
     }
 
 
-docs : Chapter (SharedModel x)
+type alias Model =
+    { backgroundStart : String
+    , backgroundEnd : String
+    , accent : String
+    }
+
+
+type Msg
+    = UpdateBackgroundStart String
+    | UpdateBackgroundEnd String
+    | UpdateAccent_ String
+
+
+update : Msg -> SharedState m -> ( SharedState m, Cmd (ElmBook.Internal.Msg.Msg (SharedState m)) )
+update msg sharedState =
+    let
+        model =
+            sharedState.theming
+
+        ( model_, cmd ) =
+            case msg of
+                UpdateBackgroundStart v ->
+                    ( { model | backgroundStart = v }
+                    , Task.perform
+                        (\_ -> SetThemeBackgroundGradient v model.backgroundEnd)
+                        (Task.succeed ())
+                    )
+
+                UpdateBackgroundEnd v ->
+                    ( { model | backgroundEnd = v }
+                    , Task.perform
+                        (\_ -> SetThemeBackgroundGradient model.backgroundStart v)
+                        (Task.succeed ())
+                    )
+
+                UpdateAccent_ v ->
+                    ( { model | accent = v }
+                    , Task.perform
+                        (\_ -> SetThemeAccent v)
+                        (Task.succeed ())
+                    )
+    in
+    ( { sharedState | theming = model_ }, cmd )
+
+
+docs : Chapter (SharedState m)
 docs =
     let
         headerProps =
@@ -95,132 +123,53 @@ docs =
             ]
         |> withStatefulComponentList
             [ ( "Theme Builder"
-              , \{ themingModel } ->
+              , \{ theming } ->
                     div
-                        [ setTheme
-                            ("linear-gradient(150deg, " ++ themingModel.themeBackgroundStart ++ " 0%, " ++ themingModel.themeBackgroundEnd ++ " 100%)")
-                            themingModel.themeAccent
-                        ]
-                        [ div [ class "elm-book-wrapper elm-book-sans elm-book-docs__theming__theme", style "background" themeBackground ]
-                            [ styles
-                            , div [ style "width" "40%" ]
-                                [ p
-                                    [ style "color" themeAccent
-                                    , style "padding" "20px"
-                                    ]
-                                    [ span [ style "font-weight" "bold" ]
-                                        [ text "Theme Accent Alt"
-                                        ]
-                                    , br [] []
-                                    , span
-                                        [ style "font-size" "12px"
-                                        , style "opacity" "0.8"
-                                        ]
-                                        [ text "(Theme Background)"
-                                        ]
-                                    ]
-                                , div
-                                    [ style "position" "relative"
-                                    , style "margin" "8px 0"
-                                    ]
-                                    [ div
-                                        [ class "elm-book-inset"
-                                        , style "opacity" "0.2"
-                                        , style "background-color" themeAccent
-                                        ]
-                                        []
-                                    , p
-                                        [ style "padding" "20px 48px 20px 20px"
-                                        , style "position" "relative"
-                                        , style "z-index" "1"
-                                        , style "color" themeAccent
-                                        ]
-                                        [ text "Theme Accent"
-                                        , br [] []
-                                        , span
-                                            [ style "font-size" "12px"
-                                            , style "opacity" "0.8"
-                                            ]
-                                            [ text "(Theme Background Alt)"
-                                            ]
-                                        ]
-                                    ]
+                        [ class "elm-book-theme-builder elm-book-shadows-light" ]
+                        [ css_ """
+.elm-book-theme-builder {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    border: 1px solid #eaeaea;
+    color: #333;
+}
+
+.elm-book-theme-builder__field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.elm-book-theme-builder__field + .elm-book-theme-builder__field {
+    border-top: 1px solid #dadada;
+}
+                    """
+                        , label [ class "elm-book-theme-builder__field" ]
+                            [ p [ class "elm-book-sans" ] [ text "Background Start" ]
+                            , input
+                                [ type_ "color"
+                                , value theming.backgroundStart
+                                , onInput (updateStateWithCmdWith (update << UpdateBackgroundStart))
                                 ]
-                            , div
-                                [ style "width" "60%"
-                                , style "border-radius" "4px"
-                                , style "padding" "20px 32px"
-                                , style "background-color" wrapperMainBackground
-                                , class "elm-book-md"
-                                ]
-                                [ h1 [ class "elm-book-serif" ] [ text "Title" ]
-                                , p [ class "elm-book-serif" ] [ text "Paragraph" ]
-                                ]
+                                []
                             ]
-                        , div []
-                            [ p []
-                                [ label [] [ text "theme background (start)" ]
-                                , input
-                                    [ type_ "color"
-                                    , onInput <|
-                                        updateStateWith
-                                            (\c shared ->
-                                                let
-                                                    themingModel_ =
-                                                        shared.themingModel
-                                                in
-                                                { shared
-                                                    | themingModel =
-                                                        { themingModel_
-                                                            | themeBackgroundStart = c
-                                                        }
-                                                }
-                                            )
-                                    ]
-                                    []
+                        , label [ class "elm-book-theme-builder__field" ]
+                            [ p [ class "elm-book-sans" ] [ text "Background End" ]
+                            , input
+                                [ type_ "color"
+                                , value theming.backgroundEnd
+                                , onInput (updateStateWithCmdWith (update << UpdateBackgroundEnd))
                                 ]
-                            , p []
-                                [ label [] [ text "theme background (end)" ]
-                                , input
-                                    [ type_ "color"
-                                    , onInput <|
-                                        updateStateWith
-                                            (\c shared ->
-                                                let
-                                                    themingModel_ =
-                                                        shared.themingModel
-                                                in
-                                                { shared
-                                                    | themingModel =
-                                                        { themingModel_
-                                                            | themeBackgroundEnd = c
-                                                        }
-                                                }
-                                            )
-                                    ]
-                                    []
+                                []
+                            ]
+                        , label [ class "elm-book-theme-builder__field" ]
+                            [ p [ class "elm-book-sans" ] [ text "Accent" ]
+                            , input
+                                [ type_ "color"
+                                , value theming.accent
+                                , onInput (updateStateWithCmdWith (update << UpdateAccent_))
                                 ]
-                            , p []
-                                [ label [] [ text "theme accent" ]
-                                , input
-                                    [ type_ "color"
-                                    , onInput <|
-                                        updateStateWith
-                                            (\c shared ->
-                                                let
-                                                    themingModel_ =
-                                                        shared.themingModel
-                                                in
-                                                { shared
-                                                    | themingModel =
-                                                        { themingModel_
-                                                            | themeAccent = c
-                                                        }
-                                                }
-                                            )
-                                    ]
-                                    []
-                                ]
+                                []
                             ]
                         ]
               )
@@ -271,7 +220,6 @@ What about colors? I mean… we all love Elm's light blue but maybe it doesn't f
 <component
     with-label="Theme Builder"
     with-display="block"
-    with-full-width="true"
     />
 
     main : ElmBook x
@@ -282,4 +230,11 @@ What about colors? I mean… we all love Elm's light blue but maybe it doesn't f
                 , ElmBook.Theme.accent "white"
                 ]
             |> withChapters []        
+
+---
+
+## Theming Roadmap
+
+There is a plan to also enable custom fonts soon. Other than that, I believe changes will be less customizable and will focus more on a better UX for all ElmBooks. Things like ready-to-be-used components like Placeholders, Design Tokens Catalogue, etc, should be handled on separate packages.
+
 """)

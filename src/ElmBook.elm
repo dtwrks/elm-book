@@ -1,6 +1,6 @@
 module ElmBook exposing
-    ( book, withChapters, withChapterGroups, ElmBook
-    , withApplicationOptions, withComponentOptions, withThemeOptions
+    ( book, withChapters, withChapterGroups
+    , Book, withApplicationOptions, withComponentOptions, withThemeOptions
     )
 
 {-| A book that tells the story of the UI components of your Elm application.
@@ -160,8 +160,6 @@ Sometimes it's useful to display a complex component so people can understand ho
 -}
 
 import Browser exposing (UrlRequest(..))
-import ElmBook.Application
-import ElmBook.Component
 import ElmBook.Custom
 import ElmBook.Internal.Application exposing (Application)
 import ElmBook.Internal.ApplicationOptions
@@ -171,12 +169,11 @@ import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes)
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.Internal.Theme
-import ElmBook.Theme
 import Html exposing (Html)
 
 
 {-| -}
-type alias ElmBook state =
+type alias Book state =
     Application state (Html (Msg state))
 
 

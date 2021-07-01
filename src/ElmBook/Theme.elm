@@ -54,4 +54,4 @@ backgroundGradient startColor endColor theme =
 
 accent : String -> Attribute
 accent background_ theme =
-    { theme | background = background_ }
+    { theme | accent = background_ }

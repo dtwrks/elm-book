@@ -58,10 +58,10 @@ styles =
     opacity: 0.1;
 }
 .elm-book-nav-item.active .elm-book-nav-item-bg {
-    opacity: 0.25;
+    opacity: 0.2;
 }
 .elm-book-nav-item.active.pre-selected .elm-book-nav-item-bg {
-    opacity: 0.3;
+    opacity: 0.25;
 }
 .elm-book-nav-item:hover .elm-book-nav-item-bg {
     opacity: 0.15;
@@ -70,10 +70,10 @@ styles =
     opacity: 0.1;
 }
 .elm-book-nav-item.active:hover .elm-book-nav-item-bg {
-    opacity: 0.3;
+    opacity: 0.25;
 }
 .elm-book-nav-item.active:active .elm-book-nav-item-bg {
-    opacity: 0.25;
+    opacity: 0.2;
 }
 """
 

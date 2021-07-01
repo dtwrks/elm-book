@@ -15,10 +15,10 @@ import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCusto
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme
+import ElmBook.Theme
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
 import ElmBook.UI.ChapterHeader
-import ElmBook.UI.Docs.Guides.Theming exposing (Model)
 import ElmBook.UI.Footer
 import ElmBook.UI.Header
 import ElmBook.UI.Nav
@@ -248,6 +248,32 @@ update msg model =
                     )
                 |> Maybe.withDefault ( model, Cmd.none )
 
+        UpdateStateWithCmd fn ->
+            model.config.application.state
+                |> Maybe.map
+                    (\state_ ->
+                        let
+                            config =
+                                model.config
+
+                            application_ =
+                                model.config.application
+
+                            ( state__, cmd ) =
+                                fn state_
+
+                            application__ =
+                                { application_ | state = Just state__ }
+
+                            config_ =
+                                { config | application = application__ }
+                        in
+                        ( { model | config = config_ }
+                        , cmd
+                        )
+                    )
+                |> Maybe.withDefault ( model, Cmd.none )
+
         LogAction context action ->
             logAction_ context action
 
@@ -329,6 +355,61 @@ update msg model =
 
             else
                 ( model, Cmd.none )
+
+        SetThemeBackgroundGradient startColor endColor ->
+            let
+                config =
+                    model.config
+
+                config_ =
+                    { config
+                        | theme =
+                            ElmBook.Theme.backgroundGradient
+                                startColor
+                                endColor
+                                model.config.theme
+                    }
+
+                model_ =
+                    { model | config = config_ }
+            in
+            ( model_, Cmd.none )
+
+        SetThemeBackground background ->
+            let
+                config =
+                    model.config
+
+                config_ =
+                    { config
+                        | theme =
+                            ElmBook.Theme.background
+                                background
+                                model.config.theme
+                    }
+
+                model_ =
+                    { model | config = config_ }
+            in
+            ( model_, Cmd.none )
+
+        SetThemeAccent accent ->
+            let
+                config =
+                    model.config
+
+                config_ =
+                    { config
+                        | theme =
+                            ElmBook.Theme.accent
+                                accent
+                                model.config.theme
+                    }
+
+                model_ =
+                    { model | config = config_ }
+            in
+            ( model_, Cmd.none )
 
         DoNothing ->
             ( model, Cmd.none )

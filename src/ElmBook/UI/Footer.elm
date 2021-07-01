@@ -40,13 +40,13 @@ view : Html msg
 view =
     div [ class "elm-book elm-book-sans" ]
         [ a
-            [ href "https://package.elm-lang.org/packages/dtwrks/elm-ui-book/latest/"
+            [ href "https://package.elm-lang.org/packages/dtwrks/elm-book/latest/"
             , target "_blank"
             , class "elm-book-footer"
             , style "color" themeAccent
             ]
             [ iconElm { size = 16, color = "currentColor" }
             , div [ class "elm-book-footer--text" ]
-                [ text "dtwrks/elm-ui-docs" ]
+                [ text "dtwrks/elm-book" ]
             ]
         ]

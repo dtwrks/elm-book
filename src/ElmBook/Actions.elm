@@ -6,6 +6,8 @@ module ElmBook.Actions exposing
     , logActionWithString
     , updateState
     , updateStateWith
+    , updateStateWithCmd
+    , updateStateWithCmdWith
     )
 
 import ElmBook.Internal.Msg exposing (..)
@@ -117,3 +119,35 @@ updateState =
 updateStateWith : (a -> state -> state) -> a -> Msg state
 updateStateWith fn =
     UpdateState << fn
+
+
+{-| Updates the state of your stateful book and possibly sends out a command. HTTP requests inside your book? Oh yeah! Get ready to go full over-engineering master.
+
+    counterChapter : UIChapter { x | counter : Int }
+    counterChapter =
+        let
+            fetchCurrentCounter state =
+                ( state, fetchCounterFromServer <| updateState update )
+
+            updateCounter newCounter state =
+                { state | counter = newCounter }
+        in
+        chapter "Counter"
+            |> withStatefulComponent
+                (\state ->
+                    button
+                        [ onClick (updateStateWithCmd fetchCurrentCounter) ]
+                        [ text <| String.fromInt state.counter ]
+                )
+
+-}
+updateStateWithCmd : (state -> ( state, Cmd (Msg state) )) -> Msg state
+updateStateWithCmd =
+    UpdateStateWithCmd
+
+
+{-| Same as `updateStateWith` but should return a `( state, Cmd msg )` tuple.
+-}
+updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state) )) -> a -> Msg state
+updateStateWithCmdWith fn =
+    UpdateStateWithCmd << fn

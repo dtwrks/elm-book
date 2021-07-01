@@ -3,6 +3,9 @@ module ElmBook.Internal.Theme exposing
     , Theme
     , accent
     , background
+    , defaultAccent
+    , defaultBackgroundEnd
+    , defaultBackgroundStart
     , defaultTheme
     , fontMonospace
     , fontSans
@@ -31,14 +34,29 @@ type alias Attribute =
     Theme -> Theme
 
 
+defaultBackgroundStart : String
+defaultBackgroundStart =
+    "#0087cf"
+
+
+defaultBackgroundEnd : String
+defaultBackgroundEnd =
+    "#56cfff"
+
+
+defaultAccent : String
+defaultAccent =
+    "#ffffff"
+
+
 defaultTheme : Theme
 defaultTheme =
     { header = Nothing
     , logo = Nothing
     , subtitle = Nothing
     , background =
-        "linear-gradient(150deg, rgba(0,135,207,1) 0%, rgba(86,207,255,1) 100%)"
-    , accent = "#fff"
+        "linear-gradient(150deg, " ++ defaultBackgroundStart ++ " 0%, " ++ defaultBackgroundEnd ++ " 100%)"
+    , accent = defaultAccent
     , fontSans = "IBM Plex Sans"
     , fontSerif = "IBM Plex Serif"
     , fontMonospace = "Fira Code"

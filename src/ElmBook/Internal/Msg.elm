@@ -9,6 +9,7 @@ type Msg state
     | OnUrlRequest UrlRequest
     | OnUrlChange Url
     | UpdateState (state -> state)
+    | UpdateStateWithCmd (state -> ( state, Cmd (Msg state) ))
     | LogAction String String
     | ActionLogShow
     | ActionLogHide
@@ -24,3 +25,6 @@ type Msg state
     | KeyMetaOff
     | KeyEnter
     | KeyK
+    | SetThemeBackgroundGradient String String
+    | SetThemeBackground String
+    | SetThemeAccent String
