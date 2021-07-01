@@ -1,7 +1,7 @@
 {
   "name": "@dtwrks/elm-book",
-  "version": "2.1.0",
-  "description": "Rich documentation builder for Elm applications and packages",
+  "version": "1.0.0",
+  "description": "Rich documentation builder for Elm applications and packages. Based on Storybook and HexDocs.",
   "main": "index.js",
   "bin": "./bin/elm-book.js",
   "author": "Georges Boris",

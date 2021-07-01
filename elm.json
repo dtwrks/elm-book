@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "dtwrks/elm-book",
-    "summary": "Rich documentation builder for Elm applications and packages",
+    "summary": "Rich documentation builder based on Storybook and HexDocs.",
     "license": "MPL-2.0",
     "version": "1.0.0",
     "exposed-modules": [
