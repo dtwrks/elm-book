@@ -11,7 +11,7 @@ module ElmBook.Custom exposing (Builder, Chapter, Msg, customBook)
         Element (ElmBook.Custom.Msg state)
 
     type alias Chapter state =
-        ElmBook.Custom.Chapter state (UIBookHtml state)
+        ElmBook.Custom.Chapter state (Html state)
 
     book : String -> ElmBook.Custom.Builder state (Html state)
     book =

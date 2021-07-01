@@ -1,5 +1,5 @@
 {
-  "name": "@dtwrks/elm-book",
+  "name": "elm-book",
   "version": "1.0.0",
   "description": "Rich documentation builder for Elm applications and packages. Based on Storybook and HexDocs.",
   "main": "index.js",

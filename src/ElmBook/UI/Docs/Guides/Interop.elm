@@ -32,7 +32,7 @@ type alias Html state =
 
 
 type alias Chapter state =
-    ElmBook.Custom.Chapter state (UIBookHtml state)
+    ElmBook.Custom.Chapter state (Html state)
 
 
 book : String -> ElmBook.Custom.Builder state (Html state)

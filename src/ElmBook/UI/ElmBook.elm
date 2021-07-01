@@ -6,6 +6,7 @@ import ElmBook.Theme
 import ElmBook.UI.Docs.ActionLog
 import ElmBook.UI.Docs.Footer
 import ElmBook.UI.Docs.Guides.Books
+import ElmBook.UI.Docs.Guides.BuiltinServer
 import ElmBook.UI.Docs.Guides.Chapters
 import ElmBook.UI.Docs.Guides.Interop
 import ElmBook.UI.Docs.Guides.LoggingActions
@@ -47,6 +48,7 @@ main =
                 , ElmBook.UI.Docs.Guides.LoggingActions.docs
                 , ElmBook.UI.Docs.Guides.StatefulChapters.docs
                 , ElmBook.UI.Docs.Guides.Interop.docs
+                , ElmBook.UI.Docs.Guides.BuiltinServer.docs
                 ]
               )
             , ( "Private Components"
