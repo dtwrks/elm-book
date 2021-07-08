@@ -2,11 +2,10 @@
   "name": "elm-book",
   "version": "1.0.0",
   "description": "Rich documentation builder for Elm applications and packages. Based on Storybook and HexDocs.",
-  "main": "index.js",
   "bin": "./bin/elm-book.js",
   "author": "Georges Boris",
   "license": "MPL-2.0",
-  "homepage": "https://github.com/dtwrks/elm-book#readme",
+  "homepage": "http://elm-book-in-elm-book.netlify.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dtwrks/elm-book.git"
@@ -18,7 +17,11 @@
     "postinstall": "elm-tooling install",
     "start": "elm-live ./src/ElmBook/UI/ElmBook.elm --port=3000 --pushstate --open -- --debug",
     "start:docs": "npx elm-doc-preview",
-    "build": "npx elm make ./src/ElmBook/UI/ElmBook.elm --output=public/index.js"
+    "build": "npx elm make ./src/ElmBook/UI/ElmBook.elm --output=public/index.js",
+    "test": "npm run test:app & npm run test:elm-ui & npm run test:elm-css",
+    "test:app": "elm make src/ElmBook/UI/ElmBook.elm --output=/dev/null",
+    "test:elm-ui": "cd examples/elm-ui && elm make src/Main.elm --output=/dev/null",
+    "test:elm-css": "cd examples/elm-css && elm make src/Main.elm --output=/dev/null"
   },
   "dependencies": {
     "elm-live": "^4.0.2"

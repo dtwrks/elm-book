@@ -1,4 +1,4 @@
-module ElmBook.Component exposing (background, hiddenLabel, block, inline, card)
+module ElmBook.Component exposing (background, hiddenLabel, fullWidth, displayBlock, displayInline, displayCard)
 
 {-| Attributes used by `ElmBook.withComponentOptions` and `ElmBook.Chapter.withComponentOptions`.
 
@@ -23,7 +23,7 @@ This is the API used for defining attributes on a component level (only works fo
         with-display="block"
         with-background="yellow" />
 
-@docs background, hiddenLabel, block, inline, card
+@docs background, hiddenLabel, fullWidth, displayBlock, displayInline, displayCard
 
 -}
 
@@ -54,13 +54,23 @@ hiddenLabel hiddenLabel_ (ComponentOptions settings) =
     ComponentOptions { settings | hiddenLabel = Just hiddenLabel_ }
 
 
+{-| Make the component fill the full width of the page.
+
+Available as `with-full-width="true"` on embbeded components
+
+-}
+fullWidth : Bool -> ComponentOptions -> ComponentOptions
+fullWidth fullWidth_ (ComponentOptions settings) =
+    ComponentOptions { settings | fullWidth = Just fullWidth_ }
+
+
 {-| Make your components appear inline in your chapter. This is mostly useful when embedding components inside markdown.
 
 Available as `with-display="inline"` on embbeded components
 
 -}
-inline : ComponentOptions -> ComponentOptions
-inline (ComponentOptions settings) =
+displayInline : ComponentOptions -> ComponentOptions
+displayInline (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Inline }
 
 
@@ -69,8 +79,8 @@ inline (ComponentOptions settings) =
 Available as `with-display="block"` on embbeded components
 
 -}
-block : ComponentOptions -> ComponentOptions
-block (ComponentOptions settings) =
+displayBlock : ComponentOptions -> ComponentOptions
+displayBlock (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Block }
 
 
@@ -79,6 +89,6 @@ block (ComponentOptions settings) =
 Available as `with-display="card"` on embbeded components
 
 -}
-card : ComponentOptions -> ComponentOptions
-card (ComponentOptions settings) =
+displayCard : ComponentOptions -> ComponentOptions
+displayCard (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Card }

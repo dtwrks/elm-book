@@ -24,22 +24,30 @@ We enable you to work with any custom elements via the `ElmBook.Custom` module. 
 module ElmBook.ElmUI exposing (Book, Chapter, book)
 
 import Element exposing (Element, layout)
-import ElmBook.Custom
+import ElmBook.Custom exposing (customBook)
 
 
 type alias Html state =
     Element (ElmBook.Custom.Msg state)
 
 
+type alias BookBuilder state =
+    ElmBook.Custom.BookBuilder state (Html state)
+
+
+type alias Book state =
+    ElmBook.Custom.Book state (Html state)
+
+
 type alias Chapter state =
     ElmBook.Custom.Chapter state (Html state)
 
 
-book : String -> ElmBook.Custom.Builder state (Html state)
+book : String -> BookBuilder state
 book =
     customBook (layout [])
 ```
 
-After that you would only need to use this custom `book` function when creating a new book and the custom `Chapter` definition when creating a new chapter. Simple as that.
+After that you would only need to use this custom `book` function and `Book` type when creating a new book and the custom `Chapter` type when creating a new chapter. Simple as that.
 
 """

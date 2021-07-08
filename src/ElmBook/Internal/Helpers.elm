@@ -1,9 +1,21 @@
-module ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
+module ElmBook.Internal.Helpers exposing
+    ( applyAttributes
+    , toSlug
+    )
 
 
 toSlug : String -> String
 toSlug =
-    String.toLower >> String.replace " " "-"
+    String.trim >> String.map toUrlSafe
+
+
+toUrlSafe : Char -> Char
+toUrlSafe c =
+    if Char.isAlphaNum c then
+        Char.toLower c
+
+    else
+        '-'
 
 
 applyAttributes : List (a -> a) -> a -> a

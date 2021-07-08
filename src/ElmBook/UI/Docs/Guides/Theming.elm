@@ -4,8 +4,8 @@ module ElmBook.UI.Docs.Guides.Theming exposing
     , init
     )
 
-import ElmBook.Actions exposing (logAction, updateStateWithCmd, updateStateWithCmdWith)
-import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponent, withStatefulComponentList)
+import ElmBook.Actions exposing (logAction, updateStateWithCmdWith)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
 import ElmBook.Component
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme exposing (defaultTheme)
@@ -177,6 +177,24 @@ docs =
         |> render ("""
 Your book should look and feel your own, so ElmBook provides a few ways you can customize it's theme.
 
+## Custom Colors
+
+I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't fret, you can customize a lot of what you're seeing.
+
+<component
+    with-label="Theme Builder"
+    with-display="block"
+    />
+
+    main : Book x
+    main =
+        book "CustomHeader"
+            |> withThemeOptions
+                [ ElmBook.Theme.background "slategray"
+                , ElmBook.Theme.accent "white"
+                ]
+            |> withChapters [] 
+
 ## Custom Header
 
 You can choose a different logo, title and subtitle for your book:
@@ -191,8 +209,6 @@ You can choose a different logo, title and subtitle for your book:
                 , ElmBook.Theme.logo (img [ src "/mycompanylogo.png" ] [])
                 ]
             |> withChapters []
-
----
 
 Or you can go full custom and provide your own thing:
 
@@ -211,25 +227,7 @@ main =
 myCustomHeader : Html msg
 myCustomHeader =
     ...
-```
-
-## Custom Colors
-
-What about colors? I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't fret, you can customize a lot of what you're seeing.
-
-<component
-    with-label="Theme Builder"
-    with-display="block"
-    />
-
-    main : Book x
-    main =
-        book "CustomHeader"
-            |> withThemeOptions
-                [ ElmBook.Theme.background "slategray"
-                , ElmBook.Theme.accent "white"
-                ]
-            |> withChapters []        
+```       
 
 ---
 
