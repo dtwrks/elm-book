@@ -264,9 +264,9 @@ renderComponentList componentList (ChapterBuilder builder) =
 
 {-| Render a single stateful component with no markdown content.
 -}
-renderStatefulComponent : (state -> html) -> ChapterBuilder state html -> ChapterBuilder state html
+renderStatefulComponent : (state -> html) -> ChapterBuilder state html -> ChapterCustom state html
 renderStatefulComponent view_ (ChapterBuilder builder) =
-    ChapterBuilder
+    Chapter
         { builder
             | body = builder.body ++ "<component-list />"
             , componentList =
@@ -279,9 +279,9 @@ renderStatefulComponent view_ (ChapterBuilder builder) =
 
 {-| Render a list of stateful components with no markdown content.
 -}
-renderStatefulComponentList : List ( String, state -> html ) -> ChapterBuilder state html -> ChapterBuilder state html
+renderStatefulComponentList : List ( String, state -> html ) -> ChapterBuilder state html -> ChapterCustom state html
 renderStatefulComponentList componentList (ChapterBuilder builder) =
-    ChapterBuilder
+    Chapter
         { builder
             | body = builder.body ++ "<component-list />"
             , componentList =
