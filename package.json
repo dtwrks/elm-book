@@ -1,6 +1,6 @@
 {
   "name": "elm-book",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Rich documentation builder for Elm applications and packages. Based on Storybook and HexDocs.",
   "bin": "./bin/elm-book.js",
   "author": "Georges Boris",
