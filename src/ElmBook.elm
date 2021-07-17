@@ -1,7 +1,7 @@
 module ElmBook exposing
     ( book, withChapters, withChapterGroups
-    , withThemeOptions, withComponentOptions, withApplicationOptions
-    , Book
+    , withThemeOptions, withChapterOptions, withComponentOptions, withStatefulOptions
+    , Book, Msg
     )
 
 {-| **Tip:** If you're just getting started, it's usually better to start by creating a chapter (checkout the `ElmBook.Chapter` module).
@@ -28,29 +28,37 @@ This module is used to create your books main output. You need to list your book
 
 You can pipe any of the customization functions on your book's creation. Just make sure you're passing these functions before you call `withChapters` or `withChapterGroups` functions.
 
-@docs withThemeOptions, withComponentOptions, withApplicationOptions
+@docs withThemeOptions, withChapterOptions, withComponentOptions, withStatefulOptions
 
 
 # Types
 
-@docs Book
+@docs Book, Msg
 
 -}
 
 import Browser exposing (UrlRequest(..))
-import ElmBook.Custom
+import ElmBook.Chapter
+import ElmBook.ChapterOptions
+import ElmBook.Custom exposing (BookBuilder)
 import ElmBook.Internal.Application exposing (BookApplication)
-import ElmBook.Internal.ApplicationOptions
 import ElmBook.Internal.Book exposing (BookBuilder(..))
 import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes)
-import ElmBook.Internal.Msg exposing (Msg)
+import ElmBook.Internal.Msg
+import ElmBook.Internal.StatefulOptions
 import ElmBook.Internal.Theme
+import ElmBook.StatefulOptions
+import ElmBook.ThemeOptions
 import Html exposing (Html)
 
 
-{-| Defines a book with some state. If you're creating a stateful book, you will need to pass your `SharedState` as an argument.
+{-| Defines a book with some state and some type of expected html.
+
+If you're working with something other than `elm/html` (e.g. elm-css or elm-ui) then check out the `ElmBook.Custom` module.
+
+If you're creating a stateful book, you will need to pass your custom `SharedState` as an argument as showcased below.
 
     import FirstChapter
     import SecondChapter
@@ -69,14 +77,19 @@ import Html exposing (Html)
     main : Book SharedState
     main =
         book "MyApp"
-            |> withApplicationOptions
-                [ ElmBook.Application.initialState
+            |> withStatefulOptions
+                [ ElmBook.StatefulOptions.initialState
                     initialState
                 ]
 
 -}
 type alias Book state =
     BookApplication state (Html (Msg state))
+
+
+{-| -}
+type alias Msg state =
+    ElmBook.Internal.Msg.Msg state
 
 
 {-| Kickoff the creation of an ElmBook application.
@@ -138,21 +151,43 @@ withChapterGroups chapterGroups_ =
     main =
         book "My Themed Book"
             |> withThemeOptions
-                [ ElmBook.Theme.background "slategray"
-                , ElmBook.Theme.accent "white"
+                [ ElmBook.ThemeOptions.globals [ myCssReset ]
+                , ElmBook.ThemeOptions.background "slategray"
+                , ElmBook.ThemeOptions.accent "white"
                 ]
             |> withChapters []
 
 -}
-withThemeOptions : List ElmBook.Internal.Theme.Attribute -> BookBuilder state html -> BookBuilder state html
+withThemeOptions : List (ElmBook.ThemeOptions.ThemeOption html) -> BookBuilder state html -> BookBuilder state html
 withThemeOptions themeAttributes (BookBuilder config) =
     BookBuilder
-        { config | theme = applyAttributes themeAttributes config.theme }
+        { config | themeOptions = applyAttributes themeAttributes config.themeOptions }
 
 
-{-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.Component`.
+{-| By default, your chapter will display its title at the top of the content. You can disable this by passing in chapter options.
 
-Please note that component options are "inherited". So you can override these options one a particular chapter and even on an specific component.
+    book "My Book"
+        |> withChapterOptions
+            [ ElmBook.Chapter.hiddenTitle True
+            ]
+        |> withChapters []
+
+Please note that chapter options are "inherited". So you can also override these options on a particular chapter and that will take priority of book-wide options. Take a look at `ElmBook.ChapterOptions` for all the options available.
+
+-}
+withChapterOptions : List ElmBook.ChapterOptions.Attribute -> BookBuilder state html -> BookBuilder state html
+withChapterOptions attributes (BookBuilder config) =
+    BookBuilder
+        { config
+            | chapterOptions =
+                applyAttributes attributes ElmBook.Internal.Chapter.defaultOverrides
+                    |> ElmBook.Internal.Chapter.toValidOptions config.chapterOptions
+        }
+
+
+{-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.ComponentOptions`.
+
+Please note that component options are "inherited". So you can override these options on a particular chapter and even on an specific component.
 
     main : Book ()
     main =
@@ -174,33 +209,15 @@ withComponentOptions componentAttributes (BookBuilder config) =
         }
 
 
-{-| Application options are used to both set global elements to your book (e.g. these is where you should add your CSS resets) and also to define things needed for your live elm components, take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
+{-| Stateful options are useful for interactive books. With them you can set your book's initialState or even give it your custom subscriptions. Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
 
-Attributes for this function are defined on `ElmBook.Application`.
-
-    import Css.Global exposing (global)
-    import Tailwind.Utilities exposing (globalStyles)
-
-    type alias SharedState = { ... }
-
-    initialState : SharedState
-    initialState = ...
-
-    main : Book SharedState
-    main =
-        book "MyApp"
-            |> withApplicationOptions
-                [ ElmBook.Application.globals
-                    [ global globalStyles ]
-                , ElmBook.Application.initialState
-                    initialState
-                ]
+Attributes for this function are defined on `ElmBook.StatefulOptions`.
 
 -}
-withApplicationOptions :
-    List (ElmBook.Internal.ApplicationOptions.Attribute state html)
+withStatefulOptions :
+    List (ElmBook.StatefulOptions.Attribute state)
     -> BookBuilder state html
     -> BookBuilder state html
-withApplicationOptions applicationAttributes (BookBuilder config) =
+withStatefulOptions attributes (BookBuilder config) =
     BookBuilder
-        { config | application = applyAttributes applicationAttributes config.application }
+        { config | statefulOptions = applyAttributes attributes config.statefulOptions }

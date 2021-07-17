@@ -1,7 +1,7 @@
 module ElmBook.UI.Docs.Nav exposing (..)
 
 import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, withComponentOptions)
-import ElmBook.Component
+import ElmBook.ComponentOptions
 import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Nav exposing (view)
 
@@ -27,7 +27,7 @@ docs =
     in
     chapter "Nav"
         |> withComponentOptions
-            [ ElmBook.Component.background themeBackground
+            [ ElmBook.ComponentOptions.background themeBackground
             ]
         |> renderComponentList
             [ ( "Default", view props )

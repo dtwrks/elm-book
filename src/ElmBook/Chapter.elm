@@ -1,8 +1,8 @@
 module ElmBook.Chapter exposing
-    ( chapter, renderComponent, renderComponentList, Chapter
+    ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
     , withComponent, withComponentList, render, renderWithComponentList
-    , withComponentOptions
     , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
+    , withChapterOptions, withComponentOptions
     )
 
 {-| Chapters are what books are made of. They can be library guides, component examples, design tokens showcases, you name it.
@@ -53,7 +53,7 @@ Lets start by creating a chapter that displays different variants of a Button co
 
 **Tip:** Since Elm has amazing [dead code elimination](https://elm-lang.org/news/small-assets-without-the-headache#dead-code-elimination) you don't need to worry about splitting your component examples from your source code. They can live side by side making your development experience much better!
 
-@docs chapter, renderComponent, renderComponentList, Chapter
+@docs chapter, chapterLink, renderComponent, renderComponentList, Chapter
 
 
 # Markdown and embedded components
@@ -61,13 +61,6 @@ Lets start by creating a chapter that displays different variants of a Button co
 You're not limited to creating these "storybook-like" chapters though. Take a look at the functions below and you will understand how to create richer docs based on markdown and embedded components.
 
 @docs withComponent, withComponentList, render, renderWithComponentList
-
-
-# Customizing Components
-
-Take a look at the `ElmBook.Component` attributes for more details.
-
-@docs withComponentOptions
 
 
 # Stateful Chapters
@@ -78,9 +71,15 @@ Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.ap
 
 @docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
 
+
+# Customizing Chapters
+
+@docs withChapterOptions, withComponentOptions
+
 -}
 
-import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..))
+import ElmBook.ChapterOptions
+import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..), ChapterOptions(..))
 import ElmBook.Internal.Component
 import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
 import ElmBook.Internal.Msg exposing (Msg)
@@ -101,38 +100,28 @@ chapter title =
         { title = title
         , groupTitle = Nothing
         , url = "/" ++ toSlug title
-        , body = "# " ++ title ++ "\n"
+        , body = ""
+        , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
         , componentOptions = ElmBook.Internal.Component.defaultOverrides
         , componentList = []
         }
 
 
-{-|
+{-| Creates a chapter that links to an external resource.
 
-    chapter "Buttons"
-        |> withComponentOptions
-            [ ElmBook.Component.background "yellow"
-            , ElmBook.Component.hiddenLabel True
-            ]
-        |> renderComponents
-            [ ( "Default", view props )
-            , ( "Disabled", view { props | disabled = True } )
-            ]
-
-By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.Component`.
-
-Please note that component options are "inherited". So your components will inherit from the attributes defined by `ElmBook.withComponentOptions` and they can also be overriden on the component level. Take a look at the `ElmBook.Component` module for more details.
+**Note**: Chapter links are not like normal chapters – they are not rendered, they just serve as links to external resources through the book's navigation. Useful for things like linking to a library's elm-package page.
 
 -}
-withComponentOptions :
-    List ElmBook.Internal.Component.Attribute
-    -> ChapterBuilder state html
-    -> ChapterBuilder state html
-withComponentOptions attributes (ChapterBuilder config) =
-    ChapterBuilder
-        { config
-            | componentOptions =
-                applyAttributes attributes config.componentOptions
+chapterLink : { title : String, url : String } -> ChapterCustom state html
+chapterLink props =
+    Chapter
+        { title = props.title
+        , groupTitle = Nothing
+        , url = props.url
+        , body = ""
+        , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
+        , componentOptions = ElmBook.Internal.Component.defaultOverrides
+        , componentList = []
         }
 
 
@@ -306,6 +295,63 @@ renderWithComponentList : String -> ChapterBuilder state html -> ChapterCustom s
 renderWithComponentList body (ChapterBuilder builder) =
     Chapter
         { builder | body = builder.body ++ body ++ "\n<component-list />" }
+
+
+
+-- Customizing the chapter
+
+
+{-| By default, your chapter will display its title at the top of the content. You can disable this by passing in chapter options.
+
+    chapter "Buttons"
+        |> withChapterOptions
+            [ ElmBook.Chapter.hiddenTitle True
+            ]
+        |> renderComponents
+            [ ( "Default", view props )
+            , ( "Disabled", view { props | disabled = True } )
+            ]
+
+Please note that chapter options are "inherited". So your chapters will inherit from the options passed to your book by `ElmBook.withChapterOptions`. Take a look at `ElmBook.ChapterOptions` for the options available.
+
+-}
+withChapterOptions :
+    List ElmBook.ChapterOptions.Attribute
+    -> ChapterBuilder state html
+    -> ChapterBuilder state html
+withChapterOptions attributes (ChapterBuilder builder) =
+    ChapterBuilder
+        { builder
+            | chapterOptions =
+                applyAttributes attributes builder.chapterOptions
+        }
+
+
+{-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.Component`.
+
+    chapter "Buttons"
+        |> withComponentOptions
+            [ ElmBook.Component.background "yellow"
+            , ElmBook.Component.hiddenLabel True
+            ]
+        |> renderComponents
+            [ ( "Default", view props )
+            , ( "Disabled", view { props | disabled = True } )
+            ]
+
+Please note that component options are "inherited". So your components will inherit from the options passed to your book by `ElmBook.withComponentOptions` and they can also be overriden on the component level. Take a look at the `ElmBook.Component` module for more details.
+
+-}
+withComponentOptions :
+    List ElmBook.Internal.Component.Attribute
+    -> ChapterBuilder state html
+    -> ChapterBuilder state html
+withComponentOptions attributes (ChapterBuilder config) =
+    ChapterBuilder
+        { config
+            | componentOptions =
+                applyAttributes attributes config.componentOptions
+        }
 
 
 

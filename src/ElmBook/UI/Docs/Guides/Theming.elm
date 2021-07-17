@@ -6,10 +6,10 @@ module ElmBook.UI.Docs.Guides.Theming exposing
 
 import ElmBook.Actions exposing (logAction, updateStateWithCmdWith)
 import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
-import ElmBook.Component
+import ElmBook.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme exposing (defaultTheme)
-import ElmBook.Theme
+import ElmBook.ThemeOptions
 import ElmBook.UI.Header
 import ElmBook.UI.Helpers exposing (css_, themeBackground)
 import ElmBook.UI.Icons exposing (iconElm)
@@ -28,6 +28,9 @@ init =
     { backgroundStart = ElmBook.Internal.Theme.defaultBackgroundStart
     , backgroundEnd = ElmBook.Internal.Theme.defaultBackgroundEnd
     , accent = ElmBook.Internal.Theme.defaultAccent
+    , navBackground = ElmBook.Internal.Theme.defaultNavBackground
+    , navAccent = ElmBook.Internal.Theme.defaultNavAccent
+    , navAccentHighlight = ElmBook.Internal.Theme.defaultNavAccentHighlight
     }
 
 
@@ -35,6 +38,9 @@ type alias Model =
     { backgroundStart : String
     , backgroundEnd : String
     , accent : String
+    , navBackground : String
+    , navAccent : String
+    , navAccentHighlight : String
     }
 
 
@@ -42,6 +48,9 @@ type Msg
     = UpdateBackgroundStart String
     | UpdateBackgroundEnd String
     | UpdateAccent_ String
+    | UpdateNavBackground_ String
+    | UpdateNavAccent_ String
+    | UpdateNavAccentHighlight_ String
 
 
 update : Msg -> SharedState m -> ( SharedState m, Cmd (ElmBook.Internal.Msg.Msg (SharedState m)) )
@@ -72,6 +81,27 @@ update msg sharedState =
                         (\_ -> SetThemeAccent v)
                         (Task.succeed ())
                     )
+
+                UpdateNavBackground_ v ->
+                    ( { model | navBackground = v }
+                    , Task.perform
+                        (\_ -> SetThemeNavBackground v)
+                        (Task.succeed ())
+                    )
+
+                UpdateNavAccent_ v ->
+                    ( { model | navAccent = v }
+                    , Task.perform
+                        (\_ -> SetThemeNavAccent v)
+                        (Task.succeed ())
+                    )
+
+                UpdateNavAccentHighlight_ v ->
+                    ( { model | navAccentHighlight = v }
+                    , Task.perform
+                        (\_ -> SetThemeNavAccentHighlight v)
+                        (Task.succeed ())
+                    )
     in
     ( { sharedState | theming = model_ }, cmd )
 
@@ -83,8 +113,8 @@ docs =
             { href = "/x"
             , theme =
                 defaultTheme
-                    |> ElmBook.Theme.subtitle "Custom Subtitle"
-            , title = "Title"
+                    |> ElmBook.ThemeOptions.subtitle "Custom Subtitle"
+            , title = "Custom Title"
             , isMenuOpen = False
             , onClickHeader = logAction "onClickHeader"
             , onClickMenuButton = logAction "onClickMenuButton"
@@ -99,14 +129,14 @@ docs =
     in
     chapter "Theming"
         |> withComponentOptions
-            [ ElmBook.Component.background themeBackground
+            [ ElmBook.ComponentOptions.background themeBackground
             ]
         |> withComponentList
             [ ( "Header with custom logo"
               , ElmBook.UI.Header.view
                     { headerProps
                         | theme =
-                            ElmBook.Theme.logo
+                            ElmBook.ThemeOptions.logo
                                 (iconElm { size = 28, color = "#75c5f0" })
                                 headerProps.theme
                     }
@@ -115,7 +145,7 @@ docs =
               , ElmBook.UI.Header.view
                     { headerProps
                         | theme =
-                            ElmBook.Theme.header
+                            ElmBook.ThemeOptions.header
                                 customHeader
                                 headerProps.theme
                     }
@@ -144,38 +174,69 @@ docs =
     border-top: 1px solid #dadada;
 }
                     """
-                        , label [ class "elm-book-theme-builder__field" ]
-                            [ p [ class "elm-book-sans" ] [ text "Background Start" ]
-                            , input
-                                [ type_ "color"
-                                , value theming.backgroundStart
-                                , onInput (updateStateWithCmdWith (update << UpdateBackgroundStart))
-                                ]
-                                []
-                            ]
-                        , label [ class "elm-book-theme-builder__field" ]
-                            [ p [ class "elm-book-sans" ] [ text "Background End" ]
-                            , input
-                                [ type_ "color"
-                                , value theming.backgroundEnd
-                                , onInput (updateStateWithCmdWith (update << UpdateBackgroundEnd))
-                                ]
-                                []
-                            ]
-                        , label [ class "elm-book-theme-builder__field" ]
-                            [ p [ class "elm-book-sans" ] [ text "Accent" ]
-                            , input
-                                [ type_ "color"
-                                , value theming.accent
-                                , onInput (updateStateWithCmdWith (update << UpdateAccent_))
-                                ]
-                                []
-                            ]
+                        , div []
+                            ([ ( "backgroundGradient (Start)", theming.backgroundStart, UpdateBackgroundStart )
+                             , ( "backgroundGradient (End)", theming.backgroundEnd, UpdateBackgroundEnd )
+                             , ( "accent", theming.accent, UpdateAccent_ )
+                             , ( "navBackground", theming.navBackground, UpdateNavBackground_ )
+                             , ( "navAccent", theming.navAccent, UpdateNavAccent_ )
+                             , ( "navAccentHighlight", theming.navAccentHighlight, UpdateNavAccentHighlight_ )
+                             ]
+                                |> List.map
+                                    (\( label_, value_, msg_ ) ->
+                                        label
+                                            [ class "elm-book-theme-builder__field" ]
+                                            [ p [ class "elm-book-sans" ] [ text label_ ]
+                                            , input
+                                                [ type_ "color"
+                                                , value value_
+                                                , onInput (updateStateWithCmdWith (update << msg_))
+                                                ]
+                                                []
+                                            ]
+                                    )
+                            )
                         ]
               )
             ]
         |> render ("""
 Your book should look and feel your own, so ElmBook provides a few ways you can customize it's theme.
+
+## Custom Header
+
+You can choose a different logo, title and subtitle for your book:
+
+<component with-label="Header with custom logo" with-background=\"""" ++ themeBackground ++ """" />
+
+    main : Book x
+    main =
+        book "Custom Title"
+            |> withThemeOptions
+                [ ElmBook.ThemeOptions.subtitle "Custom Subtitle",
+                , ElmBook.ThemeOptions.logo (img [ src "/mycompanylogo.png" ] [])
+                ]
+            |> withChapters []
+
+Or you can go full custom and provide your own thing:
+
+<component with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
+
+```elm
+main : Book x
+main =
+    book "Custom Header"
+        |> withThemeOptions
+            [ ElmBook.ThemeOptions.header myCustomHeader
+            ]
+        |> withChapters []
+
+
+myCustomHeader : Html msg
+myCustomHeader =
+    ...
+```       
+
+---
 
 ## Custom Colors
 
@@ -190,48 +251,14 @@ I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't
     main =
         book "CustomHeader"
             |> withThemeOptions
-                [ ElmBook.Theme.background "slategray"
-                , ElmBook.Theme.accent "white"
+                [ ElmBook.ThemeOptions.background "slategray"
+                , ElmBook.ThemeOptions.accent "white"
                 ]
             |> withChapters [] 
 
-## Custom Header
-
-You can choose a different logo, title and subtitle for your book:
-
-<component with-label="Header with custom logo" with-background=\"""" ++ themeBackground ++ """" />
-
-    main : Book x
-    main =
-        book "CustomHeader"
-            |> withThemeOptions
-                [ ElmBook.Theme.subtitle "Custom Subtitle",
-                , ElmBook.Theme.logo (img [ src "/mycompanylogo.png" ] [])
-                ]
-            |> withChapters []
-
-Or you can go full custom and provide your own thing:
-
-<component with-label="Custom header" with-background=\"""" ++ themeBackground ++ """" />
-
-```elm
-main : Book x
-main =
-    book "CustomHeader"
-        |> withThemeOptions
-            [ ElmBook.Theme.header myCustomHeader
-            ]
-        |> withChapters []
-
-
-myCustomHeader : Html msg
-myCustomHeader =
-    ...
-```       
-
 ---
 
-## Theming Roadmap
+## Roadmap
 
 There is a plan to also enable custom fonts soon. Other than that, I believe changes will be less customizable and will focus more on a better UX for all ElmBooks. Things like ready-to-be-used components like Placeholders, Design Tokens Catalogue, etc, should be handled on separate packages.
 

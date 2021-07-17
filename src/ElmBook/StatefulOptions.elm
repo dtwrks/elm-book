@@ -1,44 +1,28 @@
-module ElmBook.Application exposing
-    ( globals
-    , initialState, subscriptions
+module ElmBook.StatefulOptions exposing
+    ( initialState, subscriptions
+    , Attribute
     )
 
-{-| Attributes used by `ElmBook.withApplicationOptions`.
-
-
-# Setting up Global CSS
-
-@docs globals
-
-
-# Stateful Books
+{-| Attributes used by `ElmBook.withStatefulOptions`.
 
 The attributes below are mostly used for Stateful Books. Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
 
 @docs initialState, subscriptions
 
+
+# Types
+
+@docs Attribute
+
 -}
 
-import ElmBook.Internal.ApplicationOptions exposing (Attribute)
 import ElmBook.Internal.Msg exposing (Msg)
+import ElmBook.Internal.StatefulOptions exposing (StatefulOptions)
 
 
-{-| Add global elements to your book. This can be helpful for things like CSS resets.
-
-For instance, if you're using elm-tailwind-modules, this would be really helpful:
-
-    import Css.Global exposing (global)
-    import Tailwind.Utilities exposing (globalStyles)
-
-    book "MyApp"
-        |> withApplicationOptions [
-            globals [ global globalStyles ]
-        ]
-
--}
-globals : List html -> Attribute state html
-globals globals_ options =
-    { options | globals = Just globals_ }
+{-| -}
+type alias Attribute state =
+    StatefulOptions state -> StatefulOptions state
 
 
 {-| Add an initial state to your book.
@@ -49,12 +33,12 @@ globals globals_ options =
 
     book : Book SharedState
     book "MyApp"
-        |> withApplicationOptions [
+        |> withStatefulOptions [
             initialState { value = "" }
         ]
 
 -}
-initialState : state -> Attribute state html
+initialState : state -> Attribute state
 initialState state options =
     { options | state = Just state }
 
@@ -76,7 +60,7 @@ initialState state options =
 
     book : Book SharedState
     book "MyApp"
-        |> withApplicationOptions [
+        |> withStatefulOptions [
             subscriptions [
                 Browser.Events.onAnimationFrame
                     (updateStateWith updateAnimationState)
@@ -84,6 +68,6 @@ initialState state options =
         ]
 
 -}
-subscriptions : List (Sub (Msg state)) -> Attribute state html
+subscriptions : List (Sub (Msg state)) -> Attribute state
 subscriptions subscriptions_ options =
     { options | subscriptions = subscriptions_ }

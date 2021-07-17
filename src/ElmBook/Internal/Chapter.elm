@@ -4,15 +4,50 @@ module ElmBook.Internal.Chapter exposing
     , ChapterComponentView(..)
     , ChapterConfig
     , ChapterCustom(..)
+    , ChapterOptions(..)
+    , ValidChapterOptions
     , chapterBreadcrumb
     , chapterTitle
     , chapterUrl
     , chapterWithGroup
+    , defaultOptions
+    , defaultOverrides
     , groupTitle
+    , toValidOptions
     )
 
 import ElmBook.Internal.Component exposing (ComponentOptions)
 import ElmBook.Internal.Helpers exposing (toSlug)
+
+
+type alias ValidChapterOptions =
+    { hiddenTitle : Bool
+    }
+
+
+type ChapterOptions
+    = ChapterOptions
+        { hiddenTitle : Maybe Bool
+        }
+
+
+defaultOptions : ValidChapterOptions
+defaultOptions =
+    { hiddenTitle = False
+    }
+
+
+defaultOverrides : ChapterOptions
+defaultOverrides =
+    ChapterOptions
+        { hiddenTitle = Nothing
+        }
+
+
+toValidOptions : ValidChapterOptions -> ChapterOptions -> ValidChapterOptions
+toValidOptions valid (ChapterOptions options) =
+    { hiddenTitle = Maybe.withDefault valid.hiddenTitle options.hiddenTitle
+    }
 
 
 type ChapterCustom state html
@@ -28,6 +63,7 @@ type alias ChapterConfig state html =
     , title : String
     , groupTitle : Maybe String
     , body : String
+    , chapterOptions : ChapterOptions
     , componentOptions : ComponentOptions
     , componentList : List (ChapterComponent state html)
     }

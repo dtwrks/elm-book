@@ -66,7 +66,7 @@ styles =
 .elm-book-search-bg {
     opacity: 0.2;
     border-radius: 4px;
-    background-color: """ ++ themeAccent ++ """;
+    background-color: """ ++ themeNavBackground ++ """;
 }
 .elm-book-search-border {
     opacity: 0.5;

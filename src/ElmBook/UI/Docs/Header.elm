@@ -2,9 +2,9 @@ module ElmBook.UI.Docs.Header exposing (..)
 
 import ElmBook.Actions exposing (logAction)
 import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, withComponentOptions)
-import ElmBook.Component
+import ElmBook.ComponentOptions
 import ElmBook.Internal.Theme exposing (defaultTheme)
-import ElmBook.Theme
+import ElmBook.ThemeOptions
 import ElmBook.UI.Header exposing (view)
 import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Icons exposing (iconElm)
@@ -34,7 +34,7 @@ docs =
     in
     chapter "Header"
         |> withComponentOptions
-            [ ElmBook.Component.background themeBackground
+            [ ElmBook.ComponentOptions.background themeBackground
             ]
         |> renderComponentList
             [ ( "Default"
@@ -44,7 +44,7 @@ docs =
               , view
                     { props
                         | theme =
-                            ElmBook.Theme.logo
+                            ElmBook.ThemeOptions.logo
                                 (iconElm { size = 28, color = "#75c5f0" })
                                 props.theme
                     }
@@ -53,7 +53,7 @@ docs =
               , view
                     { props
                         | theme =
-                            ElmBook.Theme.header
+                            ElmBook.ThemeOptions.header
                                 customTitle
                                 props.theme
                     }

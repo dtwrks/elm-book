@@ -75,7 +75,7 @@ module MyBook exposing (main)
 
 
 import ElmBook exposing (..)
-import ElmBook.Application
+import ElmBook.StatefulOptions
 import ElmBook.Theme
 import ElmBook.Component
 ...
@@ -84,13 +84,13 @@ import ElmBook.Component
 main : Book SharedState
 main =
     book "My Book"
-        |> withApplicationOptions
-            [ ElmBook.Application.globals [ resetCss ]
-            , ElmBook.Application.initialState initialSharedState
+        |> withStatefulOptions
+            [ ElmBook.StatefulOptions.globals [ resetCss ]
+            , ElmBook.StatefulOptions.initialState initialSharedState
             ]
         |> withThemeOptions
-            [ ElmBook.Theme.background "yellow"
-            , ElmBook.Theme.subtitle "Guides & Stuff"
+            [ ElmBook.ThemeOptions.background "yellow"
+            , ElmBook.ThemeOptions.subtitle "Guides & Stuff"
             ]
         |> withComponentOptions
             [ ElmBook.Component.background "black"

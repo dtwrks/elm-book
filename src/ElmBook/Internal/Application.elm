@@ -14,8 +14,8 @@ import ElmBook.Internal.Book exposing (BookBuilder(..), ElmBookConfig)
 import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
 import ElmBook.Internal.Component
 import ElmBook.Internal.Msg exposing (Msg(..))
-import ElmBook.Internal.Theme
-import ElmBook.Theme
+import ElmBook.Internal.Theme exposing (navBackground)
+import ElmBook.ThemeOptions
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
 import ElmBook.UI.ChapterHeader
@@ -84,7 +84,7 @@ application chapterGroups (BookBuilder config) =
                 Sub.batch
                     [ onKeyDown keyDownDecoder
                     , onKeyUp keyUpDecoder
-                    , Sub.batch config.application.subscriptions
+                    , Sub.batch config.statefulOptions.subscriptions
                     ]
         }
 
@@ -194,6 +194,7 @@ update msg model =
                     else
                         ( model
                         , Browser.Navigation.pushUrl model.navKey (Url.toString url)
+                            |> Debug.log "Pushing url"
                         )
 
         OnUrlChange url ->
@@ -226,21 +227,21 @@ update msg model =
                     )
 
         UpdateState fn ->
-            model.config.application.state
+            model.config.statefulOptions.state
                 |> Maybe.map
                     (\state_ ->
                         let
                             config =
                                 model.config
 
-                            application_ =
-                                model.config.application
+                            statefulOptions_ =
+                                model.config.statefulOptions
 
-                            application__ =
-                                { application_ | state = Just (fn state_) }
+                            statefulOptions__ =
+                                { statefulOptions_ | state = Just (fn state_) }
 
                             config_ =
-                                { config | application = application__ }
+                                { config | statefulOptions = statefulOptions__ }
                         in
                         ( { model | config = config_ }
                         , Cmd.none
@@ -249,24 +250,24 @@ update msg model =
                 |> Maybe.withDefault ( model, Cmd.none )
 
         UpdateStateWithCmd fn ->
-            model.config.application.state
+            model.config.statefulOptions.state
                 |> Maybe.map
                     (\state_ ->
                         let
                             config =
                                 model.config
 
-                            application_ =
-                                model.config.application
+                            statefulOptions_ =
+                                model.config.statefulOptions
 
                             ( state__, cmd ) =
                                 fn state_
 
-                            application__ =
-                                { application_ | state = Just state__ }
+                            statefulOptions__ =
+                                { statefulOptions_ | state = Just state__ }
 
                             config_ =
-                                { config | application = application__ }
+                                { config | statefulOptions = statefulOptions__ }
                         in
                         ( { model | config = config_ }
                         , cmd
@@ -346,9 +347,17 @@ update msg model =
             if model.isSearching then
                 case Array.get model.chapterPreSelected model.chaptersSearched of
                     Just chapter_ ->
-                        ( model
-                        , Browser.Navigation.pushUrl model.navKey <| chapterUrl chapter_
-                        )
+                        if String.startsWith "/" (chapterUrl chapter_) then
+                            ( model
+                            , Browser.Navigation.pushUrl model.navKey <|
+                                Debug.log "here" chapterUrl chapter_
+                            )
+
+                        else
+                            ( model
+                            , Browser.Navigation.load (chapterUrl chapter_)
+                                |> Debug.log "here 2"
+                            )
 
                     Nothing ->
                         ( model, Cmd.none )
@@ -357,62 +366,48 @@ update msg model =
                 ( model, Cmd.none )
 
         SetThemeBackgroundGradient startColor endColor ->
-            let
-                config =
-                    model.config
-
-                config_ =
-                    { config
-                        | theme =
-                            ElmBook.Theme.backgroundGradient
-                                startColor
-                                endColor
-                                model.config.theme
-                    }
-
-                model_ =
-                    { model | config = config_ }
-            in
-            ( model_, Cmd.none )
+            ElmBook.ThemeOptions.backgroundGradient startColor endColor
+                |> updateTheme model
 
         SetThemeBackground background ->
-            let
-                config =
-                    model.config
-
-                config_ =
-                    { config
-                        | theme =
-                            ElmBook.Theme.background
-                                background
-                                model.config.theme
-                    }
-
-                model_ =
-                    { model | config = config_ }
-            in
-            ( model_, Cmd.none )
+            ElmBook.ThemeOptions.background background
+                |> updateTheme model
 
         SetThemeAccent accent ->
-            let
-                config =
-                    model.config
+            ElmBook.ThemeOptions.accent accent
+                |> updateTheme model
 
-                config_ =
-                    { config
-                        | theme =
-                            ElmBook.Theme.accent
-                                accent
-                                model.config.theme
-                    }
+        SetThemeNavBackground navBackground ->
+            ElmBook.ThemeOptions.navBackground navBackground
+                |> updateTheme model
 
-                model_ =
-                    { model | config = config_ }
-            in
-            ( model_, Cmd.none )
+        SetThemeNavAccent navAccent ->
+            ElmBook.ThemeOptions.navAccent navAccent
+                |> updateTheme model
+
+        SetThemeNavAccentHighlight navAccentHighlight ->
+            ElmBook.ThemeOptions.navAccentHighlight navAccentHighlight
+                |> updateTheme model
 
         DoNothing ->
             ( model, Cmd.none )
+
+
+updateTheme : Model state html -> ElmBook.ThemeOptions.ThemeOption html -> ( Model state html, Cmd (Msg state) )
+updateTheme model option =
+    let
+        config =
+            model.config
+
+        config_ =
+            { config
+                | themeOptions = option model.config.themeOptions
+            }
+
+        model_ =
+            { model | config = config_ }
+    in
+    ( model_, Cmd.none )
 
 
 withActionLogReset : Model state html -> ( Model state html, Cmd (Msg state) ) -> ( Model state html, Cmd (Msg state) )
@@ -444,7 +439,7 @@ view model =
     { title =
         let
             mainTitle =
-                ElmBook.Internal.Theme.subtitle model.config.theme
+                ElmBook.Internal.Theme.subtitle model.config.themeOptions
                     |> Maybe.map (\s -> model.config.title ++ " | " ++ s)
                     |> Maybe.withDefault model.config.title
         in
@@ -457,16 +452,16 @@ view model =
     , body =
         [ ElmBook.UI.Styles.view
         , ElmBook.UI.Wrapper.view
-            { theme = model.config.theme
+            { theme = model.config.themeOptions
             , isMenuOpen = model.isMenuOpen
             , globals =
-                model.config.application.globals
+                model.config.themeOptions.globals
                     |> Maybe.withDefault []
                     |> List.map model.config.toHtml
             , header =
                 ElmBook.UI.Header.view
                     { href = "/"
-                    , theme = model.config.theme
+                    , theme = model.config.themeOptions
                     , title = model.config.title
                     , isMenuOpen = model.isMenuOpen
                     , onClickHeader = DoNothing
@@ -515,6 +510,10 @@ view model =
                         (\(Chapter activeChapter_) ->
                             ElmBook.UI.Chapter.view
                                 { title = activeChapter_.title
+                                , chapterOptions =
+                                    activeChapter_.chapterOptions
+                                        |> ElmBook.Internal.Chapter.toValidOptions
+                                            model.config.chapterOptions
                                 , componentOptions =
                                     activeChapter_.componentOptions
                                         |> ElmBook.Internal.Component.toValidOptions
@@ -527,7 +526,7 @@ view model =
                                                 ( component.label
                                                 , componentView
                                                     model.config.toHtml
-                                                    model.config.application.state
+                                                    model.config.statefulOptions.state
                                                     component.view
                                                 )
                                             )

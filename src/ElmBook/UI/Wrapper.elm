@@ -11,7 +11,7 @@ import Html.Events exposing (..)
 
 
 view :
-    { theme : ElmBook.Internal.Theme.Theme
+    { theme : ElmBook.Internal.Theme.ThemeOptions html
     , globals : List (Html msg)
     , header : Html msg
     , menu : Html msg
@@ -26,11 +26,7 @@ view :
     }
     -> Html msg
 view props =
-    div
-        [ setTheme
-            (ElmBook.Internal.Theme.background props.theme)
-            (ElmBook.Internal.Theme.accent props.theme)
-        ]
+    div [ setTheme props.theme ]
         [ div [ class "elm-book--wrapper--globals" ] props.globals
         , div
             [ classList
@@ -188,8 +184,9 @@ styles =
     display: block;
     margin: 0;
     padding: 0;
-    opacity: 0.25;
-    border-bottom: 1px solid """ ++ themeAccent ++ """;
+    opacity: 0.2;
+    border-top: none;
+    border-bottom: 1px solid """ ++ themeNavBackground ++ """;
 }
 
 .elm-book--wrapper--menu--main-wrapper {

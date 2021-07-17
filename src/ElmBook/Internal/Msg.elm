@@ -28,3 +28,6 @@ type Msg state
     | SetThemeBackgroundGradient String String
     | SetThemeBackground String
     | SetThemeAccent String
+    | SetThemeNavBackground String
+    | SetThemeNavAccent String
+    | SetThemeNavAccentHighlight String

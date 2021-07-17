@@ -58,7 +58,7 @@ module Book exposing (main)
 
 
 import ElmBook exposing (..)
-import ElmBook.Application
+import ElmBook.StatefulOptions
 import CounterChapter
 import InputChapter
 
@@ -79,8 +79,8 @@ initialState =
 main : Book SharedState
 main =
     book "Stateful Book"
-        |> withApplicationOptions
-            [ ElmBook.Application.initialState initialState
+        |> withStatefulOptions
+            [ ElmBook.StatefulOptions.initialState initialState
             ]
         |> withChapters [
             CounterChapter.chapter,

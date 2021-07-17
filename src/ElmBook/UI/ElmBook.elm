@@ -1,8 +1,9 @@
 module ElmBook.UI.ElmBook exposing (..)
 
-import ElmBook exposing (Book, book, withApplicationOptions, withChapterGroups, withThemeOptions)
-import ElmBook.Application
-import ElmBook.Theme
+import ElmBook exposing (Book, book, withChapterGroups, withStatefulOptions, withThemeOptions)
+import ElmBook.Chapter
+import ElmBook.StatefulOptions
+import ElmBook.ThemeOptions
 import ElmBook.UI.Docs.ActionLog
 import ElmBook.UI.Docs.Footer
 import ElmBook.UI.Docs.Guides.Books
@@ -33,14 +34,21 @@ initialState =
 main : Book SharedState
 main =
     book "ElmBook's"
-        |> withApplicationOptions
-            [ ElmBook.Application.initialState initialState
+        |> withStatefulOptions
+            [ ElmBook.StatefulOptions.initialState initialState
             ]
         |> withThemeOptions
-            [ ElmBook.Theme.subtitle "Guides & Components"
+            [ ElmBook.ThemeOptions.subtitle "Guides & Components"
             ]
         |> withChapterGroups
-            [ ( "", [ ElmBook.UI.Docs.Intro.Overview.docs ] )
+            [ ( ""
+              , [ ElmBook.UI.Docs.Intro.Overview.docs
+                , ElmBook.Chapter.chapterLink
+                    { title = "API"
+                    , url = "https://package.elm-lang.org/packages/dtwrks/elm-book/latest/"
+                    }
+                ]
+              )
             , ( "Guides"
               , [ ElmBook.UI.Docs.Guides.Chapters.docs
                 , ElmBook.UI.Docs.Guides.Books.docs

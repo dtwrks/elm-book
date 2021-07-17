@@ -22,7 +22,7 @@ view chapterTitle chapterComponents componentOptions =
     Markdown.Parser.parse
         >> Result.withDefault []
         >> Markdown.Renderer.render
-            (sectionRenderer
+            (componentRenderer
                 chapterTitle
                 chapterComponents
                 componentOptions
@@ -36,8 +36,8 @@ view chapterTitle chapterComponents componentOptions =
            )
 
 
-sectionRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
-sectionRenderer chapterTitle chapterComponents componentOptions =
+componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
+componentRenderer chapterTitle chapterComponents componentOptions =
     { defaultRenderer
         | html =
             Markdown.Html.oneOf
@@ -414,6 +414,8 @@ styles =
     border-radius: 4px;
     padding: 0 12px;
     background-color: #eaeaea;
+    font-size: 0.8em;
+    line-height: 2em;
 }
 .elm-book-md img {
     max-width: 100%;

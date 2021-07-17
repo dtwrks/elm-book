@@ -7,9 +7,15 @@ module ElmBook.UI.Helpers exposing
     , setTheme
     , themeAccent
     , themeBackground
+    , themeNavAccent
+    , themeNavAccentHighlight
+    , themeNavAccentHighlightVar
+    , themeNavBackground
+    , themeNavBackgroundVar
     , wrapperMainBackground
     )
 
+import ElmBook.Internal.Theme as Theme exposing (ThemeOptions)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
@@ -28,25 +34,63 @@ themeAccentVar =
     "--elm-book-accent"
 
 
-setTheme : String -> String -> Attribute msg
-setTheme background accentColor_ =
+themeNavBackgroundVar : String
+themeNavBackgroundVar =
+    "--elm-book-nav-background"
+
+
+themeNavAccentVar : String
+themeNavAccentVar =
+    "--elm-book-nav-accent"
+
+
+themeNavAccentHighlightVar : String
+themeNavAccentHighlightVar =
+    "--elm-book-nav-accent-highlight"
+
+
+setTheme : ThemeOptions html -> Attribute msg
+setTheme theme =
     attribute "style"
-        ([ ( themeBackgroundVar, background )
-         , ( themeAccentVar, accentColor_ )
+        ([ ( themeBackgroundVar, Theme.background theme )
+         , ( themeAccentVar, Theme.accent theme )
+         , ( themeNavBackgroundVar, Theme.navBackground theme )
+         , ( themeNavAccentVar, Theme.navAccent theme )
+         , ( themeNavAccentHighlightVar, Theme.navAccentHighlight theme )
          ]
             |> List.map (\( k, v ) -> k ++ ":" ++ v ++ ";")
             |> String.concat
         )
 
 
+var_ : String -> String
+var_ v =
+    "var(" ++ v ++ ")"
+
+
 themeBackground : String
 themeBackground =
-    "var(" ++ themeBackgroundVar ++ ")"
+    var_ themeBackgroundVar
 
 
 themeAccent : String
 themeAccent =
-    "var(" ++ themeAccentVar ++ ")"
+    var_ themeAccentVar
+
+
+themeNavBackground : String
+themeNavBackground =
+    var_ themeNavBackgroundVar
+
+
+themeNavAccent : String
+themeNavAccent =
+    var_ themeNavAccentVar
+
+
+themeNavAccentHighlight : String
+themeNavAccentHighlight =
+    var_ themeNavAccentHighlightVar
 
 
 wrapperMainBackground : String

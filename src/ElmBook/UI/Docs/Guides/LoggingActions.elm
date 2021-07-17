@@ -2,7 +2,7 @@ module ElmBook.UI.Docs.Guides.LoggingActions exposing (..)
 
 import ElmBook.Actions exposing (logAction, logActionWithString)
 import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions)
-import ElmBook.Component
+import ElmBook.ComponentOptions
 import ElmBook.UI.Helpers exposing (css_)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -13,7 +13,7 @@ docs : Chapter x
 docs =
     chapter "Logging Actions"
         |> withComponentOptions
-            [ ElmBook.Component.hiddenLabel True ]
+            [ ElmBook.ComponentOptions.hiddenLabel True ]
         |> withComponentList
             [ ( "button"
               , div []

@@ -1,4 +1,7 @@
-module ElmBook.Component exposing (background, hiddenLabel, fullWidth, displayBlock, displayInline, displayCard)
+module ElmBook.ComponentOptions exposing
+    ( background, hiddenLabel, fullWidth, displayBlock, displayInline, displayCard
+    , Attribute
+    )
 
 {-| Attributes used by `ElmBook.withComponentOptions` and `ElmBook.Chapter.withComponentOptions`.
 
@@ -25,13 +28,19 @@ This is the API used for defining attributes on a component level (only works fo
 
 @docs background, hiddenLabel, fullWidth, displayBlock, displayInline, displayCard
 
+
+# Types
+
+@docs Attribute
+
 -}
 
 import ElmBook.Internal.Component exposing (ComponentOptions(..), Layout(..))
 
 
-type alias ComponentOptions =
-    ElmBook.Internal.Component.ComponentOptions
+{-| -}
+type alias Attribute =
+    ElmBook.Internal.Component.Attribute
 
 
 {-| Customize the background color of the card that wraps your components.
@@ -39,7 +48,7 @@ type alias ComponentOptions =
 Available as `with-background=<string>` on embbeded components.
 
 -}
-background : String -> ComponentOptions -> ComponentOptions
+background : String -> Attribute
 background background_ (ComponentOptions settings) =
     ComponentOptions { settings | background = Just background_ }
 
@@ -49,7 +58,7 @@ background background_ (ComponentOptions settings) =
 Available as `with-background=<"true" | "false">` on embbeded components
 
 -}
-hiddenLabel : Bool -> ComponentOptions -> ComponentOptions
+hiddenLabel : Bool -> Attribute
 hiddenLabel hiddenLabel_ (ComponentOptions settings) =
     ComponentOptions { settings | hiddenLabel = Just hiddenLabel_ }
 
@@ -59,7 +68,7 @@ hiddenLabel hiddenLabel_ (ComponentOptions settings) =
 Available as `with-full-width="true"` on embbeded components
 
 -}
-fullWidth : Bool -> ComponentOptions -> ComponentOptions
+fullWidth : Bool -> Attribute
 fullWidth fullWidth_ (ComponentOptions settings) =
     ComponentOptions { settings | fullWidth = Just fullWidth_ }
 
@@ -69,7 +78,7 @@ fullWidth fullWidth_ (ComponentOptions settings) =
 Available as `with-display="inline"` on embbeded components
 
 -}
-displayInline : ComponentOptions -> ComponentOptions
+displayInline : Attribute
 displayInline (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Inline }
 
@@ -79,7 +88,7 @@ displayInline (ComponentOptions settings) =
 Available as `with-display="block"` on embbeded components
 
 -}
-displayBlock : ComponentOptions -> ComponentOptions
+displayBlock : Attribute
 displayBlock (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Block }
 
@@ -89,6 +98,6 @@ displayBlock (ComponentOptions settings) =
 Available as `with-display="card"` on embbeded components
 
 -}
-displayCard : ComponentOptions -> ComponentOptions
+displayCard : Attribute
 displayCard (ComponentOptions settings) =
     ComponentOptions { settings | display = Just Card }

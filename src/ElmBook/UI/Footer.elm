@@ -27,7 +27,7 @@ styles =
 }
 
 .elm-book-footer--text {
-    padding-left: 8px;
+    padding-left: 12px;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.5px;

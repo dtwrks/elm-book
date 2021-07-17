@@ -81,7 +81,7 @@ styles =
 
 view :
     { href : String
-    , theme : ElmBook.Internal.Theme.Theme
+    , theme : ElmBook.Internal.Theme.ThemeOptions html
     , title : String
     , isMenuOpen : Bool
     , onClickHeader : msg
@@ -89,7 +89,8 @@ view :
     }
     -> Html msg
 view props =
-    header [ class "elm-book-header" ]
+    header
+        [ class "elm-book-header" ]
         [ a
             [ href props.href
             , class "elm-book-header--link"
@@ -112,10 +113,16 @@ view props =
             , onClick props.onClickMenuButton
             ]
             [ if props.isMenuOpen then
-                iconClose { size = 20, color = "#fff" }
+                iconClose
+                    { size = 20
+                    , color = themeAccent
+                    }
 
               else
-                iconMenu { size = 20, color = "#fff" }
+                iconMenu
+                    { size = 20
+                    , color = themeAccent
+                    }
             ]
         ]
 
@@ -123,7 +130,7 @@ view props =
 viewDefault :
     { href : String
     , title : String
-    , theme : ElmBook.Internal.Theme.Theme
+    , theme : ElmBook.Internal.Theme.ThemeOptions html
     }
     -> Html Never
 viewDefault props =
@@ -132,7 +139,7 @@ viewDefault props =
         [ ElmBook.Internal.Theme.logo props.theme
             |> Maybe.withDefault
                 (iconElm
-                    { size = 28
+                    { size = 24
                     , color = themeAccent
                     }
                 )

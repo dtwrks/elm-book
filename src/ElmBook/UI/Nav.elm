@@ -15,7 +15,6 @@ styles =
 .elm-book-nav-empty {
     padding: 12px 20px;
     font-size: 14px;
-    opacity: 0.6;
 }
 
 .elm-book-nav-list-wrapper {
@@ -96,22 +95,22 @@ view props =
         item ( url, label ) =
             li []
                 [ a
-                    [ classList
+                    [ href url
+                    , target_ url
+                    , classList
                         [ ( "elm-book-nav-item", True )
                         , ( "active", props.active == Just url )
                         , ( "pre-selected", props.preSelected == Just url )
                         ]
-                    , style "color" themeAccent
-                    , href url
                     , if props.active == Just url then
-                        style "opacity" "1"
+                        style "color" themeNavAccentHighlight
 
                       else
-                        style "opacity" "0.8"
+                        style "color" themeNavAccent
                     ]
                     [ div
                         [ class "elm-book-inset elm-book-nav-item-bg"
-                        , style "background-color" themeAccent
+                        , style "background-color" themeNavBackground
                         ]
                         []
                     , div [ class "elm-book-nav-item-content" ]
@@ -143,7 +142,7 @@ view props =
         [ if isEmpty then
             p
                 [ class "elm-book-nav-empty"
-                , style "color" themeAccent
+                , style "color" themeNavAccent
                 ]
                 [ text "No results" ]
 
@@ -151,3 +150,12 @@ view props =
             nav [ class "elm-book-nav" ]
                 (List.map list props.itemGroups)
         ]
+
+
+target_ : String -> Attribute msg
+target_ url =
+    if String.startsWith "/" url then
+        target "_self"
+
+    else
+        target "_blank"
