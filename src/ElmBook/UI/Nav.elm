@@ -155,7 +155,7 @@ view props =
 target_ : String -> Attribute msg
 target_ url =
     if String.startsWith "/" url then
-        target "_self"
+        class ""
 
     else
         target "_blank"

@@ -194,7 +194,6 @@ update msg model =
                     else
                         ( model
                         , Browser.Navigation.pushUrl model.navKey (Url.toString url)
-                            |> Debug.log "Pushing url"
                         )
 
         OnUrlChange url ->
@@ -349,14 +348,12 @@ update msg model =
                     Just chapter_ ->
                         if String.startsWith "/" (chapterUrl chapter_) then
                             ( model
-                            , Browser.Navigation.pushUrl model.navKey <|
-                                Debug.log "here" chapterUrl chapter_
+                            , Browser.Navigation.pushUrl model.navKey (chapterUrl chapter_)
                             )
 
                         else
                             ( model
                             , Browser.Navigation.load (chapterUrl chapter_)
-                                |> Debug.log "here 2"
                             )
 
                     Nothing ->

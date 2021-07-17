@@ -13,6 +13,8 @@ module ElmBook.Actions exposing
 
 Take a look at the ["Logging Actions"](https://elm-book-in-elm-book.netlify.app/guides/logging-actions) guide for some examples.
 
+**Tip** If you want to test anchor elements without actually changing the current url, just pass in an url like `/logAction/some-url`. Your book will intercept any url change starting with `/logAction` and will log the action intent.
+
 @docs logAction, logActionWithString, logActionWithInt, logActionWithFloat, logActionWith
 
 
