@@ -16,7 +16,7 @@ module UI.Button exposing (view, docs)
 
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponents)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -47,7 +47,7 @@ docs =
             }
     in
     chapter "Buttons"
-        |> renderComponents
+        |> renderComponentList
             [ ( "Default", view props )
             , ( "Disabled", view { props | disabled = True } )
             ]
@@ -60,7 +60,7 @@ docs =
 
 ## Markdown and embedded components
 
-I dare you to name one single thing that does not become more interesting with some added markdown. Yeah, you can't! …right?
+I dare you to name one single thing that doesn't get more interesting with some markdown sprinkled on it. Yeah, you can't! …right?
 
 So lets add some markdown to our chapter and directly embed our components in it!
 
@@ -70,7 +70,7 @@ module UI.Button exposing (view, docs)
 
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponents)
+import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)

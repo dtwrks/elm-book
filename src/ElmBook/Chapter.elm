@@ -17,7 +17,7 @@ Lets start by creating a chapter that displays different variants of a Button co
     module UI.Button exposing (docs, view)
 
     import ElmBook.Actions exposing (logAction)
-    import ElmBook.Chapter exposing (Chapter, chapter, renderComponents)
+    import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
     import Html exposing (..)
     import Html.Attributes exposing (..)
     import Html.Events exposing (onClick)
@@ -46,7 +46,7 @@ Lets start by creating a chapter that displays different variants of a Button co
                 }
         in
         chapter "Buttons"
-            |> renderComponents
+            |> renderComponentList
                 [ ( "Default", view props )
                 , ( "Disabled", view { props | disabled = True } )
                 ]
@@ -307,7 +307,7 @@ renderWithComponentList body (ChapterBuilder builder) =
         |> withChapterOptions
             [ ElmBook.Chapter.hiddenTitle True
             ]
-        |> renderComponents
+        |> renderComponentList
             [ ( "Default", view props )
             , ( "Disabled", view { props | disabled = True } )
             ]
@@ -334,7 +334,7 @@ withChapterOptions attributes (ChapterBuilder builder) =
             [ ElmBook.Component.background "yellow"
             , ElmBook.Component.hiddenLabel True
             ]
-        |> renderComponents
+        |> renderComponentList
             [ ( "Default", view props )
             , ( "Disabled", view { props | disabled = True } )
             ]

@@ -447,14 +447,17 @@ styles =
 .elm-book-md code {
     display: inline-block;
     border-radius: 4px;
-    padding: 0 12px;
-    background-color: #eaeaea;
+    padding: 0 8px;
+    background-color: #f0f0f0;
+    border: 1px solid #eaeaea;
+    color: #4a4a4a;
     font-size: 0.8em;
-    line-height: 2em;
+    line-height: 1.8em;
 }
 .elm-book-dark-mode .elm-book-md code {
     background-color: #333;
     border: 1px solid #444;
+    color: #bababa;
 }
 
 

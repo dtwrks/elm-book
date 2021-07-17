@@ -11,7 +11,7 @@ docs =
         |> render """
 Every application, tool or team has their own history worth telling.
 
-ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI components**, **design tokens**, or anything else really.
+ElmBook tries to help them by making it easy to create rich documents that showcase their **libraries documentations**, **UI components**, **design tokens**, or anything else their creativity comes up with.
 
 ---
 
@@ -93,12 +93,10 @@ What if the Elm ecosystem can create it's own thing with the best of both worlds
 
 ## Roadmap
 
-This tool can already be used as-is for great effect.
-Can we add plugins? Sure. Darkmode? Definitely.
+There are two main possibilities I want to explore some time soon:
 
-The most interesting thing that is currently sitting on the back of my head though is automatically creating ElmBooks based on doc comments, the same that are used to generate docs on elm-packages.
-
-This would enable any/all published elm packages to automatically have their own ElmBook with example codes turning into live components. This is both more simple that it sounds and more complex than it could be. I don't expect it to happen in the next few weeks but it's definitely possible.
+- **Generating ElmBooks based on doc comments** – the same that are used to generate docs on elm-packages. This could allow published elm packages to automatically have their own ElmBook with example codes turning into live components and no code duplication.
+- **Generating ElmBooks through a custom CLI** – this package will always be "elm-only" so it can fit everyone's custom setup and be hosted on elm-packages but I want to create a companion CLI that would enable fancier stuff like merging `.md` files and pulling stuff out of doc comments. Whatever enables the best developer experience.
 
 ---
 

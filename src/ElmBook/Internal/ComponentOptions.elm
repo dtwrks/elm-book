@@ -3,7 +3,7 @@ module ElmBook.Internal.ComponentOptions exposing (..)
 
 type alias ValidComponentOptions =
     { hiddenLabel : Bool
-    , background : Maybe String
+    , background : String
     , display : Layout
     , fullWidth : Bool
     }
@@ -31,7 +31,7 @@ type alias Attribute =
 defaultOptions : ValidComponentOptions
 defaultOptions =
     { hiddenLabel = False
-    , background = Nothing
+    , background = ""
     , display = Card
     , fullWidth = False
     }
@@ -72,7 +72,9 @@ toValidOptions validSettings (ComponentOptions settings) =
     { hiddenLabel =
         settings.hiddenLabel
             |> Maybe.withDefault validSettings.hiddenLabel
-    , background = settings.background
+    , background =
+        settings.background
+            |> Maybe.withDefault validSettings.background
     , display =
         settings.display
             |> Maybe.withDefault validSettings.display

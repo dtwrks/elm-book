@@ -115,11 +115,30 @@ I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't
                 , ElmBook.ThemeOptions.accent "white"
                 ]
             |> withChapters [] 
+---
+
+## Dark Mode
+
+Are you goth? Do you like the dark arts? Then tell your book so and it will always start already in dark mode:
+
+    main : Book x
+    main =
+        book "Goth Book"
+            |> withThemeOptions
+                [ ElmBook.ThemeOptions.darkMode
+                ]
+            |> withChapters [] 
+
+Don't worry… the light-theme losers can turn it off quite easily.
 
 ---
 
 ## Roadmap
 
-There is a plan to also enable custom fonts soon. Other than that, I believe changes will be less customizable and will focus more on a better UX for all ElmBooks. Things like ready-to-be-used components like Placeholders, Design Tokens Catalogue, etc, should be handled on separate packages.
+The state of our dark mode setup right now its not that great. It's more like a book thing than a "per user" setting since we can't persist what the user selected using pure elm.
+
+There is a plan to also enable custom fonts soon. Other than that, I believe changes will be less customizable and will focus more on a better UX for all ElmBooks.
+
+Things like ready-to-be-used components like Placeholders, Design Tokens Catalogue, etc, should be handled by separate packages.
 
 """)

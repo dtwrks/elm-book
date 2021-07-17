@@ -74,9 +74,7 @@ viewCard options_ ( label, html ) =
         [ viewLabel options_ label
         , div
             [ class "elm-book__chapter-component__background elm-book-shadows-light"
-            , options_.background
-                |> Maybe.map (style "background")
-                |> Maybe.withDefault (class "")
+            , style "background" options_.background
             ]
             [ div
                 [ class "elm-book__chapter-component__content" ]
