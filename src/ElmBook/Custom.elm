@@ -32,10 +32,10 @@ After that you would only need to use this custom `book` function and `Book` typ
 import ElmBook.Internal.Application exposing (BookApplication)
 import ElmBook.Internal.Book exposing (BookBuilder(..))
 import ElmBook.Internal.Chapter
-import ElmBook.Internal.Component
+import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.Internal.StatefulOptions
-import ElmBook.Internal.Theme
+import ElmBook.Internal.ThemeOptions
 import Html exposing (Html)
 
 
@@ -65,8 +65,8 @@ customBook toHtml title =
     BookBuilder
         { title = title
         , toHtml = toHtml
-        , themeOptions = ElmBook.Internal.Theme.defaultTheme
+        , themeOptions = ElmBook.Internal.ThemeOptions.defaultTheme
         , statefulOptions = ElmBook.Internal.StatefulOptions.defaultOptions
         , chapterOptions = ElmBook.Internal.Chapter.defaultOptions
-        , componentOptions = ElmBook.Internal.Component.defaultOptions
+        , componentOptions = ElmBook.Internal.ComponentOptions.defaultOptions
         }

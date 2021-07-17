@@ -44,11 +44,11 @@ import ElmBook.Custom exposing (BookBuilder)
 import ElmBook.Internal.Application exposing (BookApplication)
 import ElmBook.Internal.Book exposing (BookBuilder(..))
 import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
-import ElmBook.Internal.Component
+import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Helpers exposing (applyAttributes)
 import ElmBook.Internal.Msg
 import ElmBook.Internal.StatefulOptions
-import ElmBook.Internal.Theme
+import ElmBook.Internal.ThemeOptions
 import ElmBook.StatefulOptions
 import ElmBook.ThemeOptions
 import Html exposing (Html)
@@ -199,13 +199,13 @@ Please note that component options are "inherited". So you can override these op
             |> withChapters [ ... ]
 
 -}
-withComponentOptions : List ElmBook.Internal.Component.Attribute -> BookBuilder state html -> BookBuilder state html
+withComponentOptions : List ElmBook.Internal.ComponentOptions.Attribute -> BookBuilder state html -> BookBuilder state html
 withComponentOptions componentAttributes (BookBuilder config) =
     BookBuilder
         { config
             | componentOptions =
-                applyAttributes componentAttributes ElmBook.Internal.Component.defaultOverrides
-                    |> ElmBook.Internal.Component.toValidOptions config.componentOptions
+                applyAttributes componentAttributes ElmBook.Internal.ComponentOptions.defaultOverrides
+                    |> ElmBook.Internal.ComponentOptions.toValidOptions config.componentOptions
         }
 
 

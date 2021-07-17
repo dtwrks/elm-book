@@ -4,7 +4,7 @@ module ElmBook.UI.Chapter exposing
     )
 
 import ElmBook.Internal.Chapter
-import ElmBook.Internal.Component
+import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.UI.Helpers exposing (..)
 import ElmBook.UI.Markdown
@@ -15,7 +15,7 @@ import Html.Attributes exposing (..)
 type alias Props state =
     { title : String
     , chapterOptions : ElmBook.Internal.Chapter.ValidChapterOptions
-    , componentOptions : ElmBook.Internal.Component.ValidComponentOptions
+    , componentOptions : ElmBook.Internal.ComponentOptions.ValidComponentOptions
     , body : String
     , components : List ( String, Html.Html (Msg state) )
     }

@@ -16,7 +16,7 @@ module ElmBook.Internal.Chapter exposing
     , toValidOptions
     )
 
-import ElmBook.Internal.Component exposing (ComponentOptions)
+import ElmBook.Internal.ComponentOptions exposing (ComponentOptions)
 import ElmBook.Internal.Helpers exposing (toSlug)
 
 

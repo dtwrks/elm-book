@@ -1,6 +1,5 @@
 module ElmBook.UI.Helpers exposing
     ( baseStyles
-    , chapterSectionBackground
     , css_
     , mediaLargeScreen
     , mediaMobile
@@ -9,13 +8,10 @@ module ElmBook.UI.Helpers exposing
     , themeBackground
     , themeNavAccent
     , themeNavAccentHighlight
-    , themeNavAccentHighlightVar
     , themeNavBackground
-    , themeNavBackgroundVar
-    , wrapperMainBackground
     )
 
-import ElmBook.Internal.Theme as Theme exposing (ThemeOptions)
+import ElmBook.Internal.ThemeOptions as Theme exposing (ThemeOptions)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
@@ -91,16 +87,6 @@ themeNavAccent =
 themeNavAccentHighlight : String
 themeNavAccentHighlight =
     var_ themeNavAccentHighlightVar
-
-
-wrapperMainBackground : String
-wrapperMainBackground =
-    "#fbfbfd"
-
-
-chapterSectionBackground : String
-chapterSectionBackground =
-    "#fff"
 
 
 

@@ -10,11 +10,12 @@ import Browser
 import Browser.Dom
 import Browser.Events exposing (onKeyDown, onKeyUp)
 import Browser.Navigation
+import ElmBook.Chapter exposing (chapter)
 import ElmBook.Internal.Book exposing (BookBuilder(..), ElmBookConfig)
 import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
-import ElmBook.Internal.Component
+import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
-import ElmBook.Internal.Theme exposing (navBackground)
+import ElmBook.Internal.ThemeOptions exposing (navBackground)
 import ElmBook.ThemeOptions
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
@@ -43,6 +44,7 @@ type alias Model state html =
     , chaptersSearched : Array (ChapterCustom state html)
     , chapterActive : Maybe (ChapterCustom state html)
     , chapterPreSelected : Int
+    , toggleDarkMode : Bool
     , search : String
     , isSearching : Bool
     , isShiftPressed : Bool
@@ -142,6 +144,7 @@ init props _ url navKey =
       , chaptersSearched = chapters
       , chapterActive = activeChapter
       , chapterPreSelected = 0
+      , toggleDarkMode = False
       , search = ""
       , isSearching = False
       , isShiftPressed = False
@@ -224,6 +227,11 @@ update msg model =
                         Nothing ->
                             Browser.Navigation.replaceUrl model.navKey "/"
                     )
+
+        ToggleDarkMode ->
+            ( { model | toggleDarkMode = not model.toggleDarkMode }
+            , Cmd.none
+            )
 
         UpdateState fn ->
             model.config.statefulOptions.state
@@ -436,7 +444,7 @@ view model =
     { title =
         let
             mainTitle =
-                ElmBook.Internal.Theme.subtitle model.config.themeOptions
+                ElmBook.Internal.ThemeOptions.subtitle model.config.themeOptions
                     |> Maybe.map (\s -> model.config.title ++ " | " ++ s)
                     |> Maybe.withDefault model.config.title
         in
@@ -450,6 +458,16 @@ view model =
         [ ElmBook.UI.Styles.view
         , ElmBook.UI.Wrapper.view
             { theme = model.config.themeOptions
+            , darkMode =
+                case ( model.config.themeOptions.preferDarkMode, model.toggleDarkMode ) of
+                    ( True, False ) ->
+                        True
+
+                    ( False, True ) ->
+                        True
+
+                    _ ->
+                        False
             , isMenuOpen = model.isMenuOpen
             , globals =
                 model.config.themeOptions.globals
@@ -500,7 +518,13 @@ view model =
             , menuFooter = ElmBook.UI.Footer.view
             , mainHeader =
                 model.chapterActive
-                    |> Maybe.map (ElmBook.UI.ChapterHeader.view << chapterBreadcrumb)
+                    |> Maybe.map
+                        (\chapter ->
+                            ElmBook.UI.ChapterHeader.view
+                                { title = chapterBreadcrumb chapter
+                                , onToggleDarkMode = ToggleDarkMode
+                                }
+                        )
             , main =
                 model.chapterActive
                     |> Maybe.map
@@ -513,7 +537,7 @@ view model =
                                             model.config.chapterOptions
                                 , componentOptions =
                                     activeChapter_.componentOptions
-                                        |> ElmBook.Internal.Component.toValidOptions
+                                        |> ElmBook.Internal.ComponentOptions.toValidOptions
                                             model.config.componentOptions
                                 , body = activeChapter_.body
                                 , components =

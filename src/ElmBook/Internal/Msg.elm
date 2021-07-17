@@ -11,6 +11,7 @@ type Msg state
     | UpdateState (state -> state)
     | UpdateStateWithCmd (state -> ( state, Cmd (Msg state) ))
     | LogAction String String
+    | ToggleDarkMode
     | ActionLogShow
     | ActionLogHide
     | SearchFocus

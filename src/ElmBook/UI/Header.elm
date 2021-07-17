@@ -3,7 +3,7 @@ module ElmBook.UI.Header exposing
     , view
     )
 
-import ElmBook.Internal.Theme
+import ElmBook.Internal.ThemeOptions
 import ElmBook.UI.Helpers exposing (..)
 import ElmBook.UI.Icons exposing (..)
 import Html exposing (..)
@@ -81,7 +81,7 @@ styles =
 
 view :
     { href : String
-    , theme : ElmBook.Internal.Theme.ThemeOptions html
+    , theme : ElmBook.Internal.ThemeOptions.ThemeOptions html
     , title : String
     , isMenuOpen : Bool
     , onClickHeader : msg
@@ -97,7 +97,7 @@ view props =
             , style "color" themeAccent
             ]
             [ h1 [ class "elm-book" ]
-                [ ElmBook.Internal.Theme.header props.theme
+                [ ElmBook.Internal.ThemeOptions.header props.theme
                     |> Maybe.withDefault
                         (viewDefault
                             { href = props.href
@@ -130,13 +130,13 @@ view props =
 viewDefault :
     { href : String
     , title : String
-    , theme : ElmBook.Internal.Theme.ThemeOptions html
+    , theme : ElmBook.Internal.ThemeOptions.ThemeOptions html
     }
     -> Html Never
 viewDefault props =
     span
         [ class "elm-book-sans elm-book-header-default" ]
-        [ ElmBook.Internal.Theme.logo props.theme
+        [ ElmBook.Internal.ThemeOptions.logo props.theme
             |> Maybe.withDefault
                 (iconElm
                     { size = 24
@@ -147,7 +147,7 @@ viewDefault props =
             [ span
                 [ class "elm-book-header-default--title" ]
                 [ text props.title ]
-            , ElmBook.Internal.Theme.subtitle props.theme
+            , ElmBook.Internal.ThemeOptions.subtitle props.theme
                 |> Maybe.map
                     (\subtitle ->
                         span

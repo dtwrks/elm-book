@@ -3,7 +3,7 @@ module ElmBook.UI.Wrapper exposing
     , view
     )
 
-import ElmBook.Internal.Theme
+import ElmBook.Internal.ThemeOptions
 import ElmBook.UI.Helpers exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -11,7 +11,8 @@ import Html.Events exposing (..)
 
 
 view :
-    { theme : ElmBook.Internal.Theme.ThemeOptions html
+    { theme : ElmBook.Internal.ThemeOptions.ThemeOptions html
+    , darkMode : Bool
     , globals : List (Html msg)
     , header : Html msg
     , menu : Html msg
@@ -26,7 +27,14 @@ view :
     }
     -> Html msg
 view props =
-    div [ setTheme props.theme ]
+    div
+        [ setTheme props.theme
+        , if props.darkMode then
+            class "elm-book-dark-mode"
+
+          else
+            class ""
+        ]
         [ div [ class "elm-book--wrapper--globals" ] props.globals
         , div
             [ classList
@@ -223,13 +231,19 @@ styles =
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    background-color: """ ++ wrapperMainBackground ++ """;
+    background-color: #fbfbfd;
     border-radius: 4px 4px 0 0;
     overflow: hidden;
+}
+.elm-book-dark-mode .elm-book--wrapper--main--wrapper {
+    background-color: #20232a;
 }
 
 .elm-book--wrapper--main--header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.elm-book-dark-mode .elm-book--wrapper--main--header {
+    border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 .elm-book--wrapper--main--content {
@@ -244,6 +258,9 @@ styles =
 .elm-book--wrapper--main--footer {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
+.elm-book-dark-mode .elm-book--wrapper--main--footer {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}
 
 .elm-book--wrapper--modal {
     display: flex;
@@ -255,11 +272,11 @@ styles =
 .elm-book--wrapper--modal--bg {
     z-index: 0;
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.3);
     transition: background-color 300ms;
 }
 .elm-book--wrapper--modal--bg:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .elm-book--wrapper--modal--content {
@@ -272,5 +289,8 @@ styles =
     overflow-y: auto;
     background-color: #fff;
     border-radius: 8px;
+}
+.elm-book-dark-mode .elm-book--wrapper--modal--content {
+    background-color: #20232a;
 }
 """

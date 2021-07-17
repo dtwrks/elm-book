@@ -2,7 +2,7 @@ module ElmBook.UI.ElmBook exposing (..)
 
 import ElmBook exposing (Book, book, withChapterGroups, withStatefulOptions, withThemeOptions)
 import ElmBook.Chapter
-import ElmBook.Internal.Theme
+import ElmBook.Internal.ThemeOptions
 import ElmBook.StatefulOptions
 import ElmBook.ThemeOptions
 import ElmBook.UI.Docs.ActionLog
@@ -36,12 +36,12 @@ type alias SharedState =
 initialState : SharedState
 initialState =
     { theming =
-        { backgroundStart = ElmBook.Internal.Theme.defaultBackgroundStart
-        , backgroundEnd = ElmBook.Internal.Theme.defaultBackgroundEnd
-        , accent = ElmBook.Internal.Theme.defaultAccent
-        , navBackground = ElmBook.Internal.Theme.defaultNavBackground
-        , navAccent = ElmBook.Internal.Theme.defaultNavAccent
-        , navAccentHighlight = ElmBook.Internal.Theme.defaultNavAccentHighlight
+        { backgroundStart = ElmBook.Internal.ThemeOptions.defaultBackgroundStart
+        , backgroundEnd = ElmBook.Internal.ThemeOptions.defaultBackgroundEnd
+        , accent = ElmBook.Internal.ThemeOptions.defaultAccent
+        , navBackground = ElmBook.Internal.ThemeOptions.defaultNavBackground
+        , navAccent = ElmBook.Internal.ThemeOptions.defaultNavAccent
+        , navAccentHighlight = ElmBook.Internal.ThemeOptions.defaultNavAccentHighlight
         }
     }
 

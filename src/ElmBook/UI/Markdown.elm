@@ -4,7 +4,7 @@ module ElmBook.UI.Markdown exposing
     )
 
 import Dict
-import ElmBook.Internal.Component exposing (Layout(..))
+import ElmBook.Internal.ComponentOptions exposing (Layout(..))
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.UI.ChapterComponent
 import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen, mediaMobile)
@@ -17,7 +17,7 @@ import Markdown.Renderer
 import SyntaxHighlight
 
 
-view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> String -> Html (Msg state)
+view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state)
 view chapterTitle chapterComponents componentOptions =
     Markdown.Parser.parse
         >> Result.withDefault []
@@ -36,7 +36,7 @@ view chapterTitle chapterComponents componentOptions =
            )
 
 
-componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.Component.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
+componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
 componentRenderer chapterTitle chapterComponents componentOptions =
     { defaultRenderer
         | html =
@@ -45,7 +45,7 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                     (\labelFilter hiddenLabel_ background_ display_ fullWidth_ _ ->
                         let
                             options_ =
-                                ElmBook.Internal.Component.markdownOptions
+                                ElmBook.Internal.ComponentOptions.markdownOptions
                                     componentOptions
                                     { hiddenLabel = hiddenLabel_
                                     , display = display_
@@ -96,7 +96,7 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                     (\labelFilter hiddenLabel_ background_ display_ fullWidth_ _ ->
                         let
                             options_ =
-                                ElmBook.Internal.Component.markdownOptions
+                                ElmBook.Internal.ComponentOptions.markdownOptions
                                     componentOptions
                                     { hiddenLabel = hiddenLabel_
                                     , display = display_
@@ -336,6 +336,11 @@ styles =
     padding-bottom: 36px;
     color: rgb(41,41,41);
 }
+
+.elm-book-dark-mode .elm-book-md {
+    color: rgb(180, 180, 180);    
+}
+
 .elm-book-md * {
     margin: 0;
     padding: 0;
@@ -395,6 +400,15 @@ styles =
     padding-top: 24px;
 }
 
+.elm-book-dark-mode .elm-book-md h1,
+.elm-book-dark-mode .elm-book-md h2,
+.elm-book-dark-mode .elm-book-md h3,
+.elm-book-dark-mode .elm-book-md h4,
+.elm-book-dark-mode .elm-book-md h5,
+.elm-book-dark-mode .elm-book-md h6 {
+    color: #dadada;
+}
+
 """ ++ mediaMobile ++ """ {
     .elm-book-md h1 {
         font-size: 40px;
@@ -407,6 +421,11 @@ styles =
     color: rgb(80, 80, 90);
     font-size: 20px;
 }
+""" ++ mediaMobile ++ """ {
+    .elm-book-md__default {
+        font-size: 18px;
+    }
+}
 
 .elm-book-md a {
     color: #000;
@@ -414,6 +433,9 @@ styles =
 }
 .elm-book-md a:hover {
     opacity: 0.8;   
+}
+.elm-book-dark-mode .elm-book-md a {
+    color: #f0f0f0;
 }
 
 .elm-book-md blockquote {
@@ -430,6 +452,12 @@ styles =
     font-size: 0.8em;
     line-height: 2em;
 }
+.elm-book-dark-mode .elm-book-md code {
+    background-color: #333;
+    border: 1px solid #444;
+}
+
+
 .elm-book-md img {
     max-width: 100%;
 }
@@ -444,6 +472,9 @@ styles =
     border: none;
     height: 2px;
     background-color: #f0f0f0;
+}
+.elm-book-dark-mode .elm-book-md hr {
+    background-color: #3b3f47;
 }
 
 .elm-book-md table {
@@ -472,17 +503,34 @@ styles =
     border-right: none;
 }
 
+.elm-book-dark-mode .elm-book-md table,
+.elm-book-dark-mode .elm-book-md tr,
+.elm-book-dark-mode .elm-book-md th,
+.elm-book-dark-mode .elm-book-md td {
+    border-color: #3b3f47;
+}
+
 .elm-book-md__code,
-.elm-book-md__code code {
+.elm-book-md__code code,
+.elm-book-dark-mode .elm-book-md__code,
+.elm-book-dark-mode .elm-book-md__code code {
     font-size: 18px;
     line-height: 22px;
     padding: 20px 24px;
     background-color: #2a354d;
     border-radius: 6px;
+    border: none;
     overflow: auto;
 }
-.elm-book-md__code-default {
+.elm-book-md__code-default {}
 
+""" ++ mediaMobile ++ """ {
+    .elm-book-md__code,
+    .elm-book-md__code code,
+    .elm-book-dark-mode .elm-book-md__code,
+    .elm-book-dark-mode .elm-book-md__code code {
+        font-size: 16px;
+    }
 }
 
 .elm-book-md pre.elmsh {
@@ -507,7 +555,7 @@ styles =
     background: #380000;
 }
 .elm-book-md .elmsh-comm {
-    color: #75715e;
+    color: #a4a39c;
 }
 .elm-book-md .elmsh1 {
     color: #46f0ff;

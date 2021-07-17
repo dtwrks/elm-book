@@ -1,4 +1,4 @@
-module ElmBook.Internal.Theme exposing
+module ElmBook.Internal.ThemeOptions exposing
     ( ThemeOptions
     , accent
     , background
@@ -25,6 +25,7 @@ import Html exposing (Html)
 
 type alias ThemeOptions html =
     { globals : Maybe (List html)
+    , preferDarkMode : Bool
     , header : Maybe (Html Never)
     , logo : Maybe (Html Never)
     , subtitle : Maybe String
@@ -72,6 +73,7 @@ defaultNavAccentHighlight =
 defaultTheme : ThemeOptions html
 defaultTheme =
     { globals = Nothing
+    , preferDarkMode = False
     , header = Nothing
     , logo = Nothing
     , subtitle = Nothing

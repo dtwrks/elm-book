@@ -3,7 +3,7 @@ module ElmBook.UI.ChapterComponent exposing
     , view
     )
 
-import ElmBook.Internal.Component exposing (Layout(..), ValidComponentOptions)
+import ElmBook.Internal.ComponentOptions exposing (Layout(..), ValidComponentOptions)
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.UI.Helpers exposing (css_)
 import Html exposing (..)
@@ -23,7 +23,12 @@ styles =
 .elm-book__chapter-component__background {
     padding: 12px;
     border-radius: 4px;
+    background-color: #fff;
 }
+.elm-book-dark-mode .elm-book__chapter-component__background {
+    background-color: #3b3f47;
+}
+
 .elm-book__chapter-component__content {
     border: 1px dashed transparent;
     position: relative;
@@ -69,7 +74,9 @@ viewCard options_ ( label, html ) =
         [ viewLabel options_ label
         , div
             [ class "elm-book__chapter-component__background elm-book-shadows-light"
-            , style "background" options_.background
+            , options_.background
+                |> Maybe.map (style "background")
+                |> Maybe.withDefault (class "")
             ]
             [ div
                 [ class "elm-book__chapter-component__content" ]

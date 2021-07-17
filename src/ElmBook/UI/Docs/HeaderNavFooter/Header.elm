@@ -2,7 +2,7 @@ module ElmBook.UI.Docs.HeaderNavFooter.Header exposing (docs)
 
 import ElmBook
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Internal.Theme exposing (defaultTheme)
+import ElmBook.Internal.ThemeOptions exposing (defaultTheme)
 import ElmBook.ThemeOptions
 import ElmBook.UI.Header exposing (view)
 import ElmBook.UI.Icons exposing (iconElm)

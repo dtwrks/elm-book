@@ -2,7 +2,7 @@ module ElmBook.UI.Docs.Wrapper exposing (..)
 
 import ElmBook.Actions exposing (logAction)
 import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponentList, withComponentList)
-import ElmBook.Internal.Theme exposing (defaultTheme)
+import ElmBook.Internal.ThemeOptions exposing (defaultTheme)
 import ElmBook.UI.Wrapper exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -13,6 +13,7 @@ docs =
     let
         props =
             { theme = defaultTheme
+            , darkMode = False
             , globals = []
             , isMenuOpen = False
             , header = placeholder True

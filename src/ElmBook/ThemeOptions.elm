@@ -3,6 +3,7 @@ module ElmBook.ThemeOptions exposing
     , background, backgroundGradient, accent, navBackground, navAccent, navAccentHighlight
     , globals
     , ThemeOption
+    , preferDarkMode
     )
 
 {-| Use the attributes provided by this module to customize your book through `ElmBook.withThemeOptions`.
@@ -31,7 +32,7 @@ Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/t
 
 -}
 
-import ElmBook.Internal.Theme exposing (ThemeOptions)
+import ElmBook.Internal.ThemeOptions exposing (ThemeOptions)
 import Html exposing (Html)
 
 
@@ -59,6 +60,13 @@ subtitle subtitle_ theme =
 header : Html Never -> ThemeOption html
 header header_ theme =
     { theme | header = Just header_ }
+
+
+{-| Makes your book always start as dark mode.
+-}
+preferDarkMode : ThemeOption html
+preferDarkMode theme =
+    { theme | preferDarkMode = True }
 
 
 {-| Customize the background color of your book. Any valid value for the `background` CSS property will work.

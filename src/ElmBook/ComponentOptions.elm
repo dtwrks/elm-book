@@ -35,12 +35,12 @@ This is the API used for defining attributes on a component level (only works fo
 
 -}
 
-import ElmBook.Internal.Component exposing (ComponentOptions(..), Layout(..))
+import ElmBook.Internal.ComponentOptions exposing (ComponentOptions(..), Layout(..))
 
 
 {-| -}
 type alias Attribute =
-    ElmBook.Internal.Component.Attribute
+    ElmBook.Internal.ComponentOptions.Attribute
 
 
 {-| Customize the background color of the card that wraps your components.

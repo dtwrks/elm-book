@@ -80,7 +80,7 @@ Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.ap
 
 import ElmBook.ChapterOptions
 import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..), ChapterOptions(..))
-import ElmBook.Internal.Component
+import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
 import ElmBook.Internal.Msg exposing (Msg)
 import Html exposing (Html)
@@ -102,7 +102,7 @@ chapter title =
         , url = "/" ++ toSlug title
         , body = ""
         , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
-        , componentOptions = ElmBook.Internal.Component.defaultOverrides
+        , componentOptions = ElmBook.Internal.ComponentOptions.defaultOverrides
         , componentList = []
         }
 
@@ -120,7 +120,7 @@ chapterLink props =
         , url = props.url
         , body = ""
         , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
-        , componentOptions = ElmBook.Internal.Component.defaultOverrides
+        , componentOptions = ElmBook.Internal.ComponentOptions.defaultOverrides
         , componentList = []
         }
 
@@ -343,7 +343,7 @@ Please note that component options are "inherited". So your components will inhe
 
 -}
 withComponentOptions :
-    List ElmBook.Internal.Component.Attribute
+    List ElmBook.Internal.ComponentOptions.Attribute
     -> ChapterBuilder state html
     -> ChapterBuilder state html
 withComponentOptions attributes (ChapterBuilder config) =

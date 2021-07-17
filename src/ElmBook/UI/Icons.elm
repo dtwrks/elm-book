@@ -104,3 +104,22 @@ iconClose props =
             ]
             []
         ]
+
+
+iconDarkMode : IconProps -> Html msg
+iconDarkMode props =
+    svg
+        [ Svg.Attributes.width <| String.fromInt props.size
+        , Svg.Attributes.height <| String.fromInt props.size
+        , Svg.Attributes.viewBox "0 0 24 24"
+        , Svg.Attributes.fill "none"
+        , Svg.Attributes.stroke props.color
+        , Svg.Attributes.strokeWidth "2"
+        , Svg.Attributes.strokeLinecap "round"
+        , Svg.Attributes.strokeLinejoin "round"
+        ]
+        [ path
+            [ Svg.Attributes.d "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+            ]
+            []
+        ]

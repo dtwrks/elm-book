@@ -4,10 +4,10 @@ module ElmBook.Internal.Book exposing
     )
 
 import ElmBook.Internal.Chapter exposing (ValidChapterOptions)
-import ElmBook.Internal.Component exposing (ValidComponentOptions)
+import ElmBook.Internal.ComponentOptions exposing (ValidComponentOptions)
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.StatefulOptions exposing (StatefulOptions)
-import ElmBook.Internal.Theme exposing (ThemeOptions)
+import ElmBook.Internal.ThemeOptions exposing (ThemeOptions)
 import Html exposing (Html)
 
 

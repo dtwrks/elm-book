@@ -59,7 +59,7 @@ styles =
 }
 #elm-book-search::placeholder {
     border-radius: 4px;
-    color: """ ++ themeAccent ++ """;
+    color: """ ++ themeNavAccent ++ """;
     opacity: 0.7;
 }
 

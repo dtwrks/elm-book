@@ -112,6 +112,10 @@ styles =
     border-radius: 4px;
 }
 
+.elm-book-dark-mode .elm-book-action-log-preview-empty {
+    background-color: #2f3238;
+}
+
 .elm-book-action-log-list-wrapper {
     position: relative;
     padding-top: 34px;
@@ -126,6 +130,8 @@ styles =
     height: 34px;
     padding: 0 20px;
     font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
     color: #fff;
 }
 .elm-book-action-log-list {
@@ -136,6 +142,9 @@ styles =
 .elm-book-action-log-list-item {
     border-top: 1px solid #e0e0e0;
 }
+.elm-book-dark-mode .elm-book-action-log-list-item {
+    border-top-color: #3b3f47;
+}
 
 .elm-book-action-log-item-wrapper {
     display: flex;
@@ -144,6 +153,10 @@ styles =
     font-size: 14px;
     background-color: #f5f5f5;
 }
+.elm-book-dark-mode .elm-book-action-log-item-wrapper {
+    background-color: #2f3238;
+}
+
 .elm-book-action-log-item-index {
     width: 60px;
     text-align: center;
@@ -163,5 +176,8 @@ styles =
     color: #404040;
     font-size: 13px;
     font-weight: bold;
+}
+.elm-book-dark-mode .elm-book-action-log-item-label {
+    color: #f5f5f5;
 }
 """

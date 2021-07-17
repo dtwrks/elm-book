@@ -4,7 +4,7 @@ import ElmBook.Actions exposing (logAction)
 import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
 import ElmBook.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
-import ElmBook.Internal.Theme exposing (defaultTheme)
+import ElmBook.Internal.ThemeOptions exposing (defaultTheme)
 import ElmBook.ThemeOptions
 import ElmBook.UI.Header
 import ElmBook.UI.Helpers exposing (themeBackground)
@@ -105,10 +105,7 @@ myCustomHeader =
 
 I mean… we all love Elm's light blue but maybe it doesn't fit your book. Don't fret, you can customize a lot of what you're seeing.
 
-<component
-    with-label="Theme Builder"
-    with-display="block"
-    />
+<component with-label="Theme Builder" />
 
     main : Book x
     main =
