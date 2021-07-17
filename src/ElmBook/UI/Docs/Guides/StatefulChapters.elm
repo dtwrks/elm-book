@@ -64,15 +64,15 @@ import InputChapter
 
 
 type alias Model =
-    { inputChapter : InputChapter.Model
-    , counterChapter : CounterChapter.Model
+    { inputModel : InputChapter.Model
+    , counterModel : CounterChapter.Model
     }
 
 
 initialState : SharedState
 initialState =
-    { inputChapter = InputChapter.init
-    , counterChapter = CounterChapter.init
+    { inputModel = InputChapter.init
+    , counterModel = CounterChapter.init
     }
 
 
@@ -120,9 +120,9 @@ chapter : Chapter SharedState
 chapter =
     chapter "InputChapter"
         |> renderStatefulComponent (
-            \\{ inputModel } ->
+            \\{ counterModel } ->
                 myCounter
-                    { value = inputModel.value
+                    { value = counterModel.value
                     , onIncrease = updateState updateSharedState
                     }
         )
