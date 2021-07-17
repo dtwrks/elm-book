@@ -20,14 +20,12 @@ module ElmBook.Internal.ThemeOptions exposing
     , subtitle
     )
 
-import Html exposing (Html)
-
 
 type alias ThemeOptions html =
     { globals : Maybe (List html)
     , preferDarkMode : Bool
-    , header : Maybe (Html Never)
-    , logo : Maybe (Html Never)
+    , header : Maybe html
+    , logo : Maybe html
     , subtitle : Maybe String
     , background : String
     , accent : String
@@ -89,12 +87,12 @@ defaultTheme =
     }
 
 
-header : ThemeOptions html -> Maybe (Html Never)
+header : ThemeOptions html -> Maybe html
 header theme =
     theme.header
 
 
-logo : ThemeOptions html -> Maybe (Html Never)
+logo : ThemeOptions html -> Maybe html
 logo theme =
     theme.logo
 

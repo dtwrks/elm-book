@@ -1,7 +1,7 @@
 module ElmBook.UI.Docs.ActionLog exposing (..)
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList, renderWithComponentList, withComponentList)
+import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponentList, withComponentList)
 import ElmBook.UI.ActionLog exposing (list, preview, previewEmpty)
 
 

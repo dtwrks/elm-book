@@ -15,7 +15,8 @@ docs : List ( String, Html (ElmBook.Msg x) )
 docs =
     let
         props =
-            { href = "/logAction/href"
+            { toHtml = identity
+            , href = "/logAction/href"
             , title = "Title"
             , theme = defaultTheme
             , isMenuOpen = False

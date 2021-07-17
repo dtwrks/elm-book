@@ -81,6 +81,7 @@ styles =
 
 view :
     { href : String
+    , toHtml : html -> Html msg
     , theme : ElmBook.Internal.ThemeOptions.ThemeOptions html
     , title : String
     , isMenuOpen : Bool
@@ -98,14 +99,15 @@ view props =
             ]
             [ h1 [ class "elm-book" ]
                 [ ElmBook.Internal.ThemeOptions.header props.theme
+                    |> Maybe.map props.toHtml
                     |> Maybe.withDefault
                         (viewDefault
-                            { href = props.href
+                            { toHtml = props.toHtml
+                            , href = props.href
                             , title = props.title
                             , theme = props.theme
                             }
                         )
-                    |> Html.map (\_ -> props.onClickHeader)
                 ]
             ]
         , button
@@ -129,14 +131,16 @@ view props =
 
 viewDefault :
     { href : String
+    , toHtml : html -> Html msg
     , title : String
     , theme : ElmBook.Internal.ThemeOptions.ThemeOptions html
     }
-    -> Html Never
+    -> Html msg
 viewDefault props =
     span
         [ class "elm-book-sans elm-book-header-default" ]
         [ ElmBook.Internal.ThemeOptions.logo props.theme
+            |> Maybe.map props.toHtml
             |> Maybe.withDefault
                 (iconElm
                     { size = 24

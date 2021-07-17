@@ -475,7 +475,8 @@ view model =
                     |> List.map model.config.toHtml
             , header =
                 ElmBook.UI.Header.view
-                    { href = "/"
+                    { toHtml = model.config.toHtml
+                    , href = "/"
                     , theme = model.config.themeOptions
                     , title = model.config.title
                     , isMenuOpen = model.isMenuOpen

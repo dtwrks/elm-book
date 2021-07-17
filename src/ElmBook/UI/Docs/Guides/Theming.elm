@@ -20,6 +20,7 @@ docs =
     let
         headerProps =
             { href = "/x"
+            , toHtml = identity
             , theme =
                 defaultTheme
                     |> ElmBook.ThemeOptions.subtitle "Custom Subtitle"

@@ -1,9 +1,9 @@
 module ElmBook.ThemeOptions exposing
     ( subtitle, logo, header
     , background, backgroundGradient, accent, navBackground, navAccent, navAccentHighlight
+    , preferDarkMode
     , globals
     , ThemeOption
-    , preferDarkMode
     )
 
 {-| Use the attributes provided by this module to customize your book through `ElmBook.withThemeOptions`.
@@ -21,6 +21,11 @@ Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/t
 @docs background, backgroundGradient, accent, navBackground, navAccent, navAccentHighlight
 
 
+# Dark Mode
+
+@docs preferDarkMode
+
+
 # Global CSS
 
 @docs globals
@@ -33,7 +38,6 @@ Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/t
 -}
 
 import ElmBook.Internal.ThemeOptions exposing (ThemeOptions)
-import Html exposing (Html)
 
 
 {-| -}
@@ -43,7 +47,7 @@ type alias ThemeOption html =
 
 {-| Provide a custom logo for your book.
 -}
-logo : Html Never -> ThemeOption html
+logo : html -> ThemeOption html
 logo logo_ theme =
     { theme | logo = Just logo_ }
 
@@ -57,7 +61,7 @@ subtitle subtitle_ theme =
 
 {-| Provide a completely custom header to your book. This will replace the whole area where usually the logo, title and subtitle appears.
 -}
-header : Html Never -> ThemeOption html
+header : html -> ThemeOption html
 header header_ theme =
     { theme | header = Just header_ }
 
@@ -90,7 +94,7 @@ backgroundGradient startColor endColor theme =
     }
 
 
-{-| Customize the accent color of your book. This will change the color for all elements that sit on top of your background.
+{-| Customize the accent color of your book. This will change the color for a few different elements that sit on top of your background like the title and default logo.
 -}
 accent : String -> ThemeOption html
 accent v theme =

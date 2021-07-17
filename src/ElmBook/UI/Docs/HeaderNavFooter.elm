@@ -1,7 +1,7 @@
 module ElmBook.UI.Docs.HeaderNavFooter exposing (..)
 
 import ElmBook.Actions exposing (logAction, logActionWithString)
-import ElmBook.Chapter exposing (Chapter, chapter, render, renderWithComponentList, withComponentList, withComponentOptions)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions)
 import ElmBook.ComponentOptions
 import ElmBook.UI.Docs.HeaderNavFooter.Header
 import ElmBook.UI.Docs.HeaderNavFooter.Nav

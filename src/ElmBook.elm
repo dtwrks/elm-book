@@ -38,7 +38,6 @@ You can pipe any of the customization functions on your book's creation. Just ma
 -}
 
 import Browser exposing (UrlRequest(..))
-import ElmBook.Chapter
 import ElmBook.ChapterOptions
 import ElmBook.Custom exposing (BookBuilder)
 import ElmBook.Internal.Application exposing (BookApplication)
@@ -47,8 +46,6 @@ import ElmBook.Internal.Chapter exposing (ChapterCustom(..), chapterWithGroup)
 import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Helpers exposing (applyAttributes)
 import ElmBook.Internal.Msg
-import ElmBook.Internal.StatefulOptions
-import ElmBook.Internal.ThemeOptions
 import ElmBook.StatefulOptions
 import ElmBook.ThemeOptions
 import Html exposing (Html)
@@ -187,8 +184,6 @@ withChapterOptions attributes (BookBuilder config) =
 
 {-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.ComponentOptions`.
 
-Please note that component options are "inherited". So you can override these options on a particular chapter and even on an specific component.
-
     main : Book ()
     main =
         book "My Book"
@@ -197,6 +192,8 @@ Please note that component options are "inherited". So you can override these op
                 , ElmBook.Component.hiddenLabel True
                 ]
             |> withChapters [ ... ]
+
+Please note that component options are "inherited". So you can override these options on a particular chapter and even on an specific component.
 
 -}
 withComponentOptions : List ElmBook.Internal.ComponentOptions.Attribute -> BookBuilder state html -> BookBuilder state html
