@@ -113,6 +113,14 @@ chapter "button"
 
 ---
 
-There are other `logAction*` functions available. Check out the docs!
+### Logging url changes?
+
+It's a real pain when we want to showcase a navigation link and when we click on it we're suddenly on some random page. This is why we have a somewhat hidden feature – any route changes that starts with `/logAction` will actually just log the url change intent!
+
+Try it here! [/logAction/external-url](/logAction/external-url)
+
+---
+
+There are other `logAction*` functions available. Check out the [docs](https://package.elm-lang.org/packages/dtwrks/elm-book/latest/)!
 
 """

@@ -7,6 +7,12 @@ docs : Chapter x
 docs =
     chapter "Markdown"
         |> render """
+We use the amazing [dillonkearns/elm-markdown](https://package.elm-lang.org/packages/dillonkearns/elm-markdown/latest/) as the basis for not only our markdown content but also all the magic surrounding embedded components. Thanks, Dillon! 🎉
+
+Below is a sample of most if not all available tags. Check it out! 🙃
+
+---
+
 # Heading 1
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

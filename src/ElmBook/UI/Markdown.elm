@@ -80,9 +80,11 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                                             [ c ]
                                 )
                             |> Maybe.withDefault
-                                (div
-                                    [ class "elm-book__component-wrapper elm-book-sans elm-book__component-empty" ]
-                                    [ text <| "\"" ++ Maybe.withDefault "" labelFilter ++ "\" example not found." ]
+                                (div [ class "elm-book__component-wrapper" ]
+                                    [ div
+                                        [ class "elm-book-sans elm-book__component-empty" ]
+                                        [ text <| "Oops!… \"" ++ Maybe.withDefault "" labelFilter ++ "\" component not found." ]
+                                    ]
                                 )
                     )
                     |> Markdown.Html.withOptionalAttribute "with-label"
@@ -91,7 +93,7 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                     |> Markdown.Html.withOptionalAttribute "with-display"
                     |> Markdown.Html.withOptionalAttribute "with-full-width"
                 , Markdown.Html.tag "component-list"
-                    (\hiddenLabel_ background_ display_ fullWidth_ _ ->
+                    (\labelFilter hiddenLabel_ background_ display_ fullWidth_ _ ->
                         let
                             options_ =
                                 ElmBook.Internal.Component.markdownOptions
@@ -101,6 +103,16 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                                     , background = background_
                                     , fullWidth = fullWidth_
                                     }
+
+                            components =
+                                case labelFilter of
+                                    Just s ->
+                                        chapterComponents
+                                            |> List.filter
+                                                (Tuple.first >> String.startsWith s)
+
+                                    Nothing ->
+                                        chapterComponents
                         in
                         div
                             [ classList
@@ -119,10 +131,11 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                                                 section
                                             ]
                                     )
-                                    chapterComponents
+                                    components
                                 )
                             ]
                     )
+                    |> Markdown.Html.withOptionalAttribute "with-label"
                     |> Markdown.Html.withOptionalAttribute "with-hidden-label"
                     |> Markdown.Html.withOptionalAttribute "with-background"
                     |> Markdown.Html.withOptionalAttribute "with-display"
@@ -302,10 +315,10 @@ styles =
 }
 .elm-book__component-empty {
     padding: 20px;
-    background-color: #eaeaea;
+    background-color: #f9e4b5;
     border-radius: 4px;
-    border: 2px solid #dadada;
-    color: #666;
+    border: 2px solid #eac97d;
+    color: #ab7700;
 }
 
 .elm-book-md__component-list {
