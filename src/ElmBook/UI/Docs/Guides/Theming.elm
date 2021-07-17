@@ -1,112 +1,21 @@
-module ElmBook.UI.Docs.Guides.Theming exposing
-    ( Model
-    , docs
-    , init
-    )
+module ElmBook.UI.Docs.Guides.Theming exposing (docs)
 
-import ElmBook.Actions exposing (logAction, updateStateWithCmdWith)
+import ElmBook.Actions exposing (logAction)
 import ElmBook.Chapter exposing (Chapter, chapter, render, withComponentList, withComponentOptions, withStatefulComponentList)
 import ElmBook.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.Theme exposing (defaultTheme)
 import ElmBook.ThemeOptions
 import ElmBook.UI.Header
-import ElmBook.UI.Helpers exposing (css_, themeBackground)
+import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Icons exposing (iconElm)
+import ElmBook.UI.ThemeGenerator
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Task
 
 
-type alias SharedState m =
-    { m | theming : Model }
-
-
-init : Model
-init =
-    { backgroundStart = ElmBook.Internal.Theme.defaultBackgroundStart
-    , backgroundEnd = ElmBook.Internal.Theme.defaultBackgroundEnd
-    , accent = ElmBook.Internal.Theme.defaultAccent
-    , navBackground = ElmBook.Internal.Theme.defaultNavBackground
-    , navAccent = ElmBook.Internal.Theme.defaultNavAccent
-    , navAccentHighlight = ElmBook.Internal.Theme.defaultNavAccentHighlight
-    }
-
-
-type alias Model =
-    { backgroundStart : String
-    , backgroundEnd : String
-    , accent : String
-    , navBackground : String
-    , navAccent : String
-    , navAccentHighlight : String
-    }
-
-
-type Msg
-    = UpdateBackgroundStart String
-    | UpdateBackgroundEnd String
-    | UpdateAccent_ String
-    | UpdateNavBackground_ String
-    | UpdateNavAccent_ String
-    | UpdateNavAccentHighlight_ String
-
-
-update : Msg -> SharedState m -> ( SharedState m, Cmd (ElmBook.Internal.Msg.Msg (SharedState m)) )
-update msg sharedState =
-    let
-        model =
-            sharedState.theming
-
-        ( model_, cmd ) =
-            case msg of
-                UpdateBackgroundStart v ->
-                    ( { model | backgroundStart = v }
-                    , Task.perform
-                        (\_ -> SetThemeBackgroundGradient v model.backgroundEnd)
-                        (Task.succeed ())
-                    )
-
-                UpdateBackgroundEnd v ->
-                    ( { model | backgroundEnd = v }
-                    , Task.perform
-                        (\_ -> SetThemeBackgroundGradient model.backgroundStart v)
-                        (Task.succeed ())
-                    )
-
-                UpdateAccent_ v ->
-                    ( { model | accent = v }
-                    , Task.perform
-                        (\_ -> SetThemeAccent v)
-                        (Task.succeed ())
-                    )
-
-                UpdateNavBackground_ v ->
-                    ( { model | navBackground = v }
-                    , Task.perform
-                        (\_ -> SetThemeNavBackground v)
-                        (Task.succeed ())
-                    )
-
-                UpdateNavAccent_ v ->
-                    ( { model | navAccent = v }
-                    , Task.perform
-                        (\_ -> SetThemeNavAccent v)
-                        (Task.succeed ())
-                    )
-
-                UpdateNavAccentHighlight_ v ->
-                    ( { model | navAccentHighlight = v }
-                    , Task.perform
-                        (\_ -> SetThemeNavAccentHighlight v)
-                        (Task.succeed ())
-                    )
-    in
-    ( { sharedState | theming = model_ }, cmd )
-
-
-docs : Chapter (SharedState m)
+docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m)
 docs =
     let
         headerProps =
@@ -152,53 +61,7 @@ docs =
               )
             ]
         |> withStatefulComponentList
-            [ ( "Theme Builder"
-              , \{ theming } ->
-                    div
-                        [ class "elm-book-theme-builder elm-book-shadows-light" ]
-                        [ css_ """
-.elm-book-theme-builder {
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    border: 1px solid #eaeaea;
-    color: #333;
-}
-
-.elm-book-theme-builder__field {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-.elm-book-theme-builder__field + .elm-book-theme-builder__field {
-    border-top: 1px solid #dadada;
-}
-                    """
-                        , div []
-                            ([ ( "backgroundGradient (Start)", theming.backgroundStart, UpdateBackgroundStart )
-                             , ( "backgroundGradient (End)", theming.backgroundEnd, UpdateBackgroundEnd )
-                             , ( "accent", theming.accent, UpdateAccent_ )
-                             , ( "navBackground", theming.navBackground, UpdateNavBackground_ )
-                             , ( "navAccent", theming.navAccent, UpdateNavAccent_ )
-                             , ( "navAccentHighlight", theming.navAccentHighlight, UpdateNavAccentHighlight_ )
-                             ]
-                                |> List.map
-                                    (\( label_, value_, msg_ ) ->
-                                        label
-                                            [ class "elm-book-theme-builder__field" ]
-                                            [ p [ class "elm-book-sans" ] [ text label_ ]
-                                            , input
-                                                [ type_ "color"
-                                                , value value_
-                                                , onInput (updateStateWithCmdWith (update << msg_))
-                                                ]
-                                                []
-                                            ]
-                                    )
-                            )
-                        ]
-              )
-            ]
+            [ ( "Theme Builder", ElmBook.UI.ThemeGenerator.view ) ]
         |> render ("""
 Your book should look and feel your own, so ElmBook provides a few ways you can customize it's theme.
 

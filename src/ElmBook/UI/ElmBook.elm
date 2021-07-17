@@ -2,6 +2,7 @@ module ElmBook.UI.ElmBook exposing (..)
 
 import ElmBook exposing (Book, book, withChapterGroups, withStatefulOptions, withThemeOptions)
 import ElmBook.Chapter
+import ElmBook.Internal.Theme
 import ElmBook.StatefulOptions
 import ElmBook.ThemeOptions
 import ElmBook.UI.Docs.ActionLog
@@ -19,16 +20,33 @@ import ElmBook.UI.Docs.Intro.Overview
 import ElmBook.UI.Docs.Markdown
 import ElmBook.UI.Docs.Nav
 import ElmBook.UI.Docs.Search
+import ElmBook.UI.Docs.ThemeGenerator
 import ElmBook.UI.Docs.Wrapper
 
 
 type alias SharedState =
-    { theming : ElmBook.UI.Docs.Guides.Theming.Model }
+    { theming :
+        { backgroundStart : String
+        , backgroundEnd : String
+        , accent : String
+        , navBackground : String
+        , navAccent : String
+        , navAccentHighlight : String
+        }
+    }
 
 
 initialState : SharedState
 initialState =
-    { theming = ElmBook.UI.Docs.Guides.Theming.init }
+    { theming =
+        { backgroundStart = ElmBook.Internal.Theme.defaultBackgroundStart
+        , backgroundEnd = ElmBook.Internal.Theme.defaultBackgroundEnd
+        , accent = ElmBook.Internal.Theme.defaultAccent
+        , navBackground = ElmBook.Internal.Theme.defaultNavBackground
+        , navAccent = ElmBook.Internal.Theme.defaultNavAccent
+        , navAccentHighlight = ElmBook.Internal.Theme.defaultNavAccentHighlight
+        }
+    }
 
 
 main : Book SharedState
@@ -59,7 +77,7 @@ main =
                 , ElmBook.UI.Docs.Guides.BuiltinServer.docs
                 ]
               )
-            , ( "Private Components"
+            , ( "Design System"
               , [ ElmBook.UI.Docs.Wrapper.docs
                 , ElmBook.UI.Docs.Header.docs
                 , ElmBook.UI.Docs.Search.docs
@@ -68,6 +86,7 @@ main =
                 , ElmBook.UI.Docs.ActionLog.docs
                 , ElmBook.UI.Docs.Icons.docs
                 , ElmBook.UI.Docs.Markdown.docs
+                , ElmBook.UI.Docs.ThemeGenerator.docs
                 ]
               )
             ]

@@ -139,14 +139,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-| Característica da contratação e aquisição                 | Divulgação                                     | Método de seleção                                                                                   |
-| --------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Consultoria (serviços de baixa complexidade)              | Trabalhe Conosco (site do Idec) e de parceiros | Contratação simplificada de consultoria pessoa jurídica ou contratação de consultor individual (PF) |
-| Consultoria (equipe multidisciplinar, serviços complexos) | Trabalhe Conosco (site do Idec) e de parceiros | Contratação de pessoa jurídica – Qualidade e preço                                                  |
-| Bens de produção contínua                                 | Carta convite, pesquisa em sites               | Compra direta                                                                                       |
-|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |
-| Bens sob encomenda                                        | Carta convite, pesquisa em sites               | Compra direta                                                                                       |
-|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |
-| Serviços de natureza continuada                           | Carta convite, pesquisa em sites               | Contratação direta                                                                                  |
-|                                                           | Carta convite, pesquisa em sites               | Comparação de preços e qualidade de pelo menos 3 fornecedores qualificados                          |   
+| Fruits    |      Are      |   Healthy  |
+|----------|:-------------:|------:|
+| Apple |  Red | $1600 |
+| Orange |    Orange   |   $12 |
+| Banana | Yellow |    $1 |  
 """
