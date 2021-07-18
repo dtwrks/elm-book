@@ -2,7 +2,7 @@ module ElmBook.UI.ThemeGenerator exposing (SharedState, view)
 
 import ElmBook.Actions exposing (updateStateWithCmdWith)
 import ElmBook.Internal.Msg exposing (Msg(..))
-import ElmBook.UI.Helpers exposing (css_)
+import ElmBook.UI.Helpers exposing (css_, mediaMobile)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
@@ -89,7 +89,7 @@ view : SharedState m -> Html (Msg (SharedState m))
 view { theming } =
     div
         [ class "elm-book-theme-builder" ]
-        [ css_ """
+        [ css_ <| """
             .elm-book-theme-builder {
                 background-color: #fafafa;
                 border-radius: 4px;
@@ -116,6 +116,8 @@ view { theming } =
             }
             .elm-book-theme-builder__label {
                 line-height: 1em;
+                padding-right: 4px;
+                word-break: break-word;
             }
             .elm-book-theme-builder__label__title {
                 font-weight: bold;
@@ -131,6 +133,7 @@ view { theming } =
                 color: #999;
             }
             .elm-book-theme-builder__picker-wrapper {
+                flex-shrink: 0;
                 display: flex;
                 align-items: center;
             }
@@ -138,6 +141,7 @@ view { theming } =
                 font-size: 14px;
                 padding-right: 12px;
                 color: #999;
+                line-height: 1em;
             }
             .elm-book-theme-builder__picker {
                 width: 20px;
@@ -145,6 +149,22 @@ view { theming } =
                 border-radius: 100%;
                 border: none;
                 background-color: #e0e0e0;
+            }
+            """ ++ mediaMobile ++ """ {
+                .elm-book-theme-builder__field {
+                    flex-direction: column-reverse;
+                    align-items: flex-start;
+                }
+                .elm-book-theme-builder__picker-wrapper {
+                    flex-direction: row-reverse;
+                    align-items: center;
+                    padding-bottom: 4px;
+                }
+                .elm-book-theme-builder__value {
+                    padding-right: 0;
+                    padding-left: 8px;
+                    font-size: 12px;
+                }
             }
                     """
         , div []
