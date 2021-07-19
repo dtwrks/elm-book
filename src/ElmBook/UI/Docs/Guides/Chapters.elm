@@ -101,7 +101,7 @@ docs =
             }
     in
     chapter "Buttons"
-        |> withComponents
+        |> withComponentList
             [ ( "Default", view props )
             , ( "Disabled", view { props | disabled = True } )
             ]

@@ -153,7 +153,7 @@ withComponent html (ChapterBuilder builder) =
     buttonsChapter : Chapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withComponents
+            |> withComponentList
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
@@ -209,7 +209,7 @@ withStatefulComponentList componentList (ChapterBuilder builder) =
     buttonsChapter : Chapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withComponents
+            |> withComponentList
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
@@ -283,7 +283,7 @@ renderStatefulComponentList componentList (ChapterBuilder builder) =
     buttonsChapter : Chapter x
     buttonsChapter =
         chapter "Buttons"
-            |> withComponents
+            |> withComponentList
                 [ ( "Default", button [] [] )
                 , ( "Disabled", button [ disabled True ] [] )
                 ]
