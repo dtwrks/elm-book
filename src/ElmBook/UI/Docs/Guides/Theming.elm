@@ -19,7 +19,7 @@ docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m)
 docs =
     let
         headerProps =
-            { href = "/x"
+            { href = "/logAction/"
             , toHtml = identity
             , theme =
                 defaultTheme
