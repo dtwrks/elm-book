@@ -13,7 +13,7 @@ After creating a few chapters, it's time to put your book together.
 module MyBook exposing (main)
 
 
-import ElmBook exposing (ElmBook, book, withChapters)
+import ElmBook exposing (..)
 import FirstChapter exposing (firstChapter)
 import SecondChapter exposing (secondChapter)
 
@@ -37,7 +37,7 @@ Let's make it more organized by grouping chapters into guides and component docu
 module MyBook exposing (main)
 
 
-import ElmBook exposing (ElmBook, book, withChapterGroups)
+import ElmBook exposing (..)
 ...
 
 main : Book ()

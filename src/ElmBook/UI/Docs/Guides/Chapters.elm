@@ -16,7 +16,7 @@ module UI.Button exposing (view, docs)
 
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
+import ElmBook.Chapter exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -70,7 +70,7 @@ module UI.Button exposing (view, docs)
 
 
 import ElmBook.Actions exposing (logAction)
-import ElmBook.Chapter exposing (Chapter, chapter, renderComponentList)
+import ElmBook.Chapter exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)

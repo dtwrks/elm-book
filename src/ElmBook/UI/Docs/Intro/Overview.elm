@@ -23,11 +23,11 @@ They can be as simple as a markdown block or as rich as a set of interactive UI 
 module FirstChapter exposing (firstChapter)
 
 
-import ElmBook.Chapter exposing (chapter)
+import ElmBook.Chapter exposing (..)
 import Html exposing (..)
 
 
-firstChapter : ElmBook.Chapter x
+firstChapter : Chapter x
 firstChapter =
     chapter "The First Chapter"
         |> withComponent component
@@ -43,7 +43,7 @@ content : String
 content = \"\"\"
 # It all starts with a chapter
 
-Oh, look – A wide real component!
+Oh, look – A wild real component!
 
 <component />
 
@@ -62,7 +62,7 @@ A book can hold a number of chapters and there are many ways to customize it fro
 module Book exposing (main)
 
 
-import ElmBook exposing (book, withChapters)
+import ElmBook exposing (..)
 import FirstChapter exposing (firstChapter)
 
 
