@@ -1,6 +1,6 @@
 {
   "name": "elm-book",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rich documentation builder for Elm applications and packages. Based on Storybook and HexDocs.",
   "bin": "./bin/elm-book.js",
   "author": "Georges Boris",
@@ -14,7 +14,7 @@
     "url": "https://github.com/dtwrks/elm-book/issues"
   },
   "scripts": {
-    "postinstall": "elm-tooling install",
+    "dev:install": "elm-tooling install",
     "start": "elm-live ./src/ElmBook/UI/ElmBook.elm --port=3000 --pushstate --open -- --debug",
     "start:docs": "npx elm-doc-preview",
     "build": "npx elm make ./src/ElmBook/UI/ElmBook.elm --output=public/index.js",
