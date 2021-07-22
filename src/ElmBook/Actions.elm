@@ -52,6 +52,14 @@ logActionWithString action value =
 
 
 {-| Logs an action that takes one `Int` input.
+
+**WARNING**:
+
+Folks, this is function is currently broken, my bad. It will be fixed in the next major release (which won't take long).
+Until then please use the following replacement:
+
+    logActionWith String.fromInt
+
 -}
 logActionWithInt : String -> String -> Msg state
 logActionWithInt action value =
@@ -59,6 +67,14 @@ logActionWithInt action value =
 
 
 {-| Logs an action that takes one `Float` input.
+
+**WARNING**:
+
+Folks, this is function is currently broken, my bad. It will be fixed in the next major release (which won't take long).
+Until then please use the following replacement:
+
+    logActionWith String.fromFloat
+
 -}
 logActionWithFloat : String -> String -> Msg state
 logActionWithFloat action value =
