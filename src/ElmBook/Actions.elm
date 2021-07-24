@@ -47,8 +47,8 @@ logAction action =
 
 -}
 logActionWithString : String -> String -> Msg state
-logActionWithString action value =
-    LogAction "" (action ++ ": " ++ value)
+logActionWithString =
+    logActionWith identity
 
 
 {-| Logs an action that takes one `Int` input.
@@ -62,8 +62,8 @@ Until then please use the following replacement:
 
 -}
 logActionWithInt : String -> String -> Msg state
-logActionWithInt action value =
-    LogAction "" (action ++ ": " ++ value)
+logActionWithInt =
+    logActionWith identity
 
 
 {-| Logs an action that takes one `Float` input.
@@ -77,8 +77,8 @@ Until then please use the following replacement:
 
 -}
 logActionWithFloat : String -> String -> Msg state
-logActionWithFloat action value =
-    LogAction "" (action ++ ": " ++ value)
+logActionWithFloat =
+    logActionWith identity
 
 
 {-| Logs an action that takes one `Bool` input.
