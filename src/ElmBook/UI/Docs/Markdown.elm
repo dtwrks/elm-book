@@ -15,29 +15,29 @@ Below is a sample of most if not all available tags. Check it out! 🙃
 
 # Heading 1
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ## Heading 2
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ### Heading 3
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ---
 
 #### Heading 4
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ##### Heading 5
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ###### Heading 6
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ---
 
@@ -47,11 +47,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ![image](https://source.unsplash.com/WLUHO9A_xik/1600x900)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-> Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-Lorem ipsum dolor sit amet, `consectetur adipiscing elit`, [sed do eiusmod](http://xxx.xxx) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Lorem ipsum dolor sit amet, `consectetur adipiscing elit`, [sed do eiusmod](http://elm-lang.org) tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 ```elm
 -- Elm
