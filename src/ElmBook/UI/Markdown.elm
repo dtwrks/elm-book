@@ -466,6 +466,7 @@ styles =
 }
 .elm-book-md ul {
     padding-left: 32px;
+    list-style: disc;
 }
 .elm-book-md ol {
     padding-left: 32px;
