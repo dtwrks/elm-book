@@ -3,6 +3,7 @@ module ElmBook.ThemeOptions exposing
     , background, backgroundGradient, accent, navBackground, navAccent, navAccentHighlight
     , preferDarkMode
     , globals
+    , useHashBasedNavigation
     , ThemeOption
     )
 
@@ -29,6 +30,11 @@ Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/t
 # Global CSS
 
 @docs globals
+
+
+# Routing
+
+@docs useHashBasedNavigation
 
 
 # Types
@@ -138,3 +144,22 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
 globals : List html -> ThemeOption html
 globals globals_ options =
     { options | globals = Just globals_ }
+
+
+{-| By default elm-book presupposes that you will host it at the root of a server used for
+SPA style hosting: the server will redirect all unknown requests to the app.
+
+So for instance `https://example.com/guides/logging-actions` would serve the file `/index.html`, which would
+then assume the requested path is `/guides/logging-actions`.
+
+However, for other hosting situations, these assumptions might not hold, hence when you activate this
+option, elm-book will switch to the following scheme:
+
+`https://example.com/some-folder/my-app.html#/guides/logging-actions` should on any webserver load the file
+at `/some-folder/my-app.html` (this is just an example, the path can be anything you want), and elm-book
+will assume that the requested path is `/guides/logging-actions`. This will work even in elm-reactor.
+
+-}
+useHashBasedNavigation : ThemeOption html
+useHashBasedNavigation options =
+    { options | useHashBasedNavigation = True }

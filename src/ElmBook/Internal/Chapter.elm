@@ -61,6 +61,7 @@ type ChapterBuilder state html
 type alias ChapterConfig state html =
     { url : String
     , title : String
+    , internal : Bool
     , groupTitle : Maybe String
     , body : String
     , chapterOptions : ChapterOptions
@@ -85,9 +86,13 @@ chapterTitle (Chapter { title }) =
     title
 
 
-chapterUrl : ChapterCustom state html -> String
-chapterUrl (Chapter { url }) =
-    url
+chapterUrl : Bool -> ChapterCustom state html -> String
+chapterUrl useHashBasedNavigation (Chapter { url, internal }) =
+    if internal && useHashBasedNavigation then
+        "#" ++ url
+
+    else
+        url
 
 
 groupTitle : ChapterCustom state html -> Maybe String
