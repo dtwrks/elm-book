@@ -130,7 +130,7 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
     import Tailwind.Utilities exposing (globalStyles)
 
     book "MyApp"
-        |> withStatefulOptions [
+        |> withThemeOptions [
             globals [ global globalStyles ]
         ]
 
