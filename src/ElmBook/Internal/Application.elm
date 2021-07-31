@@ -44,7 +44,7 @@ type alias Model state html =
     , chaptersSearched : Array (ChapterCustom state html)
     , chapterActive : Maybe (ChapterCustom state html)
     , chapterPreSelected : Int
-    , toggleDarkMode : Bool
+    , darkMode : Bool
     , search : String
     , isSearching : Bool
     , isShiftPressed : Bool
@@ -136,15 +136,34 @@ init props _ url navKey =
 
         activeChapter =
             parseActiveChapterFromUrl props.config chapters url
+
+        darkTheme =
+            props.config.themeOptions.preferDarkMode
+
+        initialConfig =
+            props.config
+
+        initialStatefulOptions =
+            props.config.statefulOptions
+
+        initialConfig_ =
+            { initialConfig
+                | statefulOptions =
+                    { initialStatefulOptions
+                        | state =
+                            props.config.statefulOptions.state
+                                |> Maybe.map (props.config.statefulOptions.onDarkModeChange darkTheme)
+                    }
+            }
     in
     ( { navKey = navKey
-      , config = props.config
+      , config = initialConfig_
       , chapterGroups = chapterGroups
       , chapters = chapters
       , chaptersSearched = chapters
       , chapterActive = activeChapter
       , chapterPreSelected = 0
-      , toggleDarkMode = False
+      , darkMode = props.config.themeOptions.preferDarkMode
       , search = ""
       , isSearching = False
       , isShiftPressed = False
@@ -238,7 +257,30 @@ update msg model =
                     )
 
         ToggleDarkMode ->
-            ( { model | toggleDarkMode = not model.toggleDarkMode }
+            let
+                darkMode =
+                    not model.darkMode
+
+                config =
+                    model.config
+
+                statefulOptions_ =
+                    model.config.statefulOptions
+
+                statefulOptions__ =
+                    { statefulOptions_
+                        | state =
+                            statefulOptions_.state
+                                |> Maybe.map (model.config.statefulOptions.onDarkModeChange darkMode)
+                    }
+
+                config_ =
+                    { config | statefulOptions = statefulOptions__ }
+            in
+            ( { model
+                | config = config_
+                , darkMode = darkMode
+              }
             , Cmd.none
             )
 
@@ -467,16 +509,7 @@ view model =
         [ ElmBook.UI.Styles.view
         , ElmBook.UI.Wrapper.view
             { theme = model.config.themeOptions
-            , darkMode =
-                case ( model.config.themeOptions.preferDarkMode, model.toggleDarkMode ) of
-                    ( True, False ) ->
-                        True
-
-                    ( False, True ) ->
-                        True
-
-                    _ ->
-                        False
+            , darkMode = model.darkMode
             , isMenuOpen = model.isMenuOpen
             , globals =
                 model.config.themeOptions.globals

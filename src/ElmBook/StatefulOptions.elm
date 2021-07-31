@@ -1,5 +1,5 @@
 module ElmBook.StatefulOptions exposing
-    ( initialState, subscriptions
+    ( initialState, subscriptions, onDarkModeChange
     , Attribute
     )
 
@@ -7,7 +7,7 @@ module ElmBook.StatefulOptions exposing
 
 The attributes below are mostly used for Stateful Books. Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
 
-@docs initialState, subscriptions
+@docs initialState, subscriptions, onDarkModeChange
 
 
 # Types
@@ -71,3 +71,33 @@ initialState state options =
 subscriptions : List (Sub (Msg state)) -> Attribute state
 subscriptions subscriptions_ options =
     { options | subscriptions = subscriptions_ }
+
+
+{-| Change your book's state based on the themes current mode.
+
+This can be useful for showcasing your own dark themed components when using elm-book's dark mode.
+
+    type alias SharedState =
+        { darkMode : Bool
+        }
+
+    initialState : SharedState
+    initialState =
+        { darkMode = False
+        }
+
+    book : Book SharedState
+    book "MyApp"
+        |> withStatefulOptions
+            [ ElmBook.StatefulOptions.initialState
+                initialState
+            , ElmBook.StatefulOptions.onDarkModeChange
+                (\darkMode state ->
+                    { state | darkMode = darkMode }
+                )
+            ]
+
+-}
+onDarkModeChange : (Bool -> state -> state) -> Attribute state
+onDarkModeChange onDarkModeChange_ options =
+    { options | onDarkModeChange = onDarkModeChange_ }

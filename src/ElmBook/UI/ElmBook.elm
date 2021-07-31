@@ -6,6 +6,7 @@ import ElmBook.Internal.ThemeOptions
 import ElmBook.StatefulOptions
 import ElmBook.ThemeOptions
 import ElmBook.UI.Docs.ActionLog
+import ElmBook.UI.Docs.DarkModeComponents
 import ElmBook.UI.Docs.Guides.Books
 import ElmBook.UI.Docs.Guides.BuiltinServer
 import ElmBook.UI.Docs.Guides.Chapters
@@ -22,7 +23,8 @@ import ElmBook.UI.Docs.Wrapper
 
 
 type alias SharedState =
-    { theming :
+    { darkMode : Bool
+    , theming :
         { backgroundStart : String
         , backgroundEnd : String
         , accent : String
@@ -35,7 +37,8 @@ type alias SharedState =
 
 initialState : SharedState
 initialState =
-    { theming =
+    { darkMode = False
+    , theming =
         { backgroundStart = ElmBook.Internal.ThemeOptions.defaultBackgroundStart
         , backgroundEnd = ElmBook.Internal.ThemeOptions.defaultBackgroundEnd
         , accent = ElmBook.Internal.ThemeOptions.defaultAccent
@@ -51,6 +54,8 @@ main =
     book "ElmBook's"
         |> withStatefulOptions
             [ ElmBook.StatefulOptions.initialState initialState
+            , ElmBook.StatefulOptions.onDarkModeChange
+                (\darkMode s -> { s | darkMode = darkMode })
             ]
         |> withThemeOptions
             [ ElmBook.ThemeOptions.subtitle "Guides & Components"
@@ -80,6 +85,7 @@ main =
                 , ElmBook.UI.Docs.ActionLog.docs
                 , ElmBook.UI.Docs.Icons.docs
                 , ElmBook.UI.Docs.Markdown.docs
+                , ElmBook.UI.Docs.DarkModeComponents.docs
                 , ElmBook.UI.Docs.ThemeGenerator.docs
                 ]
               )
