@@ -10,8 +10,8 @@ docs =
     let
         itemGroup index =
             ( ""
-            , [ ( String.fromInt index ++ "-first-slug", "First" )
-              , ( String.fromInt index ++ "-second-slug", "Second" )
+            , [ ( String.fromInt index ++ "-first-slug", "First", True )
+              , ( String.fromInt index ++ "-second-slug", "Second", True )
               ]
             )
 

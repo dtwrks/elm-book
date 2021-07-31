@@ -80,7 +80,7 @@ styles =
 view :
     { active : Maybe String
     , preSelected : Maybe String
-    , itemGroups : List ( String, List ( String, String ) )
+    , itemGroups : List ( String, List ( String, String, Bool ) )
     }
     -> Html msg
 view props =
@@ -91,12 +91,12 @@ view props =
                 |> List.foldl (\( _, xs ) acc -> acc + List.length xs) 0
                 |> (==) 0
 
-        item : ( String, String ) -> Html msg
-        item ( url, label ) =
+        item : ( String, String, Bool ) -> Html msg
+        item ( url, label, internal ) =
             li []
                 [ a
                     [ href url
-                    , target_ url
+                    , target_ internal
                     , classList
                         [ ( "elm-book-nav-item", True )
                         , ( "active", props.active == Just url )
@@ -118,7 +118,7 @@ view props =
                     ]
                 ]
 
-        list : ( String, List ( String, String ) ) -> Html msg
+        list : ( String, List ( String, String, Bool ) ) -> Html msg
         list ( title, items ) =
             if List.isEmpty items then
                 text ""
@@ -152,9 +152,9 @@ view props =
         ]
 
 
-target_ : String -> Attribute msg
-target_ url =
-    if String.startsWith "/" url then
+target_ : Bool -> Attribute msg
+target_ internal =
+    if internal then
         class ""
 
     else
