@@ -15,7 +15,7 @@ import ElmBook.Internal.Book exposing (BookBuilder(..), ElmBookConfig)
 import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
 import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
-import ElmBook.Internal.ThemeOptions exposing (navBackground)
+import ElmBook.Internal.ThemeOptions exposing (hashBasedNavigation, navBackground)
 import ElmBook.ThemeOptions
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
@@ -159,7 +159,7 @@ init props _ url navKey =
 
         Nothing ->
             Array.get 0 chapters
-                |> Maybe.map (Browser.Navigation.replaceUrl navKey << chapterUrl (ElmBook.Internal.ThemeOptions.useHashBasedNavigation props.config.themeOptions))
+                |> Maybe.map (Browser.Navigation.replaceUrl navKey << chapterUrl (hashBasedNavigation props.config.themeOptions))
                 |> Maybe.withDefault (Browser.Navigation.replaceUrl navKey "/")
     )
 
@@ -182,8 +182,8 @@ update msg model =
             , Cmd.none
             )
 
-        useHashBasedNavigation =
-            ElmBook.Internal.ThemeOptions.useHashBasedNavigation model.config.themeOptions
+        hashBasedNavigation_ =
+            hashBasedNavigation model.config.themeOptions
     in
     case msg of
         OnUrlRequest request ->
@@ -203,10 +203,10 @@ update msg model =
                         )
 
         OnUrlChange url ->
-            case ( extractPath useHashBasedNavigation url, Array.get 0 model.chapters ) of
+            case ( extractPath hashBasedNavigation_ url, Array.get 0 model.chapters ) of
                 ( "/", Just chapter_ ) ->
                     ( model
-                    , Browser.Navigation.pushUrl model.navKey <| chapterUrl useHashBasedNavigation chapter_
+                    , Browser.Navigation.pushUrl model.navKey <| chapterUrl hashBasedNavigation_ chapter_
                     )
 
                 ( "/", Nothing ) ->
@@ -229,7 +229,7 @@ update msg model =
 
                         Nothing ->
                             Browser.Navigation.replaceUrl model.navKey
-                                (if useHashBasedNavigation then
+                                (if hashBasedNavigation_ then
                                     "#/"
 
                                  else
@@ -363,14 +363,14 @@ update msg model =
             if model.isSearching then
                 case Array.get model.chapterPreSelected model.chaptersSearched of
                     Just chapter_ ->
-                        if String.startsWith "/" (chapterUrl useHashBasedNavigation chapter_) then
+                        if String.startsWith "/" (chapterUrl hashBasedNavigation_ chapter_) then
                             ( model
-                            , Browser.Navigation.pushUrl model.navKey (chapterUrl useHashBasedNavigation chapter_)
+                            , Browser.Navigation.pushUrl model.navKey (chapterUrl hashBasedNavigation_ chapter_)
                             )
 
                         else
                             ( model
-                            , Browser.Navigation.load (chapterUrl useHashBasedNavigation chapter_)
+                            , Browser.Navigation.load (chapterUrl hashBasedNavigation_ chapter_)
                             )
 
                     Nothing ->
@@ -501,19 +501,19 @@ view model =
                     }
             , menu =
                 let
-                    useHashBasedNavigation =
-                        ElmBook.Internal.ThemeOptions.useHashBasedNavigation model.config.themeOptions
+                    hashBasedNavigation =
+                        ElmBook.Internal.ThemeOptions.hashBasedNavigation model.config.themeOptions
 
                     visibleChapterUrls =
                         Array.toList model.chaptersSearched
-                            |> List.map (chapterUrl True)
+                            |> List.map (chapterUrl hashBasedNavigation)
                 in
                 ElmBook.UI.Nav.view
-                    { active = Maybe.map (chapterUrl useHashBasedNavigation) model.chapterActive
+                    { active = Maybe.map (chapterUrl hashBasedNavigation) model.chapterActive
                     , preSelected =
                         if model.isSearching then
                             Array.get model.chapterPreSelected model.chaptersSearched
-                                |> Maybe.map (chapterUrl useHashBasedNavigation)
+                                |> Maybe.map (chapterUrl hashBasedNavigation)
 
                         else
                             Nothing
@@ -523,7 +523,7 @@ view model =
                                 (Tuple.mapSecond
                                     (List.map (\index -> Array.get index model.chapters)
                                         >> List.filterMap identity
-                                        >> List.map (\((Chapter { title, internal }) as chapter) -> ( chapterUrl useHashBasedNavigation chapter, title, internal ))
+                                        >> List.map (\((Chapter { title, internal }) as chapter) -> ( chapterUrl hashBasedNavigation chapter, title, internal ))
                                         >> List.filter (\( slug, _, _ ) -> List.member slug visibleChapterUrls)
                                     )
                                 )
@@ -634,8 +634,8 @@ searchChapters search chapters =
 
 
 extractPath : Bool -> Url.Url -> String
-extractPath useHashBasedNavigation url =
-    if useHashBasedNavigation then
+extractPath hashBasedNavigation url =
+    if hashBasedNavigation then
         url.fragment |> Maybe.withDefault "/"
 
     else
@@ -645,20 +645,11 @@ extractPath useHashBasedNavigation url =
 parseActiveChapterFromUrl : ElmBookConfig state html -> Array (ChapterCustom state html) -> Url.Url -> Maybe (ChapterCustom state html)
 parseActiveChapterFromUrl config chapters url =
     let
-        useHashBasedNavigation =
-            ElmBook.Internal.ThemeOptions.useHashBasedNavigation config.themeOptions
+        targetUrl =
+            extractPath (hashBasedNavigation config.themeOptions) url
     in
     chapters
-        |> Array.filter
-            (\c ->
-                chapterUrl useHashBasedNavigation c
-                    == (if useHashBasedNavigation then
-                            "#" ++ (url.fragment |> Maybe.withDefault "/")
-
-                        else
-                            url.path
-                       )
-            )
+        |> Array.filter (\c -> chapterUrl False c == targetUrl)
         |> Array.get 0
 
 

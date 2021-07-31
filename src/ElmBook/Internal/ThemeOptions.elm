@@ -12,18 +12,19 @@ module ElmBook.Internal.ThemeOptions exposing
     , fontMonospace
     , fontSans
     , fontSerif
+    , hashBasedNavigation
     , header
     , logo
     , navAccent
     , navAccentHighlight
     , navBackground
     , subtitle
-    , useHashBasedNavigation
     )
 
 
 type alias ThemeOptions html =
     { globals : Maybe (List html)
+    , hashBasedNavigation : Bool
     , preferDarkMode : Bool
     , header : Maybe html
     , logo : Maybe html
@@ -36,7 +37,6 @@ type alias ThemeOptions html =
     , fontSans : String
     , fontSerif : String
     , fontMonospace : String
-    , useHashBasedNavigation : Bool
     }
 
 
@@ -73,6 +73,7 @@ defaultNavAccentHighlight =
 defaultTheme : ThemeOptions html
 defaultTheme =
     { globals = Nothing
+    , hashBasedNavigation = False
     , preferDarkMode = False
     , header = Nothing
     , logo = Nothing
@@ -86,7 +87,6 @@ defaultTheme =
     , fontSans = "IBM Plex Sans"
     , fontSerif = "IBM Plex Serif"
     , fontMonospace = "Fira Code"
-    , useHashBasedNavigation = False
     }
 
 
@@ -145,6 +145,6 @@ fontMonospace theme =
     theme.fontMonospace
 
 
-useHashBasedNavigation : ThemeOptions html -> Bool
-useHashBasedNavigation =
-    .useHashBasedNavigation
+hashBasedNavigation : ThemeOptions html -> Bool
+hashBasedNavigation =
+    .hashBasedNavigation

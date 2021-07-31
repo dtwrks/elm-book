@@ -146,20 +146,11 @@ globals globals_ options =
     { options | globals = Just globals_ }
 
 
-{-| By default elm-book presupposes that you will host it at the root of a server used for
-SPA style hosting: the server will redirect all unknown requests to the app.
+{-| By default ElmBook expects you to host it at the root of a SPA style server.
 
-So for instance `https://example.com/guides/logging-actions` would serve the file `/index.html`, which would
-then assume the requested path is `/guides/logging-actions`.
-
-However, for other hosting situations, these assumptions might not hold, hence when you activate this
-option, elm-book will switch to the following scheme:
-
-`https://example.com/some-folder/my-app.html#/guides/logging-actions` should on any webserver load the file
-at `/some-folder/my-app.html` (this is just an example, the path can be anything you want), and elm-book
-will assume that the requested path is `/guides/logging-actions`. This will work even in elm-reactor.
+However, if you'd like to use ElmBook on other situations – like on a subfolder, or a static server without these redirection settings, or even in `elm-reactor`. You can use the hash based navigation as everything should work as expected.
 
 -}
 useHashBasedNavigation : ThemeOption html
 useHashBasedNavigation options =
-    { options | useHashBasedNavigation = True }
+    { options | hashBasedNavigation = True }

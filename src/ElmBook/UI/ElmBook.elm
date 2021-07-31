@@ -54,7 +54,6 @@ main =
             ]
         |> withThemeOptions
             [ ElmBook.ThemeOptions.subtitle "Guides & Components"
-            , ElmBook.ThemeOptions.useHashBasedNavigation
             ]
         |> withChapterGroups
             [ ( ""

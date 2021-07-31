@@ -16,6 +16,7 @@
   "scripts": {
     "dev:install": "elm-tooling install",
     "start": "elm-live ./src/ElmBook/UI/ElmBook.elm --port=3000 --pushstate --open -- --debug",
+    "start:hash": "elm-live ./src/ElmBook/UI/ElmBook.elm --port=3000 --open -- --debug",
     "start:docs": "npx elm-doc-preview",
     "build": "npx elm make ./src/ElmBook/UI/ElmBook.elm --output=public/index.js",
     "test": "npm run test:app & npm run test:elm-ui & npm run test:elm-css",

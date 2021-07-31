@@ -90,12 +90,11 @@ logActionWithBool =
 
 stringFromBool : Bool -> String
 stringFromBool value =
-    case value of
-        True ->
-            "True"
+    if value then
+        "True"
 
-        False ->
-            "False"
+    else
+        "False"
 
 
 {-| Logs an action that takes one generic input that can be transformed into a String.

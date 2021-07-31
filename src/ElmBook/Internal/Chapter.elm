@@ -87,8 +87,8 @@ chapterTitle (Chapter { title }) =
 
 
 chapterUrl : Bool -> ChapterCustom state html -> String
-chapterUrl useHashBasedNavigation (Chapter { url, internal }) =
-    if internal && useHashBasedNavigation then
+chapterUrl hashBasedNavigation (Chapter { url, internal }) =
+    if internal && hashBasedNavigation then
         "#" ++ url
 
     else
