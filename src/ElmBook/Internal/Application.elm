@@ -10,13 +10,13 @@ import Browser
 import Browser.Dom
 import Browser.Events exposing (onKeyDown, onKeyUp)
 import Browser.Navigation
+import Dict
 import ElmBook.Chapter exposing (chapter)
-import ElmBook.Internal.Book exposing (BookBuilder(..), ElmBookConfig)
-import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterTitle, chapterUrl)
+import ElmBook.Internal.Book exposing (BookBuilder, ElmBookConfig, chapterFromUrl, configFromBuilder)
+import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCustom(..), chapterBreadcrumb, chapterInternal, chapterNavUrl, chapterTitle, chapterUrl)
 import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.ThemeOptions exposing (hashBasedNavigation, navBackground)
-import ElmBook.ThemeOptions
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
 import ElmBook.UI.ChapterHeader
@@ -38,11 +38,9 @@ import Url
 
 type alias Model state html =
     { navKey : Browser.Navigation.Key
-    , config : ElmBookConfig state html
-    , chapterGroups : List ( String, List Int )
-    , chapters : Array (ChapterCustom state html)
-    , chaptersSearched : Array (ChapterCustom state html)
-    , chapterActive : Maybe (ChapterCustom state html)
+    , url : String
+    , state : Maybe state
+    , themeOverrides : ElmBook.Internal.ThemeOptions.ThemeOptionOverrides
     , chapterPreSelected : Int
     , darkMode : Bool
     , search : String
@@ -52,6 +50,7 @@ type alias Model state html =
     , actionLog : List ( String, String )
     , actionLogModal : Bool
     , isMenuOpen : Bool
+    , backCompatibility : Maybe html
     }
 
 
@@ -67,17 +66,17 @@ application :
     List ( String, List (ChapterCustom state html) )
     -> BookBuilder state html
     -> BookApplication state html
-application chapterGroups (BookBuilder config) =
+application chapterGroups bookBuilder =
+    let
+        config =
+            configFromBuilder chapterGroups bookBuilder
+    in
     Browser.application
-        { init =
-            init
-                { config = config
-                , chapterGroups = chapterGroups
-                }
-        , view = view
+        { init = init config
+        , view = view config
         , update =
             \msg model ->
-                update msg model
+                update config msg model
                     |> withActionLogReset model
         , onUrlChange = OnUrlChange
         , onUrlRequest = OnUrlRequest
@@ -96,74 +95,35 @@ application chapterGroups (BookBuilder config) =
 
 
 init :
-    { chapterGroups : List ( String, List (ChapterCustom state html) )
-    , config : ElmBookConfig state html
-    }
+    ElmBookConfig state html
     -> ()
     -> Url.Url
     -> Browser.Navigation.Key
     -> ( Model state html, Cmd (Msg state) )
-init props _ url navKey =
+init config _ url_ navKey =
     let
-        chapters =
-            props.chapterGroups
-                |> List.foldl
-                    (\( _, chapters_ ) acc ->
-                        chapters_
-                            |> Array.fromList
-                            |> Array.append acc
-                    )
-                    Array.empty
+        url =
+            extractPath config.themeOptions.hashBasedNavigation url_
 
-        chapterGroups =
-            let
-                toIndexedGroup : Int -> ( String, List a ) -> ( String, List Int )
-                toIndexedGroup initialIndex ( groupTitle, groupChapters ) =
-                    ( groupTitle
-                    , List.indexedMap (\i _ -> i + initialIndex) groupChapters
-                    )
-            in
-            props.chapterGroups
-                |> List.foldl
-                    (\( label, xs ) ( acc, lastIndex ) ->
-                        ( toIndexedGroup lastIndex ( label, xs ) :: acc
-                        , lastIndex + List.length xs
-                        )
-                    )
-                    ( [], 0 )
-                |> Tuple.first
-                |> List.reverse
+        darkMode =
+            config.themeOptions.preferDarkMode
+
+        initialState =
+            config.statefulOptions.initialState
+                |> Maybe.map (config.statefulOptions.onDarkModeChange darkMode)
+
+        hashBasedNavigation_ =
+            hashBasedNavigation config.themeOptions
 
         activeChapter =
-            parseActiveChapterFromUrl props.config chapters url
-
-        darkTheme =
-            props.config.themeOptions.preferDarkMode
-
-        initialConfig =
-            props.config
-
-        initialStatefulOptions =
-            props.config.statefulOptions
-
-        initialConfig_ =
-            { initialConfig
-                | statefulOptions =
-                    { initialStatefulOptions
-                        | state =
-                            props.config.statefulOptions.state
-                                |> Maybe.map (props.config.statefulOptions.onDarkModeChange darkTheme)
-                    }
-            }
+            chapterFromUrl config (extractPath hashBasedNavigation_ url_)
     in
     ( { navKey = navKey
-      , config = initialConfig_
-      , chapterGroups = chapterGroups
-      , chapters = chapters
-      , chaptersSearched = chapters
-      , chapterActive = activeChapter
+      , url = url
+      , state = initialState
+      , themeOverrides = ElmBook.Internal.ThemeOptions.defaultOverrides
+      , darkMode = darkMode
       , chapterPreSelected = 0
-      , darkMode = props.config.themeOptions.preferDarkMode
       , search = ""
       , isSearching = False
       , isShiftPressed = False
@@ -171,14 +131,15 @@ init props _ url navKey =
       , actionLog = []
       , actionLogModal = False
       , isMenuOpen = False
+      , backCompatibility = Nothing
       }
     , case activeChapter of
         Just _ ->
             Cmd.none
 
         Nothing ->
-            Array.get 0 chapters
-                |> Maybe.map (Browser.Navigation.replaceUrl navKey << chapterUrl (hashBasedNavigation props.config.themeOptions))
+            Array.get 0 config.chapters
+                |> Maybe.map (Browser.Navigation.replaceUrl navKey << chapterNavUrl hashBasedNavigation_)
                 |> Maybe.withDefault (Browser.Navigation.replaceUrl navKey "/")
     )
 
@@ -187,11 +148,14 @@ init props _ url navKey =
 -- Update
 
 
-update : Msg state -> Model state html -> ( Model state html, Cmd (Msg state) )
-update msg model =
+update : ElmBookConfig state html -> Msg state -> Model state html -> ( Model state html, Cmd (Msg state) )
+update config msg model =
     let
+        activeChapter =
+            chapterFromUrl config model.url
+
         defaultLogContext =
-            model.chapterActive
+            activeChapter
                 |> Maybe.map chapterTitle
                 |> Maybe.map (\s -> s ++ " / ")
                 |> Maybe.withDefault ""
@@ -202,7 +166,7 @@ update msg model =
             )
 
         hashBasedNavigation_ =
-            hashBasedNavigation model.config.themeOptions
+            hashBasedNavigation config.themeOptions
     in
     case msg of
         OnUrlRequest request ->
@@ -221,26 +185,20 @@ update msg model =
                         , Browser.Navigation.pushUrl model.navKey (Url.toString url)
                         )
 
-        OnUrlChange url ->
-            case ( extractPath hashBasedNavigation_ url, Array.get 0 model.chapters ) of
-                ( "/", Just chapter_ ) ->
-                    ( model
-                    , Browser.Navigation.pushUrl model.navKey <| chapterUrl hashBasedNavigation_ chapter_
-                    )
-
-                ( "/", Nothing ) ->
-                    ( { model | chapterActive = Nothing }, Cmd.none )
+        OnUrlChange url_ ->
+            let
+                url =
+                    extractPath hashBasedNavigation_ url_
+            in
+            case url of
+                "/" ->
+                    Array.get 0 config.chapters
+                        |> Maybe.map (\fallback -> ( model, Browser.Navigation.pushUrl model.navKey <| chapterUrl fallback ))
+                        |> Maybe.withDefault ( { model | url = "/" }, Cmd.none )
 
                 _ ->
-                    let
-                        activeChapter =
-                            parseActiveChapterFromUrl model.config model.chapters url
-                    in
-                    ( { model
-                        | chapterActive = activeChapter
-                        , isMenuOpen = False
-                      }
-                    , case activeChapter of
+                    ( { model | url = url, isMenuOpen = False }
+                    , case Dict.get url config.chapterByUrl of
                         Just _ ->
                             Task.attempt
                                 (\_ -> DoNothing)
@@ -260,77 +218,20 @@ update msg model =
             let
                 darkMode =
                     not model.darkMode
-
-                config =
-                    model.config
-
-                statefulOptions_ =
-                    model.config.statefulOptions
-
-                statefulOptions__ =
-                    { statefulOptions_
-                        | state =
-                            statefulOptions_.state
-                                |> Maybe.map (model.config.statefulOptions.onDarkModeChange darkMode)
-                    }
-
-                config_ =
-                    { config | statefulOptions = statefulOptions__ }
             in
             ( { model
-                | config = config_
-                , darkMode = darkMode
+                | darkMode = darkMode
+                , state =
+                    model.state
+                        |> Maybe.map (config.statefulOptions.onDarkModeChange darkMode)
               }
             , Cmd.none
             )
 
         UpdateState fn ->
-            model.config.statefulOptions.state
-                |> Maybe.map
-                    (\state_ ->
-                        let
-                            config =
-                                model.config
-
-                            statefulOptions_ =
-                                model.config.statefulOptions
-
-                            statefulOptions__ =
-                                { statefulOptions_ | state = Just (fn state_) }
-
-                            config_ =
-                                { config | statefulOptions = statefulOptions__ }
-                        in
-                        ( { model | config = config_ }
-                        , Cmd.none
-                        )
-                    )
-                |> Maybe.withDefault ( model, Cmd.none )
-
-        UpdateStateWithCmd fn ->
-            model.config.statefulOptions.state
-                |> Maybe.map
-                    (\state_ ->
-                        let
-                            config =
-                                model.config
-
-                            statefulOptions_ =
-                                model.config.statefulOptions
-
-                            ( state__, cmd ) =
-                                fn state_
-
-                            statefulOptions__ =
-                                { statefulOptions_ | state = Just state__ }
-
-                            config_ =
-                                { config | statefulOptions = statefulOptions__ }
-                        in
-                        ( { model | config = config_ }
-                        , cmd
-                        )
-                    )
+            model.state
+                |> Maybe.map fn
+                |> Maybe.map (Tuple.mapFirst (\s -> { model | state = Just s }))
                 |> Maybe.withDefault ( model, Cmd.none )
 
         LogAction context action ->
@@ -349,7 +250,6 @@ update msg model =
             ( { model
                 | isSearching = False
                 , search = ""
-                , chaptersSearched = model.chapters
               }
             , Cmd.none
             )
@@ -357,7 +257,6 @@ update msg model =
         Search value ->
             ( { model
                 | search = value
-                , chaptersSearched = searchChapters value model.chapters
                 , chapterPreSelected = 0
               }
             , Cmd.none
@@ -370,15 +269,13 @@ update msg model =
 
         KeyArrowDown ->
             ( { model
-                | chapterPreSelected = modBy (Array.length model.chaptersSearched) (model.chapterPreSelected + 1)
+                | chapterPreSelected = model.chapterPreSelected + 1
               }
             , Cmd.none
             )
 
         KeyArrowUp ->
-            ( { model
-                | chapterPreSelected = modBy (Array.length model.chaptersSearched) (model.chapterPreSelected - 1)
-              }
+            ( { model | chapterPreSelected = model.chapterPreSelected - 1 }
             , Cmd.none
             )
 
@@ -402,104 +299,118 @@ update msg model =
                 ( model, Cmd.none )
 
         KeyEnter ->
-            if model.isSearching then
-                case Array.get model.chapterPreSelected model.chaptersSearched of
+            if not model.isSearching then
+                ( model, Cmd.none )
+
+            else
+                let
+                    preSelectedIndex =
+                        modBy (Array.length config.chapters) model.chapterPreSelected
+
+                    targetChapter =
+                        Array.get preSelectedIndex config.chapters
+                in
+                case targetChapter of
                     Just chapter_ ->
-                        if String.startsWith "/" (chapterUrl hashBasedNavigation_ chapter_) then
+                        if chapterInternal chapter_ then
                             ( model
-                            , Browser.Navigation.pushUrl model.navKey (chapterUrl hashBasedNavigation_ chapter_)
+                            , Browser.Navigation.pushUrl
+                                model.navKey
+                                (chapterNavUrl hashBasedNavigation_ chapter_)
                             )
 
                         else
                             ( model
-                            , Browser.Navigation.load (chapterUrl hashBasedNavigation_ chapter_)
+                            , Browser.Navigation.load (chapterUrl chapter_)
                             )
 
                     Nothing ->
                         ( model, Cmd.none )
 
-            else
-                ( model, Cmd.none )
-
         SetThemeBackgroundGradient startColor endColor ->
-            ElmBook.ThemeOptions.backgroundGradient startColor endColor
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t ->
+                    { t
+                        | background =
+                            Just <|
+                                "linear-gradient(150deg, "
+                                    ++ startColor
+                                    ++ " 0%, "
+                                    ++ endColor
+                                    ++ " 100%)"
+                    }
+                )
 
         SetThemeBackground background ->
-            ElmBook.ThemeOptions.background background
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t -> { t | background = Just background })
 
         SetThemeAccent accent ->
-            ElmBook.ThemeOptions.accent accent
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t -> { t | accent = Just accent })
 
         SetThemeNavBackground navBackground ->
-            ElmBook.ThemeOptions.navBackground navBackground
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t -> { t | navBackground = Just navBackground })
 
         SetThemeNavAccent navAccent ->
-            ElmBook.ThemeOptions.navAccent navAccent
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t -> { t | navAccent = Just navAccent })
 
         SetThemeNavAccentHighlight navAccentHighlight ->
-            ElmBook.ThemeOptions.navAccentHighlight navAccentHighlight
-                |> updateTheme model
+            updateThemeOverrides model
+                (\t -> { t | navAccentHighlight = Just navAccentHighlight })
 
         DoNothing ->
             ( model, Cmd.none )
 
 
-updateTheme : Model state html -> ElmBook.ThemeOptions.ThemeOption html -> ( Model state html, Cmd (Msg state) )
-updateTheme model option =
-    let
-        config =
-            model.config
-
-        config_ =
-            { config
-                | themeOptions = option model.config.themeOptions
-            }
-
-        model_ =
-            { model | config = config_ }
-    in
-    ( model_, Cmd.none )
+updateThemeOverrides :
+    Model state html
+    -> (ElmBook.Internal.ThemeOptions.ThemeOptionOverrides -> ElmBook.Internal.ThemeOptions.ThemeOptionOverrides)
+    -> ( Model state html, Cmd (Msg state) )
+updateThemeOverrides model fn =
+    ( { model | themeOverrides = fn model.themeOverrides }, Cmd.none )
 
 
 withActionLogReset : Model state html -> ( Model state html, Cmd (Msg state) ) -> ( Model state html, Cmd (Msg state) )
-withActionLogReset previousModel ( model, cmd ) =
-    let
-        chapterSlugActive : Maybe String
-        chapterSlugActive =
-            model.chapterActive
-                |> Maybe.map (chapterUrl False)
+withActionLogReset previousModel =
+    Tuple.mapFirst
+        (\model ->
+            if model.url /= previousModel.url then
+                { model | actionLog = [] }
 
-        chapterSlugPrevious : Maybe String
-        chapterSlugPrevious =
-            previousModel.chapterActive
-                |> Maybe.map (chapterUrl False)
-    in
-    if chapterSlugActive /= chapterSlugPrevious then
-        ( { model | actionLog = [] }, cmd )
-
-    else
-        ( model, cmd )
+            else
+                model
+        )
 
 
 
 -- View
 
 
-view : Model state html -> Browser.Document (Msg state)
-view model =
+view : ElmBookConfig state html -> Model state html -> Browser.Document (Msg state)
+view config model =
+    let
+        theme =
+            ElmBook.Internal.ThemeOptions.applyOverrides
+                config.themeOptions
+                model.themeOverrides
+
+        activeChapter =
+            chapterFromUrl config model.url
+
+        hashBasedNavigation =
+            ElmBook.Internal.ThemeOptions.hashBasedNavigation config.themeOptions
+    in
     { title =
         let
             mainTitle =
-                ElmBook.Internal.ThemeOptions.subtitle model.config.themeOptions
-                    |> Maybe.map (\s -> model.config.title ++ " | " ++ s)
-                    |> Maybe.withDefault model.config.title
+                ElmBook.Internal.ThemeOptions.subtitle config.themeOptions
+                    |> Maybe.map (\s -> config.title ++ " | " ++ s)
+                    |> Maybe.withDefault config.title
         in
-        case model.chapterActive of
+        case activeChapter of
             Just (Chapter { title }) ->
                 title ++ " - " ++ mainTitle
 
@@ -508,19 +419,19 @@ view model =
     , body =
         [ ElmBook.UI.Styles.view
         , ElmBook.UI.Wrapper.view
-            { theme = model.config.themeOptions
+            { theme = theme
             , darkMode = model.darkMode
             , isMenuOpen = model.isMenuOpen
             , globals =
-                model.config.themeOptions.globals
+                config.themeOptions.globals
                     |> Maybe.withDefault []
-                    |> List.map model.config.toHtml
+                    |> List.map config.toHtml
             , header =
                 ElmBook.UI.Header.view
-                    { toHtml = model.config.toHtml
+                    { toHtml = config.toHtml
                     , href = "/"
-                    , theme = model.config.themeOptions
-                    , title = model.config.title
+                    , theme = config.themeOptions
+                    , title = config.title
                     , isMenuOpen = model.isMenuOpen
                     , onClickHeader = DoNothing
                     , onClickMenuButton = ToggleMenu
@@ -534,36 +445,41 @@ view model =
                     }
             , menu =
                 let
-                    hashBasedNavigation =
-                        ElmBook.Internal.ThemeOptions.hashBasedNavigation model.config.themeOptions
+                    chaptersList =
+                        searchChapters model.search config.chapters
 
-                    visibleChapterUrls =
-                        Array.toList model.chaptersSearched
-                            |> List.map (chapterUrl hashBasedNavigation)
+                    chaptersListSlugs =
+                        chaptersList
+                            |> Array.toList
+                            |> List.map (chapterNavUrl hashBasedNavigation)
                 in
                 ElmBook.UI.Nav.view
-                    { active = Maybe.map (chapterUrl hashBasedNavigation) model.chapterActive
+                    { active =
+                        activeChapter
+                            |> Maybe.map (chapterNavUrl hashBasedNavigation)
                     , preSelected =
                         if model.isSearching then
-                            Array.get model.chapterPreSelected model.chaptersSearched
-                                |> Maybe.map (chapterUrl hashBasedNavigation)
+                            Array.get
+                                (modBy (Array.length chaptersList) model.chapterPreSelected)
+                                chaptersList
+                                |> Maybe.map (chapterNavUrl hashBasedNavigation)
 
                         else
                             Nothing
                     , itemGroups =
-                        model.chapterGroups
+                        config.chapterGroups
                             |> List.map
                                 (Tuple.mapSecond
-                                    (List.map (\index -> Array.get index model.chapters)
+                                    (List.map (\index -> Array.get index config.chapters)
                                         >> List.filterMap identity
-                                        >> List.map (\((Chapter { title, internal }) as chapter) -> ( chapterUrl hashBasedNavigation chapter, title, internal ))
-                                        >> List.filter (\( slug, _, _ ) -> List.member slug visibleChapterUrls)
+                                        >> List.map (\((Chapter { title, internal }) as chapter) -> ( chapterNavUrl hashBasedNavigation chapter, title, internal ))
+                                        >> List.filter (\( slug, _, _ ) -> List.member slug chaptersListSlugs)
                                     )
                                 )
                     }
             , menuFooter = ElmBook.UI.Footer.view
             , mainHeader =
-                model.chapterActive
+                activeChapter
                     |> Maybe.map
                         (\chapter ->
                             ElmBook.UI.ChapterHeader.view
@@ -572,7 +488,7 @@ view model =
                                 }
                         )
             , main =
-                model.chapterActive
+                activeChapter
                     |> Maybe.map
                         (\(Chapter activeChapter_) ->
                             ElmBook.UI.Chapter.view
@@ -580,21 +496,18 @@ view model =
                                 , chapterOptions =
                                     activeChapter_.chapterOptions
                                         |> ElmBook.Internal.Chapter.toValidOptions
-                                            model.config.chapterOptions
+                                            config.chapterOptions
                                 , componentOptions =
                                     activeChapter_.componentOptions
                                         |> ElmBook.Internal.ComponentOptions.toValidOptions
-                                            model.config.componentOptions
+                                            config.componentOptions
                                 , body = activeChapter_.body
                                 , components =
                                     activeChapter_.componentList
                                         |> List.map
                                             (\component ->
                                                 ( component.label
-                                                , componentView
-                                                    model.config.toHtml
-                                                    model.config.statefulOptions.state
-                                                    component.view
+                                                , componentView config.toHtml model.state component.view
                                                 )
                                             )
                                 }
@@ -673,17 +586,6 @@ extractPath hashBasedNavigation url =
 
     else
         url.path
-
-
-parseActiveChapterFromUrl : ElmBookConfig state html -> Array (ChapterCustom state html) -> Url.Url -> Maybe (ChapterCustom state html)
-parseActiveChapterFromUrl config chapters url =
-    let
-        targetUrl =
-            extractPath (hashBasedNavigation config.themeOptions) url
-    in
-    chapters
-        |> Array.filter (\c -> chapterUrl False c == targetUrl)
-        |> Array.get 0
 
 
 
