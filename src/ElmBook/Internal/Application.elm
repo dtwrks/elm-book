@@ -105,9 +105,6 @@ init config _ url_ navKey =
         url =
             extractPath config.themeOptions.hashBasedNavigation url_
 
-        activeChapter =
-            parseActiveChapterFromUrl config url_
-
         darkMode =
             config.themeOptions.preferDarkMode
 
@@ -117,6 +114,9 @@ init config _ url_ navKey =
 
         hashBasedNavigation_ =
             hashBasedNavigation config.themeOptions
+
+        activeChapter =
+            chapterFromUrl config (extractPath hashBasedNavigation_ url_)
     in
     ( { navKey = navKey
       , url = url
@@ -586,16 +586,6 @@ extractPath hashBasedNavigation url =
 
     else
         url.path
-
-
-parseActiveChapterFromUrl : ElmBookConfig state html -> Url.Url -> Maybe (ChapterCustom state html)
-parseActiveChapterFromUrl config url =
-    let
-        targetUrl =
-            extractPath (hashBasedNavigation config.themeOptions) url
-    in
-    Dict.get targetUrl config.chapterByUrl
-        |> Maybe.andThen (\i -> Array.get i config.chapters)
 
 
 
