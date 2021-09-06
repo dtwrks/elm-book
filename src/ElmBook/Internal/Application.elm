@@ -17,7 +17,6 @@ import ElmBook.Internal.Chapter exposing (ChapterComponentView(..), ChapterCusto
 import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Msg exposing (Msg(..))
 import ElmBook.Internal.ThemeOptions exposing (hashBasedNavigation, navBackground)
-import ElmBook.ThemeOptions
 import ElmBook.UI.ActionLog
 import ElmBook.UI.Chapter
 import ElmBook.UI.ChapterHeader

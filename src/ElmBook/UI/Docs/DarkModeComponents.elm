@@ -1,6 +1,6 @@
 module ElmBook.UI.Docs.DarkModeComponents exposing (..)
 
-import ElmBook.Chapter exposing (Chapter, chapter, render, renderStatefulComponent, renderWithComponentList, withStatefulComponent)
+import ElmBook.Chapter exposing (Chapter, chapter, render, withStatefulComponent)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
