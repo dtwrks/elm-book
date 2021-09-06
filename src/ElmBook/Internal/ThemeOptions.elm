@@ -1,6 +1,8 @@
 module ElmBook.Internal.ThemeOptions exposing
-    ( ThemeOptions
+    ( ThemeOptionOverrides
+    , ThemeOptions
     , accent
+    , applyOverrides
     , background
     , defaultAccent
     , defaultBackgroundEnd
@@ -8,6 +10,7 @@ module ElmBook.Internal.ThemeOptions exposing
     , defaultNavAccent
     , defaultNavAccentHighlight
     , defaultNavBackground
+    , defaultOverrides
     , defaultTheme
     , fontMonospace
     , fontSans
@@ -37,6 +40,36 @@ type alias ThemeOptions html =
     , fontSans : String
     , fontSerif : String
     , fontMonospace : String
+    }
+
+
+type alias ThemeOptionOverrides =
+    { background : Maybe String
+    , accent : Maybe String
+    , navBackground : Maybe String
+    , navAccent : Maybe String
+    , navAccentHighlight : Maybe String
+    }
+
+
+defaultOverrides : ThemeOptionOverrides
+defaultOverrides =
+    { background = Nothing
+    , accent = Nothing
+    , navBackground = Nothing
+    , navAccent = Nothing
+    , navAccentHighlight = Nothing
+    }
+
+
+applyOverrides : ThemeOptions html -> ThemeOptionOverrides -> ThemeOptions html
+applyOverrides theme overrides =
+    { theme
+        | background = Maybe.withDefault theme.background overrides.background
+        , accent = Maybe.withDefault theme.accent overrides.accent
+        , navBackground = Maybe.withDefault theme.navBackground overrides.navBackground
+        , navAccent = Maybe.withDefault theme.navAccent overrides.navAccent
+        , navAccentHighlight = Maybe.withDefault theme.navAccentHighlight overrides.navAccentHighlight
     }
 
 

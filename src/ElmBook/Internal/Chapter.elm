@@ -7,6 +7,8 @@ module ElmBook.Internal.Chapter exposing
     , ChapterOptions(..)
     , ValidChapterOptions
     , chapterBreadcrumb
+    , chapterInternal
+    , chapterNavUrl
     , chapterTitle
     , chapterUrl
     , chapterWithGroup
@@ -86,8 +88,18 @@ chapterTitle (Chapter { title }) =
     title
 
 
-chapterUrl : Bool -> ChapterCustom state html -> String
-chapterUrl hashBasedNavigation (Chapter { url, internal }) =
+chapterUrl : ChapterCustom state html -> String
+chapterUrl (Chapter { url }) =
+    url
+
+
+chapterInternal : ChapterCustom state html -> Bool
+chapterInternal (Chapter { internal }) =
+    internal
+
+
+chapterNavUrl : Bool -> ChapterCustom state html -> String
+chapterNavUrl hashBasedNavigation (Chapter { url, internal }) =
     if internal && hashBasedNavigation then
         "#" ++ url
 

@@ -143,8 +143,8 @@ logActionWith toString action value =
 
 -}
 updateState : (state -> state) -> Msg state
-updateState =
-    UpdateState
+updateState fn =
+    UpdateState (\state -> ( fn state, Cmd.none ))
 
 
 {-| Used when updating the state based on an argument.
@@ -167,8 +167,8 @@ updateState =
 
 -}
 updateStateWith : (a -> state -> state) -> a -> Msg state
-updateStateWith fn =
-    UpdateState << fn
+updateStateWith fn a =
+    UpdateState (\state -> ( fn a state, Cmd.none ))
 
 
 {-| Updates the state of your stateful book and possibly sends out a command. HTTP requests inside your book? Oh yeah! Get ready to go full over-engineering master.
@@ -196,11 +196,11 @@ updateStateWith fn =
 -}
 updateStateWithCmd : (state -> ( state, Cmd (Msg state) )) -> Msg state
 updateStateWithCmd =
-    UpdateStateWithCmd
+    UpdateState
 
 
 {-| Same as `updateStateWith` but should return a `( state, Cmd msg )` tuple.
 -}
 updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state) )) -> a -> Msg state
 updateStateWithCmdWith fn =
-    UpdateStateWithCmd << fn
+    UpdateState << fn

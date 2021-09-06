@@ -8,8 +8,7 @@ type Msg state
     = DoNothing
     | OnUrlRequest UrlRequest
     | OnUrlChange Url
-    | UpdateState (state -> state)
-    | UpdateStateWithCmd (state -> ( state, Cmd (Msg state) ))
+    | UpdateState (state -> ( state, Cmd (Msg state) ))
     | LogAction String String
     | ToggleDarkMode
     | ActionLogShow

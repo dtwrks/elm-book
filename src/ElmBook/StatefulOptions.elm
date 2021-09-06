@@ -40,7 +40,7 @@ type alias Attribute state =
 -}
 initialState : state -> Attribute state
 initialState state options =
-    { options | state = Just state }
+    { options | initialState = Just state }
 
 
 {-| Add subscriptions to your book.
