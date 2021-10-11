@@ -3,7 +3,7 @@
     "name": "dtwrks/elm-book",
     "summary": "Rich documentation builder inspired by Storybook and HexDocs.",
     "license": "MPL-2.0",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "exposed-modules": [
         "ElmBook",
         "ElmBook.Chapter",
@@ -16,7 +16,7 @@
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
-        "dillonkearns/elm-markdown": "6.0.1 <= v < 7.0.0",
+        "dillonkearns/elm-markdown": "7.0.0 <= v < 8.0.0",
         "elm/browser": "1.0.0 <= v < 2.0.0",
         "elm/core": "1.0.0 <= v < 2.0.0",
         "elm/html": "1.0.0 <= v < 2.0.0",
