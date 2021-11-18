@@ -1,7 +1,7 @@
 module ElmBook.Chapter exposing
     ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
     , withComponent, withComponentList, render, renderWithComponentList
-    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
+    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map
     , withChapterOptions, withComponentOptions
     )
 
@@ -69,7 +69,7 @@ Create chapters with interactive components that can read and update the book's 
 
 Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for a more throughout explanation.
 
-@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
+@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map
 
 
 # Customizing Chapters
@@ -297,6 +297,13 @@ renderWithComponentList : String -> ChapterBuilder state html -> ChapterCustom s
 renderWithComponentList body (ChapterBuilder builder) =
     Chapter
         { builder | body = builder.body ++ body ++ "\n<component-list />" }
+
+
+{-| Maps the msg a Chapter produces. Useful when using chapters that have their own `Msg` and `update` functions
+-}
+map : (subMsg -> mappedSubMsg) -> Chapter state subMsg -> Chapter state mappedSubMsg
+map mapMsg chapter_ =
+    ElmBook.Internal.Chapter.map (Html.map (ElmBook.Internal.Msg.map mapMsg)) chapter_
 
 
 

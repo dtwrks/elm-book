@@ -15,6 +15,7 @@ module ElmBook.Internal.Chapter exposing
     , defaultOptions
     , defaultOverrides
     , groupTitle
+    , map
     , toValidOptions
     )
 
@@ -49,6 +50,33 @@ defaultOverrides =
 toValidOptions : ValidChapterOptions -> ChapterOptions -> ValidChapterOptions
 toValidOptions valid (ChapterOptions options) =
     { hiddenTitle = Maybe.withDefault valid.hiddenTitle options.hiddenTitle
+    }
+
+
+map : (html -> mappedHtml) -> ChapterCustom state html -> ChapterCustom state mappedHtml
+map mapFn (Chapter chapter) =
+    Chapter
+        { url = chapter.url
+        , title = chapter.title
+        , internal = chapter.internal
+        , groupTitle = chapter.groupTitle
+        , body = chapter.body
+        , chapterOptions = chapter.chapterOptions
+        , componentOptions = chapter.componentOptions
+        , componentList = List.map (mapComponent mapFn) chapter.componentList
+        }
+
+
+mapComponent : (html -> mappedHtml) -> ChapterComponent state html -> ChapterComponent state mappedHtml
+mapComponent mapFn component =
+    { label = component.label
+    , view =
+        case component.view of
+            ChapterComponentViewStateless statelessView ->
+                ChapterComponentViewStateless (mapFn statelessView)
+
+            ChapterComponentViewStateful statefulView ->
+                ChapterComponentViewStateful (statefulView >> mapFn)
     }
 
 
