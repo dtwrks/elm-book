@@ -1,6 +1,7 @@
 module ElmBook.StatefulOptions exposing
     ( initialState, subscriptions, onDarkModeChange
     , Attribute
+    , update
     )
 
 {-| Attributes used by `ElmBook.withStatefulOptions`.
@@ -41,6 +42,38 @@ type alias Attribute state subMsg =
 initialState : state -> Attribute state subMsg
 initialState state options =
     { options | initialState = Just state }
+
+
+{-| Update the shared state with your own msg type.
+
+    type alias SharedState =
+        { childComponent : ChildComponent.Model }
+
+    type Msg
+        = GotChildComponentMsg ChildComponent.Msg
+
+    updateSharedState : SharedState -> Msg -> ( SharedState, Cmd Msg )
+    updateSharedState sharedState msg =
+        case msg of
+            UpdatedChildComponent subMsg ->
+                let
+                    ( childComponent, cmd ) =
+                        ChildComponent.update subMsg sharedState.childComponent
+                in
+                ( { sharedState | childComponent = childComponent }
+                , Cmd.map GotChildComponentMsg cmd
+                )
+
+    book : Book SharedState Msg
+    book "MyApp"
+        |> withStatefulOptions [
+            update updateSharedState
+        ]
+
+-}
+update : (subMsg -> state -> ( state, Cmd subMsg )) -> Attribute state subMsg
+update updateFn options =
+    { options | update = updateFn }
 
 
 {-| Add subscriptions to your book.

@@ -214,6 +214,20 @@ update config msg model =
                                 )
                     )
 
+        GotCustomMsg subMsg ->
+            case model.state of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just state ->
+                    let
+                        ( newState, cmd ) =
+                            config.statefulOptions.update subMsg state
+                    in
+                    ( { model | state = Just newState }
+                    , Cmd.map GotCustomMsg cmd
+                    )
+
         ToggleDarkMode ->
             let
                 darkMode =
@@ -362,9 +376,6 @@ update config msg model =
                 (\t -> { t | navAccentHighlight = Just navAccentHighlight })
 
         DoNothing ->
-            ( model, Cmd.none )
-
-        GenericMsg _ ->
             ( model, Cmd.none )
 
 
