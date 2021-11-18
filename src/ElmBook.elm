@@ -80,18 +80,18 @@ If you're creating a stateful book, you will need to pass your custom `SharedSta
                 ]
 
 -}
-type alias Book state =
-    BookApplication state (Html (Msg state))
+type alias Book state subMsg =
+    BookApplication state (Html (Msg state subMsg)) subMsg
 
 
 {-| -}
-type alias Msg state =
-    ElmBook.Internal.Msg.Msg state
+type alias Msg state subMsg =
+    ElmBook.Internal.Msg.Msg state subMsg
 
 
 {-| Kickoff the creation of an ElmBook application.
 -}
-book : String -> BookBuilder state (Html (Msg state))
+book : String -> BookBuilder state (Html (Msg state subMsg)) subMsg
 book =
     ElmBook.Custom.customBook identity
 
@@ -101,7 +101,7 @@ book =
 **Should be used as the final step on your setup.**
 
 -}
-withChapters : List (ChapterCustom state html) -> BookBuilder state html -> BookApplication state html
+withChapters : List (ChapterCustom state html) -> BookBuilder state html subMsg -> BookApplication state html subMsg
 withChapters chapters =
     withChapterGroups [ ( "", chapters ) ]
 
@@ -128,8 +128,8 @@ withChapters chapters =
 -}
 withChapterGroups :
     List ( String, List (ChapterCustom state html) )
-    -> BookBuilder state html
-    -> BookApplication state html
+    -> BookBuilder state html subMsg
+    -> BookApplication state html subMsg
 withChapterGroups chapterGroups_ =
     ElmBook.Internal.Application.application
         (chapterGroups_
@@ -155,7 +155,7 @@ withChapterGroups chapterGroups_ =
             |> withChapters []
 
 -}
-withThemeOptions : List (ElmBook.ThemeOptions.ThemeOption html) -> BookBuilder state html -> BookBuilder state html
+withThemeOptions : List (ElmBook.ThemeOptions.ThemeOption html) -> BookBuilder state html subMsg -> BookBuilder state html subMsg
 withThemeOptions themeAttributes (BookBuilder config) =
     BookBuilder
         { config | themeOptions = applyAttributes themeAttributes config.themeOptions }
@@ -172,7 +172,7 @@ withThemeOptions themeAttributes (BookBuilder config) =
 Please note that chapter options are "inherited". So you can also override these options on a particular chapter and that will take priority of book-wide options. Take a look at `ElmBook.ChapterOptions` for all the options available.
 
 -}
-withChapterOptions : List ElmBook.ChapterOptions.Attribute -> BookBuilder state html -> BookBuilder state html
+withChapterOptions : List ElmBook.ChapterOptions.Attribute -> BookBuilder state html subMsg -> BookBuilder state html subMsg
 withChapterOptions attributes (BookBuilder config) =
     BookBuilder
         { config
@@ -196,7 +196,7 @@ withChapterOptions attributes (BookBuilder config) =
 Please note that component options are "inherited". So you can override these options on a particular chapter and even on an specific component.
 
 -}
-withComponentOptions : List ElmBook.Internal.ComponentOptions.Attribute -> BookBuilder state html -> BookBuilder state html
+withComponentOptions : List ElmBook.Internal.ComponentOptions.Attribute -> BookBuilder state html subMsg -> BookBuilder state html subMsg
 withComponentOptions componentAttributes (BookBuilder config) =
     BookBuilder
         { config
@@ -212,9 +212,9 @@ Attributes for this function are defined on `ElmBook.StatefulOptions`.
 
 -}
 withStatefulOptions :
-    List (ElmBook.StatefulOptions.Attribute state)
-    -> BookBuilder state html
-    -> BookBuilder state html
+    List (ElmBook.StatefulOptions.Attribute state subMsg)
+    -> BookBuilder state html subMsg
+    -> BookBuilder state html subMsg
 withStatefulOptions attributes (BookBuilder config) =
     BookBuilder
         { config | statefulOptions = applyAttributes attributes config.statefulOptions }

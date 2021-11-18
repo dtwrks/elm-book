@@ -9,7 +9,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     chapter "Logging Actions"
         |> withComponentOptions

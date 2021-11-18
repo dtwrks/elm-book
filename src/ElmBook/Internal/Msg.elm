@@ -4,11 +4,12 @@ import Browser exposing (UrlRequest)
 import Url exposing (Url)
 
 
-type Msg state
+type Msg state msg
     = DoNothing
     | OnUrlRequest UrlRequest
     | OnUrlChange Url
-    | UpdateState (state -> ( state, Cmd (Msg state) ))
+    | GenericMsg msg
+    | UpdateState (state -> ( state, Cmd (Msg state msg) ))
     | LogAction String String
     | ToggleDarkMode
     | ActionLogShow

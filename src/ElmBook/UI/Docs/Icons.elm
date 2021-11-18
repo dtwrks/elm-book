@@ -4,7 +4,7 @@ import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponentList, with
 import ElmBook.UI.Icons exposing (..)
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     let
         color =

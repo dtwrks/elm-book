@@ -35,7 +35,7 @@ import ElmBook.Internal.Msg exposing (..)
     button [ onClick <| logAction "Clicked!" ] []
 
 -}
-logAction : String -> Msg state
+logAction : String -> Msg state subMsg
 logAction action =
     LogAction "" action
 
@@ -46,7 +46,7 @@ logAction action =
     input [ onInput <| logActionWithString "Input" ] []
 
 -}
-logActionWithString : String -> String -> Msg state
+logActionWithString : String -> String -> Msg state subMsg
 logActionWithString =
     logActionWith identity
 
@@ -61,7 +61,7 @@ Until then please use the following replacement:
     logActionWith String.fromInt
 
 -}
-logActionWithInt : String -> String -> Msg state
+logActionWithInt : String -> String -> Msg state subMsg
 logActionWithInt =
     logActionWith identity
 
@@ -76,14 +76,14 @@ Until then please use the following replacement:
     logActionWith String.fromFloat
 
 -}
-logActionWithFloat : String -> String -> Msg state
+logActionWithFloat : String -> String -> Msg state subMsg
 logActionWithFloat =
     logActionWith identity
 
 
 {-| Logs an action that takes one `Bool` input.
 -}
-logActionWithBool : String -> Bool -> Msg state
+logActionWithBool : String -> Bool -> Msg state subMsg
 logActionWithBool =
     logActionWith stringFromBool
 
@@ -116,7 +116,7 @@ stringFromBool value =
     }
 
 -}
-logActionWith : (value -> String) -> String -> value -> Msg state
+logActionWith : (value -> String) -> String -> value -> Msg state subMsg
 logActionWith toString action value =
     LogAction "" (action ++ ": " ++ toString value)
 
@@ -142,7 +142,7 @@ logActionWith toString action value =
                 )
 
 -}
-updateState : (state -> state) -> Msg state
+updateState : (state -> state) -> Msg state subMsg
 updateState fn =
     UpdateState (\state -> ( fn state, Cmd.none ))
 
@@ -166,7 +166,7 @@ updateState fn =
                 )
 
 -}
-updateStateWith : (a -> state -> state) -> a -> Msg state
+updateStateWith : (a -> state -> state) -> a -> Msg state subMsg
 updateStateWith fn a =
     UpdateState (\state -> ( fn a state, Cmd.none ))
 
@@ -194,13 +194,13 @@ updateStateWith fn a =
                 )
 
 -}
-updateStateWithCmd : (state -> ( state, Cmd (Msg state) )) -> Msg state
+updateStateWithCmd : (state -> ( state, Cmd (Msg state subMsg) )) -> Msg state subMsg
 updateStateWithCmd =
     UpdateState
 
 
 {-| Same as `updateStateWith` but should return a `( state, Cmd msg )` tuple.
 -}
-updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state) )) -> a -> Msg state
+updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state subMsg) )) -> a -> Msg state subMsg
 updateStateWithCmdWith fn =
     UpdateState << fn

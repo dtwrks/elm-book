@@ -88,8 +88,8 @@ import Html exposing (Html)
 
 {-| Defines a Chapter type. The argument is the shared state this chapter depends on. We can leave it blank (`x`) on stateless chapters. Read the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide to know more.
 -}
-type alias Chapter state =
-    ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state))
+type alias Chapter state subMsg =
+    ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state subMsg))
 
 
 {-| Creates a chapter with some title.

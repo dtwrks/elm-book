@@ -9,7 +9,7 @@ type alias SharedState x =
     { x | darkMode : Bool }
 
 
-docs : Chapter (SharedState x)
+docs : Chapter (SharedState x) subMsg
 docs =
     chapter "Dark Components"
         |> withStatefulComponent

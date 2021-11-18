@@ -11,7 +11,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 
-docs : List ( String, Html (ElmBook.Msg x) )
+docs : List ( String, Html (ElmBook.Msg x subMsg) )
 docs =
     let
         props =

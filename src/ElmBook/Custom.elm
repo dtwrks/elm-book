@@ -40,8 +40,8 @@ import Html exposing (Html)
 
 
 {-| -}
-type alias Msg state =
-    ElmBook.Internal.Msg.Msg state
+type alias Msg state subMsg =
+    ElmBook.Internal.Msg.Msg state subMsg
 
 
 {-| -}
@@ -50,17 +50,17 @@ type alias Chapter state html =
 
 
 {-| -}
-type alias BookBuilder state html =
-    ElmBook.Internal.Book.BookBuilder state html
+type alias BookBuilder state html subMsg =
+    ElmBook.Internal.Book.BookBuilder state html subMsg
 
 
 {-| -}
-type alias Book state html =
-    BookApplication state html
+type alias Book state html subMsg =
+    BookApplication state html subMsg
 
 
 {-| -}
-customBook : (html -> Html (Msg state)) -> String -> BookBuilder state html
+customBook : (html -> Html (Msg state subMsg)) -> String -> BookBuilder state html subMsg
 customBook toHtml title =
     BookBuilder
         { title = title

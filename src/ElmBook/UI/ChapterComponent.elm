@@ -39,7 +39,7 @@ styles =
 """
 
 
-viewLabel : ValidComponentOptions -> String -> Html (Msg state)
+viewLabel : ValidComponentOptions -> String -> Html (Msg state subMsg)
 viewLabel options_ label =
     case ( label, options_.hiddenLabel, options_.display ) of
         ( "", _, _ ) ->
@@ -58,7 +58,7 @@ viewLabel options_ label =
                 [ text label ]
 
 
-viewBlock : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewBlock : ValidComponentOptions -> ( String, Html.Html (Msg state subMsg) ) -> Html (Msg state subMsg)
 viewBlock options_ ( label, html ) =
     article
         [ class "elm-book__chapter-component" ]
@@ -67,7 +67,7 @@ viewBlock options_ ( label, html ) =
         ]
 
 
-viewCard : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewCard : ValidComponentOptions -> ( String, Html.Html (Msg state subMsg) ) -> Html (Msg state subMsg)
 viewCard options_ ( label, html ) =
     article
         [ class "elm-book__chapter-component" ]
@@ -83,7 +83,7 @@ viewCard options_ ( label, html ) =
         ]
 
 
-viewDisplay : ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+viewDisplay : ValidComponentOptions -> ( String, Html.Html (Msg state subMsg) ) -> Html (Msg state subMsg)
 viewDisplay options_ ( label, html ) =
     case options_.display of
         Inline ->
@@ -96,7 +96,7 @@ viewDisplay options_ ( label, html ) =
             viewCard options_ ( label, html )
 
 
-view : String -> ValidComponentOptions -> ( String, Html.Html (Msg state) ) -> Html (Msg state)
+view : String -> ValidComponentOptions -> ( String, Html.Html (Msg state subMsg) ) -> Html (Msg state subMsg)
 view chapterTitle options_ ( label, html ) =
     viewDisplay options_ ( label, html )
         |> Html.map

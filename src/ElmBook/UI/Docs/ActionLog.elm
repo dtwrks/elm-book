@@ -5,7 +5,7 @@ import ElmBook.Chapter exposing (Chapter, chapter, renderWithComponentList, with
 import ElmBook.UI.ActionLog exposing (list, preview, previewEmpty)
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     chapter "ActionLog"
         |> withComponentList

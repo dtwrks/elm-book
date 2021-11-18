@@ -3,7 +3,7 @@ module ElmBook.UI.Docs.Guides.Chapters exposing (..)
 import ElmBook.Chapter exposing (Chapter, chapter, render)
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     chapter "Chapters"
         |> render """

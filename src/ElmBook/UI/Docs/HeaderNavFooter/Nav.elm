@@ -5,7 +5,7 @@ import ElmBook.UI.Nav exposing (view)
 import Html exposing (..)
 
 
-docs : List ( String, Html (ElmBook.Msg x) )
+docs : List ( String, Html (ElmBook.Msg x subMsg) )
 docs =
     let
         itemGroup index =

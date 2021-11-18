@@ -20,28 +20,28 @@ import Html exposing (Html)
 -- Builder
 
 
-type alias BookBuilderData state html =
+type alias BookBuilderData state html subMsg =
     { title : String
-    , toHtml : html -> Html (Msg state)
-    , statefulOptions : StatefulOptions state
+    , toHtml : html -> Html (Msg state subMsg)
+    , statefulOptions : StatefulOptions state subMsg
     , themeOptions : ThemeOptions html
     , chapterOptions : ValidChapterOptions
     , componentOptions : ValidComponentOptions
     }
 
 
-type BookBuilder state html
-    = BookBuilder (BookBuilderData state html)
+type BookBuilder state html subMsg
+    = BookBuilder (BookBuilderData state html subMsg)
 
 
 
 -- Config
 
 
-type alias ElmBookConfig state html =
+type alias ElmBookConfig state html subMsg =
     { title : String
-    , toHtml : html -> Html (Msg state)
-    , statefulOptions : StatefulOptions state
+    , toHtml : html -> Html (Msg state subMsg)
+    , statefulOptions : StatefulOptions state subMsg
     , themeOptions : ThemeOptions html
     , chapterOptions : ValidChapterOptions
     , componentOptions : ValidComponentOptions
@@ -53,8 +53,8 @@ type alias ElmBookConfig state html =
 
 configFromBuilder :
     List ( String, List (ChapterCustom state html) )
-    -> BookBuilder state html
-    -> ElmBookConfig state html
+    -> BookBuilder state html subMsg
+    -> ElmBookConfig state html subMsg
 configFromBuilder chapterGroups_ (BookBuilder data) =
     let
         chapterData :
@@ -127,7 +127,7 @@ configFromBuilder chapterGroups_ (BookBuilder data) =
 -- Helpers
 
 
-chapterFromUrl : ElmBookConfig state html -> String -> Maybe (ChapterCustom state html)
+chapterFromUrl : ElmBookConfig state html subMsg -> String -> Maybe (ChapterCustom state html)
 chapterFromUrl config url =
     Dict.get url config.chapterByUrl
         |> Maybe.andThen (\i -> Array.get i config.chapters)

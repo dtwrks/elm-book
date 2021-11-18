@@ -4,7 +4,7 @@ import ElmBook.Chapter exposing (Chapter, chapter, render, withStatefulComponent
 import ElmBook.UI.ThemeGenerator
 
 
-docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m)
+docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m) subMsg
 docs =
     chapter "Theme Generator"
         |> withStatefulComponent ElmBook.UI.ThemeGenerator.view

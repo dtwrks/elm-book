@@ -15,7 +15,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 
-docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m)
+docs : Chapter (ElmBook.UI.ThemeGenerator.SharedState m) subMsg
 docs =
     let
         headerProps =

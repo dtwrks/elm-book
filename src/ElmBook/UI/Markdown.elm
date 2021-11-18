@@ -17,7 +17,7 @@ import Markdown.Renderer
 import SyntaxHighlight
 
 
-view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state)
+view : String -> List ( String, Html (Msg state subMsg) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state subMsg)
 view chapterTitle chapterComponents componentOptions =
     Markdown.Parser.parse
         >> Result.withDefault []
@@ -36,7 +36,7 @@ view chapterTitle chapterComponents componentOptions =
            )
 
 
-componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
+componentRenderer : String -> List ( String, Html (Msg state subMsg) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state subMsg))
 componentRenderer chapterTitle chapterComponents componentOptions =
     { defaultRenderer
         | html =

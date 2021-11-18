@@ -5,7 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     chapter "Overview"
         |> render """

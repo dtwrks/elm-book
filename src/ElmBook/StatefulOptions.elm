@@ -21,8 +21,8 @@ import ElmBook.Internal.StatefulOptions exposing (StatefulOptions)
 
 
 {-| -}
-type alias Attribute state =
-    StatefulOptions state -> StatefulOptions state
+type alias Attribute state subMsg =
+    StatefulOptions state subMsg -> StatefulOptions state subMsg
 
 
 {-| Add an initial state to your book.
@@ -38,7 +38,7 @@ type alias Attribute state =
         ]
 
 -}
-initialState : state -> Attribute state
+initialState : state -> Attribute state subMsg
 initialState state options =
     { options | initialState = Just state }
 
@@ -68,7 +68,7 @@ initialState state options =
         ]
 
 -}
-subscriptions : List (Sub (Msg state)) -> Attribute state
+subscriptions : List (Sub (Msg state subMsg)) -> Attribute state subMsg
 subscriptions subscriptions_ options =
     { options | subscriptions = subscriptions_ }
 
@@ -98,6 +98,6 @@ This can be useful for showcasing your own dark themed components when using elm
             ]
 
 -}
-onDarkModeChange : (Bool -> state -> state) -> Attribute state
+onDarkModeChange : (Bool -> state -> state) -> Attribute state subMsg
 onDarkModeChange onDarkModeChange_ options =
     { options | onDarkModeChange = onDarkModeChange_ }

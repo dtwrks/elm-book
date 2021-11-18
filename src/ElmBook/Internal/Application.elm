@@ -58,14 +58,14 @@ type alias Model state html =
 -- Application
 
 
-type alias BookApplication state html =
-    Program () (Model state html) (Msg state)
+type alias BookApplication state html subMsg =
+    Program () (Model state html) (Msg state subMsg)
 
 
 application :
     List ( String, List (ChapterCustom state html) )
-    -> BookBuilder state html
-    -> BookApplication state html
+    -> BookBuilder state html subMsg
+    -> BookApplication state html subMsg
 application chapterGroups bookBuilder =
     let
         config =
@@ -95,11 +95,11 @@ application chapterGroups bookBuilder =
 
 
 init :
-    ElmBookConfig state html
+    ElmBookConfig state html subMsg
     -> ()
     -> Url.Url
     -> Browser.Navigation.Key
-    -> ( Model state html, Cmd (Msg state) )
+    -> ( Model state html, Cmd (Msg state subMsg) )
 init config _ url_ navKey =
     let
         url =
@@ -148,7 +148,7 @@ init config _ url_ navKey =
 -- Update
 
 
-update : ElmBookConfig state html -> Msg state -> Model state html -> ( Model state html, Cmd (Msg state) )
+update : ElmBookConfig state html subMsg -> Msg state subMsg -> Model state html -> ( Model state html, Cmd (Msg state subMsg) )
 update config msg model =
     let
         activeChapter =
@@ -364,16 +364,19 @@ update config msg model =
         DoNothing ->
             ( model, Cmd.none )
 
+        GenericMsg _ ->
+            ( model, Cmd.none )
+
 
 updateThemeOverrides :
     Model state html
     -> (ElmBook.Internal.ThemeOptions.ThemeOptionOverrides -> ElmBook.Internal.ThemeOptions.ThemeOptionOverrides)
-    -> ( Model state html, Cmd (Msg state) )
+    -> ( Model state html, Cmd (Msg state subMsg) )
 updateThemeOverrides model fn =
     ( { model | themeOverrides = fn model.themeOverrides }, Cmd.none )
 
 
-withActionLogReset : Model state html -> ( Model state html, Cmd (Msg state) ) -> ( Model state html, Cmd (Msg state) )
+withActionLogReset : Model state html -> ( Model state html, Cmd (Msg state subMsg) ) -> ( Model state html, Cmd (Msg state subMsg) )
 withActionLogReset previousModel =
     Tuple.mapFirst
         (\model ->
@@ -389,7 +392,7 @@ withActionLogReset previousModel =
 -- View
 
 
-view : ElmBookConfig state html -> Model state html -> Browser.Document (Msg state)
+view : ElmBookConfig state html subMsg -> Model state html -> Browser.Document (Msg state subMsg)
 view config model =
     let
         theme =
@@ -538,10 +541,10 @@ view config model =
 
 
 componentView :
-    (html -> Html (Msg state))
+    (html -> Html (Msg state subMsg))
     -> Maybe state
     -> ChapterComponentView state html
-    -> Html (Msg state)
+    -> Html (Msg state subMsg)
 componentView toHtml state_ componentView_ =
     case componentView_ of
         ChapterComponentViewStateless html ->
@@ -592,7 +595,7 @@ extractPath hashBasedNavigation url =
 -- Keyboard Events
 
 
-keyDownDecoder : Decode.Decoder (Msg state)
+keyDownDecoder : Decode.Decoder (Msg state subMsg)
 keyDownDecoder =
     Decode.map
         (\string ->
@@ -621,7 +624,7 @@ keyDownDecoder =
         (Decode.field "key" Decode.string)
 
 
-keyUpDecoder : Decode.Decoder (Msg state)
+keyUpDecoder : Decode.Decoder (Msg state subMsg)
 keyUpDecoder =
     Decode.map
         (\string ->

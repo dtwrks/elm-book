@@ -12,12 +12,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-type alias Props state =
+type alias Props state subMsg =
     { title : String
     , chapterOptions : ElmBook.Internal.Chapter.ValidChapterOptions
     , componentOptions : ElmBook.Internal.ComponentOptions.ValidComponentOptions
     , body : String
-    , components : List ( String, Html.Html (Msg state) )
+    , components : List ( String, Html.Html (Msg state subMsg) )
     }
 
 
@@ -36,7 +36,7 @@ styles =
 """
 
 
-view : Props state -> Html (Msg state)
+view : Props state subMsg -> Html (Msg state subMsg)
 view props =
     let
         body =

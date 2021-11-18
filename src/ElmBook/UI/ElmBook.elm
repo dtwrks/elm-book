@@ -49,7 +49,7 @@ initialState =
     }
 
 
-main : Book SharedState
+main : Book SharedState subMsg
 main =
     book "ElmBook's"
         |> withStatefulOptions

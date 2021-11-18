@@ -32,7 +32,7 @@ type Msg_
     | UpdateNavAccentHighlight_ String
 
 
-update : Msg_ -> SharedState m -> ( SharedState m, Cmd (ElmBook.Internal.Msg.Msg (SharedState m)) )
+update : Msg_ -> SharedState m -> ( SharedState m, Cmd (ElmBook.Internal.Msg.Msg (SharedState m) subMsg) )
 update msg sharedState =
     let
         model =
@@ -85,7 +85,7 @@ update msg sharedState =
     ( { sharedState | theming = model_ }, cmd )
 
 
-view : SharedState m -> Html (Msg (SharedState m))
+view : SharedState m -> Html (Msg (SharedState m) subMsg)
 view { theming } =
     div
         [ class "elm-book-theme-builder" ]

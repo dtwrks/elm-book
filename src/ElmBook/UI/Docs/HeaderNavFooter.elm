@@ -10,7 +10,7 @@ import ElmBook.UI.Helpers exposing (themeBackground)
 import ElmBook.UI.Search
 
 
-docs : Chapter x
+docs : Chapter x subMsg
 docs =
     chapter "Header, Nav & Footer"
         |> withComponentOptions
