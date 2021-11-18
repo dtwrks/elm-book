@@ -1,7 +1,7 @@
 module ElmBook.Chapter exposing
     ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
     , withComponent, withComponentList, render, renderWithComponentList
-    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map
+    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, CustomChapter, map, mapCustom
     , withChapterOptions, withComponentOptions
     )
 
@@ -69,7 +69,7 @@ Create chapters with interactive components that can read and update the book's 
 
 Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for a more throughout explanation.
 
-@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map
+@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, CustomChapter, map, mapCustom
 
 
 # Customizing Chapters
@@ -82,7 +82,7 @@ import ElmBook.ChapterOptions
 import ElmBook.Internal.Chapter exposing (ChapterBuilder(..), ChapterComponent, ChapterComponentView(..), ChapterCustom(..), ChapterOptions(..))
 import ElmBook.Internal.ComponentOptions
 import ElmBook.Internal.Helpers exposing (applyAttributes, toSlug)
-import ElmBook.Internal.Msg exposing (Msg)
+import ElmBook.Internal.Msg as Msg exposing (Msg)
 import Html exposing (Html)
 
 
@@ -90,6 +90,12 @@ import Html exposing (Html)
 -}
 type alias Chapter state subMsg =
     ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state subMsg))
+
+
+{-| Defines a Chapter type. Use this instead of the regular `Chapter` if you want to use your own `Msg` type, along with `StatefulOptions.update`
+-}
+type alias CustomChapter state subMsg =
+    ElmBook.Internal.Chapter.ChapterCustom state (Html subMsg)
 
 
 {-| Creates a chapter with some title.
@@ -303,7 +309,14 @@ renderWithComponentList body (ChapterBuilder builder) =
 -}
 map : (subMsg -> mappedSubMsg) -> Chapter state subMsg -> Chapter state mappedSubMsg
 map mapMsg chapter_ =
-    ElmBook.Internal.Chapter.map (Html.map (ElmBook.Internal.Msg.map mapMsg)) chapter_
+    ElmBook.Internal.Chapter.map (Html.map (Msg.map mapMsg)) chapter_
+
+
+{-| Similar to `map`, but with a `CustomChapter`
+-}
+mapCustom : (subMsg -> mappedSubMsg) -> CustomChapter state subMsg -> Chapter state mappedSubMsg
+mapCustom mapMsg chapter_ =
+    ElmBook.Internal.Chapter.map (Html.map (mapMsg >> Msg.GotCustomMsg)) chapter_
 
 
 
