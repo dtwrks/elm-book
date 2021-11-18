@@ -13,7 +13,7 @@ Check out the ["Books"](https://elm-book-in-elm-book.netlify.app/guides/books) g
 
 This module is used to create your books main output. You need to list your book's chapters here and also provide any global options you may want to define.
 
-    main : Book ()
+    main : Book () ()
     main =
         book "My Book"
             |> withChapters
@@ -55,7 +55,7 @@ import Html exposing (Html)
 
 If you're working with something other than `elm/html` (e.g. elm-css or elm-ui) then check out the `ElmBook.Custom` module.
 
-If you're creating a stateful book, you will need to pass your custom `SharedState` as an argument as showcased below.
+If you're creating a stateful book, you will need to pass your custom `SharedState` as an argument as showcased below. If you're using your own `Msg` and `update`, you need to pass it as the second argument.
 
     import FirstChapter
     import SecondChapter
@@ -71,12 +71,29 @@ If you're creating a stateful book, you will need to pass your custom `SharedSta
         , secondChapter = SecondChapter.init
         }
 
-    main : Book SharedState
+    type Msg
+        = GotFirstChapterMsg FirstChapter.Msg
+        | GotSecondChapterMsg SecondChapter.Msg
+
+    update : Msg -> SharedState -> ( SharedState, Cmd Msg )
+    update msg sharedState =
+        case msg of
+            GotFirstChapterMsg subMsg ->
+                FirstChapter.update subMsg sharedState
+                    |> Tuple.mapSecond (Cmd.map GotFirstChapterMsg)
+
+            GotFirstChapterMsg subMsg ->
+                SecondChapter.update subMsg sharedState
+                    |> Tuple.mapSecond (Cmd.map GotSecondChapterMsg)
+
+    main : Book SharedState Msg
     main =
         book "MyApp"
             |> withStatefulOptions
                 [ ElmBook.StatefulOptions.initialState
                     initialState
+                , ElmBook.StatefulOptions.update
+                    update
                 ]
 
 -}
@@ -144,7 +161,7 @@ withChapterGroups chapterGroups_ =
 
 {-| You can customize your book with any of the options available on the `ElmBook.Theme` module. Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/theming) guide for some examples.
 
-    main : Book x
+    main : Book x y
     main =
         book "My Themed Book"
             |> withThemeOptions
@@ -184,7 +201,7 @@ withChapterOptions attributes (BookBuilder config) =
 
 {-| By default, your components will appear inside a card with some padding and a label at the top. You can customize all of that with this function and the attributes available on `ElmBook.ComponentOptions`.
 
-    main : Book ()
+    main : Book () ()
     main =
         book "My Book"
             |> withComponentOptions

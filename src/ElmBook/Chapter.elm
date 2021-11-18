@@ -1,7 +1,7 @@
 module ElmBook.Chapter exposing
-    ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
+    ( chapter, chapterLink, renderComponent, renderComponentList, Chapter, CustomChapter
     , withComponent, withComponentList, render, renderWithComponentList
-    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, CustomChapter, map, mapCustom
+    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map, mapCustom
     , withChapterOptions, withComponentOptions
     )
 
@@ -36,7 +36,7 @@ Lets start by creating a chapter that displays different variants of a Button co
             ]
             [ text props.label ]
 
-    docs : Chapter x
+    docs : Chapter x y
     docs =
         let
             props =
@@ -53,7 +53,7 @@ Lets start by creating a chapter that displays different variants of a Button co
 
 **Tip:** Since Elm has amazing [dead code elimination](https://elm-lang.org/news/small-assets-without-the-headache#dead-code-elimination) you don't need to worry about splitting your component examples from your source code. They can live side by side making your development experience much better!
 
-@docs chapter, chapterLink, renderComponent, renderComponentList, Chapter
+@docs chapter, chapterLink, renderComponent, renderComponentList, Chapter, CustomChapter
 
 
 # Markdown and embedded components
@@ -69,7 +69,7 @@ Create chapters with interactive components that can read and update the book's 
 
 Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for a more throughout explanation.
 
-@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, CustomChapter, map, mapCustom
+@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, map, mapCustom
 
 
 # Customizing Chapters
@@ -86,13 +86,13 @@ import ElmBook.Internal.Msg as Msg exposing (Msg)
 import Html exposing (Html)
 
 
-{-| Defines a Chapter type. The argument is the shared state this chapter depends on. We can leave it blank (`x`) on stateless chapters. Read the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide to know more.
+{-| Defines a Chapter type. The arguments are the shared state this chapter depends on, and the msg it emits. We can leave it blank (`x` and `y`) on stateless chapters. Read the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide to know more.
 -}
 type alias Chapter state subMsg =
     ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state subMsg))
 
 
-{-| Defines a Chapter type. Use this instead of the regular `Chapter` if you want to use your own `Msg` type, along with `StatefulOptions.update`
+{-| Defines a Chapter type. Use this instead of the regular `Chapter` if you want to use your own `Msg` type, along with [`StatefulOptions.update`](ElmBook-StatefulOptions#update)
 -}
 type alias CustomChapter state subMsg =
     ElmBook.Internal.Chapter.ChapterCustom state (Html subMsg)
@@ -135,7 +135,7 @@ chapterLink props =
 
 {-| Adds a component to your chapter. You can display it using markdown.
 
-    inputChapter : Chapter x
+    inputChapter : Chapter x y
     inputChapter =
         chapter "Input"
             |> withComponent (input [] [])
@@ -158,7 +158,7 @@ withComponent html (ChapterBuilder builder) =
 
 {-| Adds multiple components to your chapter. You can display them using markdown.
 
-    buttonsChapter : Chapter x
+    buttonsChapter : Chapter x y
     buttonsChapter =
         chapter "Buttons"
             |> withComponentList
@@ -214,7 +214,7 @@ withStatefulComponentList componentList (ChapterBuilder builder) =
 
 {-| Used to create rich chapters with markdown and embedded components. Take a look at how you would list all buttons of the previous examples in one go:
 
-    buttonsChapter : Chapter x
+    buttonsChapter : Chapter x y
     buttonsChapter =
         chapter "Buttons"
             |> withComponentList
@@ -288,7 +288,7 @@ renderStatefulComponentList componentList (ChapterBuilder builder) =
 
 {-| Helper for creating chapters where all of the text content sits on top and all components at the bottom. It's basically an alias for what you just saw on the example above.
 
-    buttonsChapter : Chapter x
+    buttonsChapter : Chapter x y
     buttonsChapter =
         chapter "Buttons"
             |> withComponentList
@@ -305,7 +305,37 @@ renderWithComponentList body (ChapterBuilder builder) =
         { builder | body = builder.body ++ body ++ "\n<component-list />" }
 
 
-{-| Maps the msg a Chapter produces. Useful when using chapters that have their own `Msg` and `update` functions
+{-| Maps the msg a Chapter produces. Useful when using chapters that have their own `Msg` and `update` functions.
+
+    inputChapter : Chapter { x | inputChapterModel : InputChapter.Model } InputChapter.Msg
+
+    buttonChapter : Chapter { x | buttonChapterModel : ButtonChapter.Model } ButtonChapter.Msg
+
+    type Msg
+        = GotInputChapterMsg InputChapter.Msg
+        | GotButtonChapterMsg ButtonChapter.Msg
+
+    update : Msg -> SharedState -> ( SharedState, Cmd Msg )
+    update msg sharedState =
+        case msg of
+            GotInputChapterMsg subMsg ->
+                InputChapter.update subMsg sharedState
+                    |> Tuple.mapSecond (Cmd.map GotInputChapterMsg)
+
+            GotButtonChapterMsg subMsg ->
+                ButtonChapter.update subMsg sharedState
+                    |> Tuple.mapSecond (Cmd.map GotButtonChapterMsg)
+
+    main : ElmBook.Book SharedState Msg
+    main =
+        ElmBook.book "..."
+            |> ElmBook.withStatefulOptions
+                [ ElmBook.StatefulOptions.update update ]
+            |> ElmBook.withChapters
+                [ map GotInputChapterMsg inputChapter
+                , map GotButtonChapterMsg buttonChapter
+                ]
+
 -}
 map : (subMsg -> mappedSubMsg) -> Chapter state subMsg -> Chapter state mappedSubMsg
 map mapMsg chapter_ =

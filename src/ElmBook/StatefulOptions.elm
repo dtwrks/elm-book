@@ -1,14 +1,13 @@
 module ElmBook.StatefulOptions exposing
-    ( initialState, subscriptions, onDarkModeChange
+    ( initialState, update, subscriptions, onDarkModeChange
     , Attribute
-    , update
     )
 
 {-| Attributes used by `ElmBook.withStatefulOptions`.
 
 The attributes below are mostly used for Stateful Books. Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for more details.
 
-@docs initialState, subscriptions, onDarkModeChange
+@docs initialState, update, subscriptions, onDarkModeChange
 
 
 # Types
@@ -32,7 +31,7 @@ type alias Attribute state subMsg =
         { value : String }
 
 
-    book : Book SharedState
+    book : Book SharedState y
     book "MyApp"
         |> withStatefulOptions [
             initialState { value = "" }
@@ -91,7 +90,7 @@ update updateFn options =
         { state | timestamp = posix }
 
 
-    book : Book SharedState
+    book : Book SharedState y
     book "MyApp"
         |> withStatefulOptions [
             subscriptions [
@@ -119,7 +118,7 @@ This can be useful for showcasing your own dark themed components when using elm
         { darkMode = False
         }
 
-    book : Book SharedState
+    book : Book SharedState y
     book "MyApp"
         |> withStatefulOptions
             [ ElmBook.StatefulOptions.initialState

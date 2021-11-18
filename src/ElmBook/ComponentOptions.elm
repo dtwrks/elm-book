@@ -9,7 +9,7 @@ By default, your components will appear inside a card with some padding and a la
 
 Customizations might be applied for your whole book, for a particular chapter or even for a particular component.
 
-    main : Book ()
+    main : Book () ()
     main =
         book "My Book"
             |> withComponentOptions

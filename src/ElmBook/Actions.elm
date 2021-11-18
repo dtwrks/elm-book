@@ -8,6 +8,8 @@ module ElmBook.Actions exposing
   - **log actions** will not deal with any state. They will just print out some message to the action logger. This is pretty useful to get things running quickly.
   - **update actions** are used to update your book's shared state. A bit trickier to use but you can do a lot more powerful things with it.
 
+If you want to create your own custom actions, take a look at [`StatefulOptions.update`](ElmBook-StatefulOptions#update).
+
 
 # Logging Actions
 
@@ -127,7 +129,7 @@ logActionWith toString action value =
 
 {-| Updates the state of your stateful book.
 
-    counterChapter : Chapter { x | counter : Int }
+    counterChapter : Chapter { x | counter : Int } subMsg
     counterChapter =
         let
             update state =
@@ -149,7 +151,7 @@ updateState fn =
 
 {-| Used when updating the state based on an argument.
 
-    inputChapter : Chapter { x | input : String }
+    inputChapter : Chapter { x | input : String } subMsg
     inputChapter =
         let
             updateInput value state =
@@ -173,7 +175,7 @@ updateStateWith fn a =
 
 {-| Updates the state of your stateful book and possibly sends out a command. HTTP requests inside your book? Oh yeah! Get ready to go full over-engineering master.
 
-    counterChapter : Chapter { x | counter : Int }
+    counterChapter : Chapter { x | counter : Int } subMsg
     counterChapter =
         let
             fetchCurrentCounter state =
@@ -199,7 +201,7 @@ updateStateWithCmd =
     UpdateState
 
 
-{-| Same as `updateStateWith` but should return a `( state, Cmd msg )` tuple.
+{-| Same as `updateStateWith` but should return a `( state, Cmd (Msg state subMsg) )` tuple.
 -}
 updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state subMsg) )) -> a -> Msg state subMsg
 updateStateWithCmdWith fn =
