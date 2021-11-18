@@ -5,7 +5,7 @@ import ElmBook.ElmCSS exposing (Chapter)
 import Html.Styled exposing (div, p, text)
 
 
-chapter_ : Chapter x
+chapter_ : Chapter x y
 chapter_ =
     chapter "Testing…"
         |> renderComponent

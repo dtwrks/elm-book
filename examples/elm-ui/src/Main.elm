@@ -5,7 +5,7 @@ import ElmBook exposing (withChapters)
 import ElmBook.ElmUI exposing (Book, book)
 
 
-main : Book ()
+main : Book () ()
 main =
     book "Elm-UI"
         |> withChapters

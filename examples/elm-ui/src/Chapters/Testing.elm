@@ -5,7 +5,7 @@ import ElmBook.Chapter exposing (chapter, renderComponent)
 import ElmBook.ElmUI exposing (Chapter)
 
 
-chapter_ : Chapter x
+chapter_ : Chapter x y
 chapter_ =
     chapter "Testing…"
         |> renderComponent

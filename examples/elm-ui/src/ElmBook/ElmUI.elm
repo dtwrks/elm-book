@@ -4,22 +4,22 @@ import Element exposing (Element, layout)
 import ElmBook.Custom exposing (customBook)
 
 
-type alias Html state =
-    Element (ElmBook.Custom.Msg state)
+type alias Html state subMsg =
+    Element (ElmBook.Custom.Msg state subMsg)
 
 
-type alias BookBuilder state =
-    ElmBook.Custom.BookBuilder state (Html state)
+type alias BookBuilder state subMsg =
+    ElmBook.Custom.BookBuilder state (Html state subMsg) subMsg
 
 
-type alias Book state =
-    ElmBook.Custom.Book state (Html state)
+type alias Book state subMsg =
+    ElmBook.Custom.Book state (Html state subMsg) subMsg
 
 
-type alias Chapter state =
-    ElmBook.Custom.Chapter state (Html state)
+type alias Chapter state subMsg =
+    ElmBook.Custom.Chapter state (Html state subMsg)
 
 
-book : String -> BookBuilder state
+book : String -> BookBuilder state subMsg
 book =
     customBook (layout [])
