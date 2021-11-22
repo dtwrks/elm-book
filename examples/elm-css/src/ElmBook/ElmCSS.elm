@@ -5,7 +5,7 @@ import Html.Styled
 
 
 type alias Html state subMsg =
-    Html.Styled.Html (ElmBook.Custom.Msg state subMsg) 
+    Html.Styled.Html (ElmBook.Custom.Msg state subMsg)
 
 
 type alias BookBuilder state subMsg =
