@@ -1,7 +1,7 @@
 module ElmBook.Chapter exposing
     ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
     , withComponent, withComponentList, render, renderWithComponentList
-    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
+    , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, withChapterInit
     , withChapterOptions, withComponentOptions
     )
 
@@ -69,7 +69,7 @@ Create chapters with interactive components that can read and update the book's 
 
 Take a look at the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/stateful-chapters) guide for a more throughout explanation.
 
-@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList
+@docs withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, withChapterInit
 
 
 # Customizing Chapters
@@ -105,6 +105,7 @@ chapter title =
         , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
         , componentOptions = ElmBook.Internal.ComponentOptions.defaultOverrides
         , componentList = []
+        , init = Nothing
         }
 
 
@@ -124,6 +125,7 @@ chapterLink props =
         , chapterOptions = ElmBook.Internal.Chapter.defaultOverrides
         , componentOptions = ElmBook.Internal.ComponentOptions.defaultOverrides
         , componentList = []
+        , init = Nothing
         }
 
 
@@ -301,6 +303,16 @@ renderWithComponentList body (ChapterBuilder builder) =
 
 
 -- Customizing the chapter
+
+
+{-| Use this to trigger a state change or command whenever this chapter is first rendered.
+-}
+withChapterInit :
+    (state -> ( state, Cmd (Msg state) ))
+    -> ChapterBuilder state html
+    -> ChapterBuilder state html
+withChapterInit init_ (ChapterBuilder builder) =
+    ChapterBuilder { builder | init = Just init_ }
 
 
 {-| By default, your chapter will display its title at the top of the content. You can disable this by passing in chapter options.

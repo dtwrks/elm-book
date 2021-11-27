@@ -117,10 +117,22 @@ init config _ url_ navKey =
 
         activeChapter =
             chapterFromUrl config (extractPath hashBasedNavigation_ url_)
+
+        ( initialState_, cmd ) =
+            activeChapter
+                |> Maybe.andThen
+                    (\chapter ->
+                        Maybe.map2
+                            (\state_ chapterInit -> chapterInit state_)
+                            initialState
+                            (ElmBook.Internal.Chapter.init chapter)
+                            |> Maybe.map (Tuple.mapFirst Just)
+                    )
+                |> Maybe.withDefault ( initialState, Cmd.none )
     in
     ( { navKey = navKey
       , url = url
-      , state = initialState
+      , state = initialState_
       , themeOverrides = ElmBook.Internal.ThemeOptions.defaultOverrides
       , darkMode = darkMode
       , chapterPreSelected = 0
@@ -135,7 +147,7 @@ init config _ url_ navKey =
       }
     , case activeChapter of
         Just _ ->
-            Cmd.none
+            cmd
 
         Nothing ->
             Array.get 0 config.chapters
@@ -197,22 +209,48 @@ update config msg model =
                         |> Maybe.withDefault ( { model | url = "/" }, Cmd.none )
 
                 _ ->
-                    ( { model | url = url, isMenuOpen = False }
-                    , case Dict.get url config.chapterByUrl of
-                        Just _ ->
-                            Task.attempt
-                                (\_ -> DoNothing)
-                                (Browser.Dom.setViewportOf "elm-book-main" 0 0)
+                    let
+                        urlChapter =
+                            Dict.get url config.chapterByUrl
+                                |> Maybe.andThen (\i -> Array.get i config.chapters)
+                    in
+                    case urlChapter of
+                        Just chapter ->
+                            let
+                                ( state, cmd ) =
+                                    Maybe.map2
+                                        (\state_ chapterInit -> chapterInit state_)
+                                        model.state
+                                        (ElmBook.Internal.Chapter.init chapter)
+                                        |> Maybe.map (Tuple.mapFirst Just)
+                                        |> Maybe.withDefault ( model.state, Cmd.none )
+                            in
+                            ( { model
+                                | url = url
+                                , isMenuOpen = False
+                                , state = state
+                              }
+                            , Cmd.batch
+                                [ cmd
+                                , Task.attempt
+                                    (\_ -> DoNothing)
+                                    (Browser.Dom.setViewportOf "elm-book-main" 0 0)
+                                ]
+                            )
 
                         Nothing ->
-                            Browser.Navigation.replaceUrl model.navKey
+                            ( { model
+                                | url = url
+                                , isMenuOpen = False
+                              }
+                            , Browser.Navigation.replaceUrl model.navKey
                                 (if hashBasedNavigation_ then
                                     "#/"
 
                                  else
                                     "/"
                                 )
-                    )
+                            )
 
         ToggleDarkMode ->
             let

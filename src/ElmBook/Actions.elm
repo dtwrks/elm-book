@@ -1,12 +1,14 @@
 module ElmBook.Actions exposing
     ( logAction, logActionWithString, logActionWithBool, logActionWithInt, logActionWithFloat, logActionWith
     , updateState, updateStateWith, updateStateWithCmd, updateStateWithCmdWith
+    , mapUpdate, mapUpdateWithCmd
     )
 
 {-| This module focuses on actions – a.k.a messages your book may send to its runtime. There are mainly two types of actions:
 
   - **log actions** will not deal with any state. They will just print out some message to the action logger. This is pretty useful to get things running quickly.
   - **update actions** are used to update your book's shared state. A bit trickier to use but you can do a lot more powerful things with it.
+  - **update mappers** are helpers for when you're using module with their own elm architecture.
 
 
 # Logging Actions
@@ -18,11 +20,44 @@ Take a look at the ["Logging Actions"](https://elm-book-in-elm-book.netlify.app/
 @docs logAction, logActionWithString, logActionWithBool, logActionWithInt, logActionWithFloat, logActionWith
 
 
-# Updating Actions
+# Update Actions
 
 **Tip:** I highly recommend you read the ["Stateful Chapters"](https://elm-book-in-elm-book.netlify.app/guides/logging-actions) guide to learn more about update actions and stateful chapters.
 
 @docs updateState, updateStateWith, updateStateWithCmd, updateStateWithCmdWith
+
+
+# "The Elm Architecture" helpers
+
+If you're working on a module with its own elm architecture, these might make things a little simpler. Everything here _could_ be done with `updateState` but why not make things easier for ourselves?
+
+    -- Your UI module stuff
+
+    type alias Model = ...
+    type Msg = ...
+
+    update : Msg -> Model -> Model
+    view : Model -> Html msg
+
+    -- The elm-book stuff
+
+    type alias ElmBookModel a =
+        { a | inputModel : Model }
+
+    chapter : Chapter (ElmBookModel a)
+    chapter "Chapter with elm architecture"
+        |> renderStatefulComponent (\{ inputModel } ->
+            view inputModel
+                |> Html.map (
+                    mapUpdate
+                        { toState = \state model -> { state | inputModel = model }
+                        , fromState = \state -> state.inputModel
+                        , update = update
+                        }
+                    )
+        )
+
+@docs mapUpdate, mapUpdateWithCmd
 
 -}
 
@@ -204,3 +239,41 @@ updateStateWithCmd =
 updateStateWithCmdWith : (a -> state -> ( state, Cmd (Msg state) )) -> a -> Msg state
 updateStateWithCmdWith fn =
     UpdateState << fn
+
+
+{-| Maps a custom msg to an elm-book msg.
+-}
+mapUpdate :
+    { fromState : state -> model
+    , toState : state -> model -> state
+    , update : msg -> model -> model
+    }
+    -> msg
+    -> Msg state
+mapUpdate config msg =
+    let
+        update_ msg_ state =
+            config.update msg_ (config.fromState state)
+                |> (\model -> ( config.toState state model, Cmd.none ))
+    in
+    updateStateWithCmdWith update_ msg
+
+
+{-| Same as `mapUpdate` but used when your `update` returns a `( model, Cmd msg )` tuple.
+-}
+mapUpdateWithCmd :
+    { fromState : state -> model
+    , toState : state -> model -> state
+    , update : msg -> model -> ( model, Cmd msg )
+    }
+    -> msg
+    -> Msg state
+mapUpdateWithCmd config msg =
+    let
+        update_ msg_ state =
+            config.update msg_ (config.fromState state)
+                |> Tuple.mapFirst (config.toState state)
+                |> Tuple.mapSecond
+                    (Cmd.map (updateStateWithCmd << update_))
+    in
+    updateStateWithCmdWith update_ msg
