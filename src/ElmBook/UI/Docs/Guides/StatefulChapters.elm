@@ -164,16 +164,19 @@ chapter =
 
 ---
 
-### Nested Elm Architecture Example
+### Nested Elm Architecture
 
-Let's change our `InputChapter` so it now have it's own elm architecture.
+Sometimes we need to handle components with their own msg, model and update. Well – turns out it can be pretty simple to use that on your elm-book!
 
 ```elm
 module InputChapter exposing (Model, init, chapter)
 
 
 import ElmBook.Chapter exposing (Chapter, chapter, renderStatefulComponent)
-import ElmBook.Actions exposing (updateStateWith)
+import ElmBook.Actions exposing (mapUpdate)
+
+
+-- component
 
 
 type alias Model = { value = String }
@@ -195,22 +198,22 @@ view model =
     input [ value model.value, onInput UpdateValue ] []
 
 
-type alias SharedState
-    = { x | inputModel : Model }
+-- elm-book
 
 
-updateSharedState : Msg -> SharedState -> SharedState
-updateSharedState msg shared =
-    { shared | inputModel = update msg shared.inputModel }
-
-
-chapter : ElmBook.Chapter SharedState
+chapter : ElmBook.Chapter { x | inputModel : Model }
 chapter =
     ElmBook.chapter "InputChapter"
         |> withStatefulComponent (
             \\{ inputModel } ->
                 view inputModel
-                    |> Html.map (updateStateWith updateSharedState)
+                    |> Html.map (
+                        mapUpdate
+                            { toState = \\state inputModel_ -> { state | inputModel = inputModel_ }
+                            , fromState = \\state -> state.inputModel
+                            , update = update
+                            }
+                    )
         )
 ```
 

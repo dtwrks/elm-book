@@ -15,11 +15,13 @@ module ElmBook.Internal.Chapter exposing
     , defaultOptions
     , defaultOverrides
     , groupTitle
+    , init
     , toValidOptions
     )
 
 import ElmBook.Internal.ComponentOptions exposing (ComponentOptions)
 import ElmBook.Internal.Helpers exposing (toSlug)
+import ElmBook.Internal.Msg exposing (Msg)
 
 
 type alias ValidChapterOptions =
@@ -69,6 +71,7 @@ type alias ChapterConfig state html =
     , chapterOptions : ChapterOptions
     , componentOptions : ComponentOptions
     , componentList : List (ChapterComponent state html)
+    , init : Maybe (state -> ( state, Cmd (Msg state) ))
     }
 
 
@@ -110,6 +113,11 @@ chapterNavUrl hashBasedNavigation (Chapter { url, internal }) =
 groupTitle : ChapterCustom state html -> Maybe String
 groupTitle (Chapter chapter) =
     chapter.groupTitle
+
+
+init : ChapterCustom state html -> Maybe (state -> ( state, Cmd (Msg state) ))
+init (Chapter chapter) =
+    chapter.init
 
 
 chapterBreadcrumb : ChapterCustom state html -> String
