@@ -204,7 +204,7 @@ view model =
 chapter : ElmBook.Chapter { x | inputModel : Model }
 chapter =
     ElmBook.chapter "InputChapter"
-        |> withStatefulComponent (
+        |> renderStatefulComponent (
             \\{ inputModel } ->
                 view inputModel
                     |> Html.map (
