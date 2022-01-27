@@ -187,7 +187,7 @@ update config msg model =
                     ( model, Browser.Navigation.load url )
 
                 Browser.Internal url ->
-                    if String.startsWith "/logAction" url.path then
+                    if String.contains "/logAction" url.path then
                         String.replace "/logAction" "" url.path
                             |> (++) "Navigate to: "
                             |> logAction_ defaultLogContext
