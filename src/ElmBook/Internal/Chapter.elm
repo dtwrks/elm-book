@@ -130,7 +130,7 @@ chapterBreadcrumb (Chapter chapter) =
 
 chapterWithGroup : String -> ChapterCustom state html -> ChapterCustom state html
 chapterWithGroup group (Chapter chapter) =
-    if group == "" then
+    if group == "" || not chapter.internal then
         Chapter chapter
 
     else
