@@ -63,7 +63,7 @@ import CounterChapter
 import InputChapter
 
 
-type alias Model =
+type alias SharedState =
     { inputModel : InputChapter.Model
     , counterModel : CounterChapter.Model
     }
