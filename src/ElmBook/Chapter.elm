@@ -1,5 +1,5 @@
 module ElmBook.Chapter exposing
-    ( chapter, chapterLink, renderComponent, renderComponentList, Chapter
+    ( chapter, chapterLink, renderComponent, renderComponentList, Chapter, ChapterBuilder
     , withComponent, withComponentList, render, renderWithComponentList
     , withStatefulComponent, withStatefulComponentList, renderStatefulComponent, renderStatefulComponentList, withChapterInit
     , withChapterOptions, withComponentOptions
@@ -53,7 +53,7 @@ Lets start by creating a chapter that displays different variants of a Button co
 
 **Tip:** Since Elm has amazing [dead code elimination](https://elm-lang.org/news/small-assets-without-the-headache#dead-code-elimination) you don't need to worry about splitting your component examples from your source code. They can live side by side making your development experience much better!
 
-@docs chapter, chapterLink, renderComponent, renderComponentList, Chapter
+@docs chapter, chapterLink, renderComponent, renderComponentList, Chapter, ChapterBuilder
 
 
 # Markdown and embedded components
@@ -90,6 +90,12 @@ import Html exposing (Html)
 -}
 type alias Chapter state =
     ElmBook.Internal.Chapter.ChapterCustom state (Html (Msg state))
+
+
+{-| The builder type for an incomplete chapter. Useful if you wanna reuse parts of your chapter setup pipeline across different chapters.
+-}
+type alias ChapterBuilder state html =
+    ElmBook.Internal.Chapter.ChapterBuilder state html
 
 
 {-| Creates a chapter with some title.

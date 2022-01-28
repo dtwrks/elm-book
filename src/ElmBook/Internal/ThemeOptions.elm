@@ -27,6 +27,7 @@ module ElmBook.Internal.ThemeOptions exposing
 
 type alias ThemeOptions html =
     { globals : Maybe (List html)
+    , routePrefix : String
     , hashBasedNavigation : Bool
     , preferDarkMode : Bool
     , header : Maybe html
@@ -106,6 +107,7 @@ defaultNavAccentHighlight =
 defaultTheme : ThemeOptions html
 defaultTheme =
     { globals = Nothing
+    , routePrefix = ""
     , hashBasedNavigation = False
     , preferDarkMode = False
     , header = Nothing
@@ -176,6 +178,11 @@ fontSerif theme =
 fontMonospace : ThemeOptions html -> String
 fontMonospace theme =
     theme.fontMonospace
+
+
+routePrefix : ThemeOptions html -> Bool
+routePrefix =
+    .hashBasedNavigation
 
 
 hashBasedNavigation : ThemeOptions html -> Bool

@@ -130,16 +130,22 @@ withChapterGroups :
     List ( String, List (ChapterCustom state html) )
     -> BookBuilder state html
     -> BookApplication state html
-withChapterGroups chapterGroups_ =
+withChapterGroups chapterGroups_ (BookBuilder config) =
     ElmBook.Internal.Application.application
         (chapterGroups_
             |> List.map
                 (\( group, chapters ) ->
                     ( group
-                    , List.map (chapterWithGroup group) chapters
+                    , List.map
+                        (chapterWithGroup
+                            config.themeOptions.routePrefix
+                            group
+                        )
+                        chapters
                     )
                 )
         )
+        (BookBuilder config)
 
 
 {-| You can customize your book with any of the options available on the `ElmBook.Theme` module. Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/theming) guide for some examples.
