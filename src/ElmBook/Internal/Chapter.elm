@@ -128,14 +128,22 @@ chapterBreadcrumb (Chapter chapter) =
         |> (\t -> t ++ chapter.title)
 
 
-chapterWithGroup : String -> ChapterCustom state html -> ChapterCustom state html
-chapterWithGroup group (Chapter chapter) =
-    if group == "" || not chapter.internal then
+chapterWithGroup : String -> String -> ChapterCustom state html -> ChapterCustom state html
+chapterWithGroup routePrefix group (Chapter chapter) =
+    let
+        groupPrefix =
+            if group == "" then
+                ""
+
+            else
+                "/" ++ toSlug group
+    in
+    if not chapter.internal then
         Chapter chapter
 
     else
         Chapter
             { chapter
                 | groupTitle = Just group
-                , url = "/" ++ toSlug group ++ chapter.url
+                , url = routePrefix ++ groupPrefix ++ chapter.url
             }

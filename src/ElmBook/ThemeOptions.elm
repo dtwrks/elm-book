@@ -3,7 +3,7 @@ module ElmBook.ThemeOptions exposing
     , background, backgroundGradient, accent, navBackground, navAccent, navAccentHighlight
     , preferDarkMode
     , globals
-    , useHashBasedNavigation
+    , routePrefix, useHashBasedNavigation
     , ThemeOption
     )
 
@@ -34,7 +34,7 @@ Take a look at the ["Theming"](https://elm-book-in-elm-book.netlify.app/guides/t
 
 # Routing
 
-@docs useHashBasedNavigation
+@docs routePrefix, useHashBasedNavigation
 
 
 # Types
@@ -144,6 +144,13 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
 globals : List html -> ThemeOption html
 globals globals_ options =
     { options | globals = Just globals_ }
+
+
+{-| Use this to set the route prefix for your ElmBook's urls. This is useful if you're not hosting it on your root path.
+-}
+routePrefix : String -> ThemeOption html
+routePrefix routePrefix_ options =
+    { options | routePrefix = routePrefix_ }
 
 
 {-| By default ElmBook expects you to host it at the root of a SPA style server.
