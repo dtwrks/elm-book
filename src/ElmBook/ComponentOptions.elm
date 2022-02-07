@@ -13,8 +13,8 @@ Customizations might be applied for your whole book, for a particular chapter or
     main =
         book "My Book"
             |> withComponentOptions
-                [ ElmBook.Component.background "black"
-                , ElmBook.Component.hiddenLabel True
+                [ ElmBook.ComponentOptions.background "black"
+                , ElmBook.ComponentOptions.hiddenLabel True
                 ]
             |> withChapters [ ... ]
 
