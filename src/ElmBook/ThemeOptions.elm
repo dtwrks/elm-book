@@ -143,7 +143,13 @@ For instance, if you're using elm-tailwind-modules, this would be really helpful
 -}
 globals : List html -> ThemeOption html
 globals globals_ options =
-    { options | globals = Just globals_ }
+    { options
+        | globals =
+            options.globals
+                |> Maybe.map ((++) globals_)
+                |> Maybe.withDefault globals_
+                |> Just
+    }
 
 
 {-| Use this to set the route prefix for your ElmBook's urls. This is useful if you're not hosting it on your root path.
