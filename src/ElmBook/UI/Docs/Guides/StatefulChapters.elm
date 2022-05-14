@@ -107,16 +107,16 @@ import ElmBook.Actions exposing (updateState)
 type alias Model = Int
 
 
-type alias SharedState
+type alias SharedState x
     = { x | counterModel : Model }
 
 
-updateSharedState : SharedState -> SharedState
+updateSharedState : SharedState x -> SharedState x
 updateSharedState x =
     { x | counterModel = x.counterModel + 1 }
 
 
-chapter : Chapter SharedState
+chapter : Chapter (SharedState x)
 chapter =
     chapter "InputChapter"
         |> renderStatefulComponent (
@@ -141,16 +141,16 @@ import ElmBook.Actions exposing (updateStateWith)
 type alias Model = { value : String }
 
 
-type alias SharedState
+type alias SharedState x
     = { x | inputModel : Model }
 
 
-updateSharedState : Int -> SharedState -> SharedState
+updateSharedState : Int -> SharedState x -> SharedState x
 updateSharedState value x =
     { x | inputModel = { value = value } }
 
 
-chapter : ElmBook.Chapter SharedState
+chapter : ElmBook.Chapter (SharedState x)
 chapter =
     ElmBook.chapter "InputChapter"
         |> withStatefulComponent (
