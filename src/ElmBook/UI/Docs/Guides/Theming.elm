@@ -136,7 +136,7 @@ Don't worry… the light-theme losers can turn it off quite easily.
 
 ## Roadmap
 
-The state of our dark mode setup right now its not that great. It's more like a book thing than a "per user" setting since we can't persist what the user selected using pure elm.
+The state of our dark mode setup right now is not that great. It's more like a book thing than a "per user" setting since we can't persist what the user selected using pure elm.
 
 There is a plan to also enable custom fonts soon. Other than that, I believe changes will be less customizable and will focus more on a better UX for all ElmBooks.
 
