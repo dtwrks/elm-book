@@ -43,7 +43,7 @@ docs =
               )
             ]
         |> renderWithComponentList """
-Since ElmBook is basically a "one layout" app – it's easier to maintain all it's skeleton in a single place. This is all inside the `Wrapper` module. Take a look at the possible states below.
+Since ElmBook is basically a "one layout" app – it's easier to maintain all its skeleton in a single place. This is all inside the `Wrapper` module. Take a look at the possible states below.
 
 """
 
