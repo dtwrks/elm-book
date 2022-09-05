@@ -556,7 +556,7 @@ view config model =
                     |> Maybe.map
                         (\lastAction ->
                             ElmBook.UI.ActionLog.preview
-                                { lastActionIndex = List.length model.actionLog
+                                { lastActionIndex = List.length model.actionLog - 1
                                 , lastAction = lastAction
                                 , onClick = ActionLogShow
                                 }
