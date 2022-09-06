@@ -28,6 +28,7 @@ import ElmBook.UI.Styles
 import ElmBook.UI.Wrapper
 import Html exposing (Html, text)
 import Json.Decode as Decode
+import Process
 import Task
 import Url
 
@@ -285,10 +286,7 @@ update config msg model =
             ( { model | isSearching = True, chapterPreSelected = 0 }, Cmd.none )
 
         SearchBlur ->
-            ( { model
-                | isSearching = False
-                , search = ""
-              }
+            ( model
             , Cmd.none
             )
 
