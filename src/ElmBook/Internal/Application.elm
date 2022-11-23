@@ -494,7 +494,7 @@ view config model =
                         activeChapter
                             |> Maybe.map (chapterNavUrl hashBasedNavigation)
                     , preSelected =
-                        if model.isSearching then
+                        if model.isSearching && (Array.length chaptersList > 0) then
                             Array.get
                                 (modBy (Array.length chaptersList) model.chapterPreSelected)
                                 chaptersList
