@@ -340,11 +340,15 @@ update config msg model =
 
             else
                 let
-                    preSelectedIndex =
-                        modBy (Array.length config.chapters) model.chapterPreSelected
+                    filteredChapters =
+                        searchChapters model.search config.chapters
 
                     targetChapter =
-                        Array.get preSelectedIndex config.chapters
+                        if Array.isEmpty filteredChapters then
+                            Nothing
+                        else
+                            filteredChapters
+                                |> Array.get (modBy (Array.length filteredChapters) model.chapterPreSelected)
                 in
                 case targetChapter of
                     Just chapter_ ->
@@ -494,7 +498,7 @@ view config model =
                         activeChapter
                             |> Maybe.map (chapterNavUrl hashBasedNavigation)
                     , preSelected =
-                        if model.isSearching then
+                        if model.isSearching && (Array.length chaptersList > 0) then
                             Array.get
                                 (modBy (Array.length chaptersList) model.chapterPreSelected)
                                 chaptersList
