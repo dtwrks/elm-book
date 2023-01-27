@@ -18,22 +18,39 @@ import SyntaxHighlight
 
 
 view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state)
-view chapterTitle chapterComponents componentOptions =
-    Markdown.Parser.parse
-        >> Result.withDefault []
-        >> Markdown.Renderer.render
-            (componentRenderer
-                chapterTitle
-                chapterComponents
-                componentOptions
+view chapterTitle chapterComponents componentOptions chapterContent =
+    chapterContent
+        |> Markdown.Parser.parse
+        |> Result.mapError
+            (\errors ->
+                errors
+                |> List.map Markdown.Parser.deadEndToString
+                |> String.join "\n"
             )
-        >> Result.withDefault []
-        >> (\children ->
-                article
-                    []
-                    [ div [] children
-                    ]
-           )
+        |> Result.andThen
+            (\blocks ->
+                Markdown.Renderer.render
+                    (componentRenderer
+                        chapterTitle
+                        chapterComponents
+                        componentOptions
+                    )
+                    blocks
+            )
+        |> (\result ->
+                case result of
+                    Ok children ->
+                        article
+                            []
+                            [ div [] children
+                            ]
+                    Err errorString ->
+                        div [ class "elm-book__component-wrapper" ]
+                            [ pre
+                                [ class "elm-book-sans elm-book__component-error" ]
+                                [ text errorString ]
+                            ]
+            )
 
 
 componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
@@ -82,7 +99,7 @@ componentRenderer chapterTitle chapterComponents componentOptions =
                             |> Maybe.withDefault
                                 (div [ class "elm-book__component-wrapper" ]
                                     [ div
-                                        [ class "elm-book-sans elm-book__component-empty" ]
+                                        [ class "elm-book-sans elm-book__component-error" ]
                                         [ text <| "Oops!… \"" ++ Maybe.withDefault "" labelFilter ++ "\" component not found." ]
                                     ]
                                 )
@@ -313,7 +330,8 @@ styles =
 .elm-book__component-wrapper.full {
     max-width: 100%;
 }
-.elm-book__component-empty {
+.elm-book__component-error {
+    overflow: auto;
     padding: 20px;
     background-color: #f9e4b5;
     border-radius: 4px;
