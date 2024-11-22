@@ -206,7 +206,17 @@ update config msg model =
             case url of
                 "/" ->
                     Array.get 0 config.chapters
-                        |> Maybe.map (\fallback -> ( model, Browser.Navigation.pushUrl model.navKey <| chapterUrl fallback ))
+                        |> Maybe.map
+                            (\fallback ->
+                                ( model
+                                , Browser.Navigation.pushUrl model.navKey <|
+                                    if hashBasedNavigation_ then
+                                        "#" ++ chapterUrl fallback
+
+                                    else
+                                        chapterUrl fallback
+                                )
+                            )
                         |> Maybe.withDefault ( { model | url = "/" }, Cmd.none )
 
                 _ ->
@@ -346,6 +356,7 @@ update config msg model =
                     targetChapter =
                         if Array.isEmpty filteredChapters then
                             Nothing
+
                         else
                             filteredChapters
                                 |> Array.get (modBy (Array.length filteredChapters) model.chapterPreSelected)
