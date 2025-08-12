@@ -5,6 +5,7 @@ module ElmBook.UI.Markdown exposing
 
 import Dict
 import ElmBook.Internal.ComponentOptions exposing (Layout(..))
+import ElmBook.Internal.Helpers exposing (toSlug)
 import ElmBook.Internal.Msg exposing (Msg)
 import ElmBook.UI.ChapterComponent
 import ElmBook.UI.Helpers exposing (css_, mediaLargeScreen, mediaMobile)
@@ -24,8 +25,8 @@ view chapterTitle chapterComponents componentOptions chapterContent =
         |> Result.mapError
             (\errors ->
                 errors
-                |> List.map Markdown.Parser.deadEndToString
-                |> String.join "\n"
+                    |> List.map Markdown.Parser.deadEndToString
+                    |> String.join "\n"
             )
         |> Result.andThen
             (\blocks ->
@@ -44,18 +45,23 @@ view chapterTitle chapterComponents componentOptions chapterContent =
                             []
                             [ div [] children
                             ]
+
                     Err errorString ->
                         div [ class "elm-book__component-wrapper" ]
                             [ pre
                                 [ class "elm-book-sans elm-book__component-error" ]
                                 [ text errorString ]
                             ]
-            )
+           )
 
 
 componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
 componentRenderer chapterTitle chapterComponents componentOptions =
-    { defaultRenderer
+    let
+        defaultRenderer_ =
+            defaultRenderer False
+    in
+    { defaultRenderer_
         | html =
             Markdown.Html.oneOf
                 [ Markdown.Html.tag "component"
@@ -161,18 +167,12 @@ componentRenderer chapterTitle chapterComponents componentOptions =
     }
 
 
-defaultRenderer : Markdown.Renderer.Renderer (Html msg)
-defaultRenderer =
+defaultRenderer : Bool -> Markdown.Renderer.Renderer (Html msg)
+defaultRenderer hashBasedNavigation =
     { html = Markdown.Html.oneOf []
     , heading =
         \{ level, rawText, children } ->
             let
-                headingId =
-                    rawText
-                    |> String.trim
-                    |> String.replace " " "-"
-                    |> String.toLower
-
                 tag =
                     case level of
                         Block.H1 ->
@@ -193,9 +193,17 @@ defaultRenderer =
                         Block.H6 ->
                             h6 [ class "elm-book-sans" ]
             in
-            div
-                [ class "elm-book-md" ]
-                [ a [ href ("#" ++ headingId), id headingId, class "elm-book-md__heading-anchor" ] [ tag children ] ]
+            if hashBasedNavigation then
+                div [ class "elm-book-md" ] [ tag children ]
+
+            else
+                let
+                    headingId =
+                        toSlug rawText
+                in
+                div
+                    [ class "elm-book-md" ]
+                    [ a [ href ("#" ++ headingId), id headingId, class "elm-book-md__heading-anchor" ] [ tag children ] ]
     , paragraph =
         \children ->
             div [ class "elm-book-md elm-book-serif elm-book-md__default" ] [ p [] children ]
