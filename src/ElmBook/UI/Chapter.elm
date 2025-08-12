@@ -16,6 +16,7 @@ type alias Props state =
     { title : String
     , chapterOptions : ElmBook.Internal.Chapter.ValidChapterOptions
     , componentOptions : ElmBook.Internal.ComponentOptions.ValidComponentOptions
+    , hashBasedNavigation : Bool
     , body : String
     , components : List ( String, Html.Html (Msg state) )
     }
@@ -49,6 +50,7 @@ view props =
     article
         [ class "elm-book elm-book-chapter" ]
         [ ElmBook.UI.Markdown.view
+            props.hashBasedNavigation
             props.title
             props.components
             props.componentOptions

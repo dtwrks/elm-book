@@ -18,8 +18,8 @@ import Markdown.Renderer
 import SyntaxHighlight
 
 
-view : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state)
-view chapterTitle chapterComponents componentOptions chapterContent =
+view : Bool -> String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> String -> Html (Msg state)
+view hashBasedNavigation chapterTitle chapterComponents componentOptions chapterContent =
     chapterContent
         |> Markdown.Parser.parse
         |> Result.mapError
@@ -32,6 +32,7 @@ view chapterTitle chapterComponents componentOptions chapterContent =
             (\blocks ->
                 Markdown.Renderer.render
                     (componentRenderer
+                        hashBasedNavigation
                         chapterTitle
                         chapterComponents
                         componentOptions
@@ -55,11 +56,11 @@ view chapterTitle chapterComponents componentOptions chapterContent =
            )
 
 
-componentRenderer : String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
-componentRenderer chapterTitle chapterComponents componentOptions =
+componentRenderer : Bool -> String -> List ( String, Html (Msg state) ) -> ElmBook.Internal.ComponentOptions.ValidComponentOptions -> Markdown.Renderer.Renderer (Html (Msg state))
+componentRenderer hashBasedNavigation chapterTitle chapterComponents componentOptions =
     let
         defaultRenderer_ =
-            defaultRenderer False
+            defaultRenderer hashBasedNavigation
     in
     { defaultRenderer_
         | html =
