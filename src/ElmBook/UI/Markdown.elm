@@ -165,8 +165,14 @@ defaultRenderer : Markdown.Renderer.Renderer (Html msg)
 defaultRenderer =
     { html = Markdown.Html.oneOf []
     , heading =
-        \{ level, children } ->
+        \{ level, rawText, children } ->
             let
+                headingId =
+                    rawText
+                    |> String.trim
+                    |> String.replace " " "-"
+                    |> String.toLower
+
                 tag =
                     case level of
                         Block.H1 ->
@@ -187,7 +193,9 @@ defaultRenderer =
                         Block.H6 ->
                             h6 [ class "elm-book-sans" ]
             in
-            div [ class "elm-book-md" ] [ tag children ]
+            div
+                [ class "elm-book-md" ]
+                [ a [ href ("#" ++ headingId), id headingId, class "elm-book-md__heading-anchor" ] [ tag children ] ]
     , paragraph =
         \children ->
             div [ class "elm-book-md elm-book-serif elm-book-md__default" ] [ p [] children ]
@@ -363,6 +371,15 @@ styles =
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+.elm-book-md .elm-book-md__heading-anchor {
+    display: block;
+    text-decoration: none;
+    appearance: none;
+    color: inherit;
+    &:focus {
+        outline: none;
+    }
 }
 
 """ ++ mediaLargeScreen ++ """ {

@@ -5,6 +5,7 @@ module ElmBook.Internal.Application exposing
     , init
     )
 
+
 import Array exposing (Array)
 import Browser
 import Browser.Dom
@@ -28,9 +29,9 @@ import ElmBook.UI.Styles
 import ElmBook.UI.Wrapper
 import Html exposing (Html, text)
 import Json.Decode as Decode
-import Process
 import Task
 import Url
+import Json.Encode
 
 
 
@@ -60,7 +61,7 @@ type alias Model state html =
 
 
 type alias BookApplication state html =
-    Program () (Model state html) (Msg state)
+    Program Json.Encode.Value (Model state html) (Msg state)
 
 
 application :
@@ -82,11 +83,13 @@ application chapterGroups bookBuilder =
         , onUrlChange = OnUrlChange
         , onUrlRequest = OnUrlRequest
         , subscriptions =
-            \_ ->
+            \model ->
                 Sub.batch
                     [ onKeyDown keyDownDecoder
                     , onKeyUp keyUpDecoder
-                    , Sub.batch config.statefulOptions.subscriptions
+                    , model.state
+                        |> Maybe.map config.statefulOptions.subscriptions
+                        |> Maybe.withDefault Sub.none
                     ]
         }
 
@@ -97,11 +100,11 @@ application chapterGroups bookBuilder =
 
 init :
     ElmBookConfig state html
-    -> ()
+    -> Json.Encode.Value
     -> Url.Url
     -> Browser.Navigation.Key
     -> ( Model state html, Cmd (Msg state) )
-init config _ url_ navKey =
+init config flags url_ navKey =
     let
         url =
             extractPath config.themeOptions.hashBasedNavigation url_
@@ -111,6 +114,7 @@ init config _ url_ navKey =
 
         initialState =
             config.statefulOptions.initialState
+                |> Maybe.map (\fn -> fn flags navKey)
                 |> Maybe.map (config.statefulOptions.onDarkModeChange darkMode)
 
         hashBasedNavigation_ =
