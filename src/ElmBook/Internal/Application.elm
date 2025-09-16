@@ -5,7 +5,6 @@ module ElmBook.Internal.Application exposing
     , init
     )
 
-
 import Array exposing (Array)
 import Browser
 import Browser.Dom
@@ -29,9 +28,9 @@ import ElmBook.UI.Styles
 import ElmBook.UI.Wrapper
 import Html exposing (Html, text)
 import Json.Decode as Decode
+import Json.Encode
 import Task
 import Url
-import Json.Encode
 
 
 
@@ -556,6 +555,7 @@ view config model =
                                     activeChapter_.componentOptions
                                         |> ElmBook.Internal.ComponentOptions.toValidOptions
                                             config.componentOptions
+                                , hashBasedNavigation = config.themeOptions.hashBasedNavigation
                                 , body = activeChapter_.body
                                 , components =
                                     activeChapter_.componentList
